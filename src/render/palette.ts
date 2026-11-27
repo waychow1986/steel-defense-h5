@@ -29,7 +29,8 @@ export const PALETTE = {
   baseDestroyed: '#4a4440',
 
   outline: '#14181c',
-  shadow: 'rgba(6, 8, 8, 0.55)',
+  /** Dense enough to stay darker than the ground even where it falls on brick, steel or water. */
+  shadow: 'rgba(6, 8, 8, 0.92)',
   treadLink: '#2a2f33',
   hitBody: '#f2efe6',
   hitLight: '#ffffff',

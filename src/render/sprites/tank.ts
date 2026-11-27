@@ -91,7 +91,7 @@ const TURRET_Y = 0.04;
 const LINKS = 4;
 
 /** Extra room around the tank square in a tank sprite (barrel reach, shadow, soft edge), tiles. */
-export const TANK_PAD = 0.26;
+export const TANK_PAD = 0.3;
 
 export function tankShading(type: TankType, hit: boolean): Shading {
   if (hit) return { body: PALETTE.hitBody, light: PALETTE.hitLight, dark: PALETTE.hitDark };

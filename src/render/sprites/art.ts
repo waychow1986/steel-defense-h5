@@ -13,7 +13,7 @@ export const ART = {
    * Shadow offset to the bottom-right, tiles. Large enough that every shadow-casting element
    * (tanks, base, power-ups, walls) shows its shadow on the ground beside its footprint.
    */
-  shadowOffset: 0.12,
+  shadowOffset: 0.16,
   shadowColor: PALETTE.shadow,
   outlineColor: PALETTE.outline,
   /** Lit (top-left) and shaded (bottom-right) edge thickness, tiles. */
