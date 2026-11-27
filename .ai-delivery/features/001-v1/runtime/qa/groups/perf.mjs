@@ -76,17 +76,37 @@ async function ensurePlaying(g) {
   await g.release();
 }
 
-async function presses(g, kind, n) {
+// 连续重做时开新局（测试的操作手段）：同一种子重新打开页面并进入第 1 关
+async function newGame(g) {
+  await g.release().catch(() => { }); g.touchHeld = null; g.held = null;
+  await g.page.goto(g.page.url());
+  await g.page.waitForFunction(() => window.steelDefense && typeof window.steelDefense.snapshot === 'function');
+  await g.startToPlaying();
+  await installRec(g.page);
+}
+
+// 帧中不能测量的原因（与“被击中或画面变化”一样重做这次按下）
+function redoReason(f, pr) {
+  if (f.bd) return '指挥所已毁（失败前爆炸阶段）';
+  if (f.pn || f.x === undefined) return '玩家坦克不存在';
+  if (f.er === 0) return '本关敌人已清（过关前阶段）';
+  if (f.screen !== 'playing') return `画面变化 ${f.screen}`;
+  if (f.lives !== pr.lives) return '被击中';
+  return null;
+}
+
+async function presses(g, kind, n, redos) {
   const page = g.page; const out = [];
-  let attempts = 0, lastLives = null;
+  let attempts = 0, lastLives = null, streak = 0;
   const dirs = ['up', 'down'];
-  while (out.length < n && attempts++ < n + 30) {
+  while (out.length < n && attempts++ < n + 40) {
+    if (streak >= 3) { await newGame(g); streak = 0; lastLives = null; redos.push({ kind, i: out.length + 1, why: '连续重做 3 次，开新局' }); }
     if (kind === 'fire') {
       await g.until(s => !s.bullets.some(b => b.owner === 'player'), 3000, 50);
       await sleep(600);
     } else await sleep(150);
     const s0 = await g.snap();
-    if (notMeasurable(s0)) { await ensurePlaying(g); lastLives = null; continue; }
+    if (notMeasurable(s0)) { redos.push({ kind, i: out.length + 1, why: `按下前不可测量：screen=${s0.screen} 指挥所已毁=${!!s0.base?.destroyed} 玩家=${s0.player ? '在' : '无'} 剩余敌人=${s0.enemiesRemaining}` }); await ensurePlaying(g); lastLives = null; continue; }
     // 刚重生或新开局：等待稳定后再按，避免按在出生保护/入场阶段
     if (lastLives !== s0.lives) { lastLives = s0.lives; await sleep(2000); continue; }
     if (kind === 'fire' && s0.player.dir !== 'up') { await g.hold('up'); await sleep(20); await g.release(); await sleep(300); }
@@ -97,10 +117,12 @@ async function presses(g, kind, n) {
     try {
       if (kind === 'fire') { await g.fire(); await sleep(400); }
       else { await g.hold(dir); await sleep(500); await g.release(); await sleep(400); }
-    } catch { g.touchHeld = null; await g.release().catch(() => { }); continue; }
+    } catch (e) { g.touchHeld = null; await g.release().catch(() => { }); streak++; redos.push({ kind, i: out.length + 1, why: '操作异常：' + e.message.slice(0, 120) }); continue; }
     const rec = await takeRec(page);
-    // 期间被击中、画面变化、指挥所被毁、玩家坦克不存在或进入过关前阶段：重做这次按下
-    if (rec.fr.some(f => f.lives !== pr.lives || f.screen !== 'playing' || f.x === undefined || f.pn || f.bd || f.er === 0)) continue;
+    // 按下前或测量期间（含按下前 50ms 的帧）指挥所被毁、玩家坦克不存在、处于失败/过关前阶段、被击中或画面变化：重做这次按下
+    const bad = rec.fr.map(f => redoReason(f, pr)).find(Boolean);
+    if (bad) { streak++; redos.push({ kind, i: out.length + 1, dir: kind === 'fire' ? 'fire' : dir, why: bad }); continue; }
+    streak = 0;
     out.push({ i: out.length + 1, dir: kind === 'fire' ? 'fire' : dir, ...analyzePress(pre, rec, kind) });
   }
   return out;
@@ -125,11 +147,15 @@ async function ts42(browser) {
       if (!await g.startToPlaying()) { sc.check(`${dev}：进入游戏进行中`, false, '未能进入游戏进行中'); continue; }
       await installRec(g.page);
       const how = device.hasTouch ? '虚拟按键' : '键盘';
-      const f = await presses(g, 'fire', 10);
+      const redos = [];
+      all[dev] = { redos };
+      const f = await presses(g, 'fire', 10, redos);
+      all[dev].fire = f;
       judge(sc, `${dev}${how}开火`, f, 10, 'fire');
-      const m = await presses(g, 'move', 10);
+      const m = await presses(g, 'move', 10, redos);
+      all[dev].move = m;
       judge(sc, `${dev}${how}移动`, m, 10, 'move');
-      all[dev] = { fire: f, move: m };
+      log('TS-42', dev, '重做', redos.length, '次', redos.map(r => r.why).join('；').slice(0, 300));
     } catch (e) { sc.check(`${dev}：脚本执行`, false, '执行异常：' + e.message); }
     finally { if (g) { await g.dumpEvidence(sc, dev).catch(() => { }); await g.close(); } }
   }
@@ -217,8 +243,109 @@ async function perfRun(browser, id, device) {
   return sc;
 }
 
+// ---------- TS-43（测试计划第 2 版）：跨关、跨失去生命、跨局累计“游戏进行中”的帧 ----------
+// 页面内逐帧记录：只计 screen=playing 且不在过渡中的帧；帧间隔只在同一段连续的游戏进行中内计算
+async function installPerfRec(page) {
+  await page.evaluate(() => {
+    if (window.__qp) return;
+    const q = window.__qp = { seg: 0, on: false, lastT: 0, accMs: 0, intervals: 0, maxGap: 0, long: [], segs: [] };
+    const loop = t => {
+      const s = window.steelDefense.snapshot();
+      const counted = s.screen === 'playing' && !s.transitioning;
+      if (counted) {
+        if (q.on) {
+          const gap = t - q.lastT;
+          q.accMs += gap; q.intervals++;
+          if (gap > q.maxGap) q.maxGap = gap;
+          if (gap > 100 && q.long.length < 50) q.long.push({ seg: q.seg, t: Math.round(t), gap: Math.round(gap * 10) / 10, level: s.level });
+          q.segs[q.segs.length - 1].ms += gap; q.segs[q.segs.length - 1].frames++;
+        } else { q.seg++; q.segs.push({ seg: q.seg, level: s.level, lives: s.lives, startT: Math.round(t), ms: 0, frames: 1 }); }
+        q.lastT = t;
+      }
+      q.on = counted;
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  });
+}
+const perfState = page => page.evaluate(() => { const q = window.__qp; return { seg: q.seg, on: q.on, accMs: q.accMs, intervals: q.intervals, maxGap: q.maxGap, long: q.long, segs: q.segs.slice(-60) }; });
+
+async function ts43(browser) {
+  const sc = new Scenario('TS-43'); let g;
+  const TARGET_MS = 65000;
+  try {
+    const deadline = Date.now() + 6 * 60000;
+    g = await openGame(browser, { device: DESKTOP, seed: 43, clock: false });
+    if (!await g.startToPlaying()) { sc.check('进入游戏进行中', false, '未能进入游戏进行中'); return sc; }
+    await installPerfRec(g.page);
+    const mb = await g.mapBox();
+    const endScreens = ['gameOver', 'victory', 'start'];
+    let stopFlag = false, games = 1;
+    const shots = [], perf = [], flow = [];
+    // 测试的操作手段：自动游玩，过关后继续下一关；失去生命继续；一局失败或通关后回到开始画面再开新的一局继续累计
+    const driver = (async () => {
+      while (!stopFlag && Date.now() < deadline) {
+        const s = await g.snap();
+        if (s.screen === 'gameOver' || s.screen === 'victory') {
+          flow.push({ at: Date.now(), screen: s.screen, level: s.level, score: s.score });
+          const btn = g.page.getByRole('button', { name: '返回开始画面' });
+          await btn.click({ timeout: 10000 }).catch(() => { });
+          await g.until(x => x.screen === 'start' && !x.transitioning, 8000, 100);
+        } else if (s.screen === 'start') {
+          if (await g.startToPlaying()) games++;
+        } else {
+          const bot = new Bot(g, { shoot: true, dodge: true, pickup: false, goal: () => null });
+          await bot.run({ maxMs: 1e9, deadline, stop: x => stopFlag || endScreens.includes(x.screen) });
+        }
+      }
+      await g.release().catch(() => { });
+    })().catch(e => { flow.push({ error: e.message }); });
+    let lastPerf = 0, st = await perfState(g.page);
+    while (Date.now() < deadline && st.accMs < TARGET_MS) {
+      const before = await perfState(g.page);
+      const buf = await g.page.screenshot({ scale: 'css' });
+      const hud = await g.page.getByRole('group', { name: '战况' }).isVisible().catch(() => false);
+      st = await perfState(g.page);
+      // 截图前后都在同一段游戏进行中才计入闪烁检查
+      if (before.on && st.on && before.seg === st.seg) {
+        const png = PNG.sync.read(buf);
+        shots.push({ seg: st.seg, acc: Math.round(st.accMs), full: uniformRatio(png, 0, 0, png.width, png.height), map: mb ? uniformRatio(png, Math.round(mb.x), Math.round(mb.y), Math.round(mb.width), Math.round(mb.height)) : null, hud });
+      }
+      if (st.on && Date.now() - lastPerf >= 1000) {
+        lastPerf = Date.now();
+        const s = await g.snap();
+        perf.push({ acc: Math.round(st.accMs), level: s.level, ...s.perf });
+      }
+      await sleep(100);
+    }
+    stopFlag = true; await driver;
+    st = await perfState(g.page);
+    const accS = st.accMs / 1000;
+    sc.addEvidence(await writeEvidence('TS-43-perf.json', { accMs: st.accMs, intervals: st.intervals, maxGap: st.maxGap, long: st.long, segs: st.segs, games, flow, perf, shots }));
+    if (st.accMs < 60000) { sc.unreachable(`6 分钟内累计游戏进行中 ${accS.toFixed(1)} 秒，不足 60 秒`); return sc; }
+    const fps = st.intervals / accS;
+    const head = `累计游戏进行中 ${accS.toFixed(1)} 秒（${st.segs.length} 段，${games} 局，到达关卡 ${[...new Set(st.segs.map(x => x.level))].join(',')}），计入帧间隔 ${st.intervals} 个`;
+    sc.check('1 测量时段内没有单次超过 100ms 的画面停顿（同一段游戏进行中的最大帧间隔 ≤ 100ms）', st.maxGap <= 100,
+      `${head}，最大帧间隔 ${st.maxGap.toFixed(1)}ms；超过 100ms 的间隔 ${JSON.stringify(st.long).slice(0, 200)}；快照 perf 最大帧间隔读数 ${perf.length ? Math.max(...perf.map(p => p.maxFrameGapMs)) : '无'}ms`);
+    sc.check('2 测量时段内平均帧率 ≥ 55（计入帧数 ÷ 累计游戏进行中时长）', fps >= 55,
+      `${head}，平均帧率 ${fps.toFixed(1)}；快照 perf 帧率读数最低 ${perf.length ? Math.min(...perf.map(p => p.fps)) : '无'}`);
+    const flashes = [];
+    for (let i = 1; i + 1 < shots.length; i++) {
+      const [a, b, c] = [shots[i - 1], shots[i], shots[i + 1]];
+      if (a.seg !== b.seg || b.seg !== c.seg) continue;
+      if (a.full < 0.97 && b.full >= 0.97 && c.full < 0.97) flashes.push(`累计 ${b.acc}ms 整屏空白`);
+      if (a.map !== null && a.map < 0.97 && b.map >= 0.97 && c.map < 0.97) flashes.push(`累计 ${b.acc}ms 地图整体不见`);
+      if (a.hud && !b.hud && c.hud) flashes.push(`累计 ${b.acc}ms HUD 不见`);
+    }
+    sc.check('3 不闪烁：同一段游戏进行中的相邻截图无整屏空白后恢复、地图或 HUD 整体消失后恢复', flashes.length === 0 && shots.length >= 3,
+      `截图 ${shots.length} 张（每约 0.1 秒加截图耗时）；${flashes.length ? flashes.join('，') : '未发现'}；整屏单色比例最大 ${shots.length ? Math.max(...shots.map(s => s.full)).toFixed(2) : '无'}`);
+  } catch (e) { sc.check('脚本执行', false, '执行异常：' + e.message); }
+  finally { if (g) { await g.dumpEvidence(sc, 'end').catch(() => { }); await g.close(); } }
+  return sc;
+}
+
 export const scenarios = {
   'TS-42': ts42,
-  'TS-43': b => perfRun(b, 'TS-43', DESKTOP),
+  'TS-43': ts43,
   'TS-44': b => perfRun(b, 'TS-44', MOBILE),
 };
