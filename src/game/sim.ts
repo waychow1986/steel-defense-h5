@@ -106,7 +106,7 @@ function checkLevelClear(state: GameState, events: GameEvent[]): void {
 /**
  * Builds the next level's world after a clear (FR-026): score and lives carry over, and so does
  * firepower (A-3: kept until a life is lost or the game ends). Power-ups, bullets and the shield do not
- * (shield reset is a provisional answer pending a product decision).
+ * (business decision after S45: a running shield is cleared at the start of the next level).
  */
 export function advanceLevel(state: GameState): GameState {
   const next = createWorld({

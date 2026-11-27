@@ -135,6 +135,14 @@ describe('UT-flow: level clear and victory (AC-10)', () => {
     expect(n.spawnEnabled).toBe(true);
   });
 
+  it('a shield still running at the clear does not carry into the next level', () => {
+    const { s, e } = lastEnemyWorld(2, 0, 3);
+    shootLast(s, e);
+    s.player!.shieldMs = CONFIG.shieldMs - 1000;
+    const n = advanceLevel(s);
+    expect(n.player!.shieldMs).toBe(0);
+  });
+
   it('a new game starts at level 1 with score 0 and 3 lives', () => {
     const s = createWorld({ seed: 1, level: 1 });
     expect([s.level, s.score, s.lives, s.cleared]).toEqual([1, 0, 3, false]);
