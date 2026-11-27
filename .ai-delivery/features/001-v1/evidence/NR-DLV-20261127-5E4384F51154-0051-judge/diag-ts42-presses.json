@@ -1,0 +1,371 @@
+{
+ "电脑": {
+  "fire": [
+   {
+    "i": 1,
+    "dir": "fire",
+    "lrm": 6.300000000745058,
+    "measured": 6.7,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 2,
+    "dir": "fire",
+    "lrm": 5.200000001117587,
+    "measured": 5.6,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 3,
+    "dir": "fire",
+    "lrm": 5.199999999254942,
+    "measured": 5.5,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 4,
+    "dir": "fire",
+    "lrm": 6.200000001117587,
+    "measured": 6.6,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 5,
+    "dir": "fire",
+    "lrm": 6,
+    "measured": 6.4,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 6,
+    "dir": "fire",
+    "lrm": 10.099999999627471,
+    "measured": 10.4,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 7,
+    "dir": "fire",
+    "lrm": 12.900000000372529,
+    "measured": 13.3,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 8,
+    "dir": "fire",
+    "lrm": 8.900000000372529,
+    "measured": 9.2,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 9,
+    "dir": "fire",
+    "lrm": 4.400000000372529,
+    "measured": 4.8,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 10,
+    "dir": "fire",
+    "lrm": 0.3999999985098839,
+    "measured": 0.8,
+    "updated": true,
+    "ok": true
+   }
+  ],
+  "move": [
+   {
+    "i": 1,
+    "dir": "up",
+    "lrm": 12.300000000745058,
+    "measured": 12.5,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,10.562；松开时位置 4.063,10.562"
+   },
+   {
+    "i": 2,
+    "dir": "down",
+    "lrm": 11.800000000745058,
+    "measured": 11.9,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,11.162；松开时位置 4.063,11.162"
+   },
+   {
+    "i": 3,
+    "dir": "up",
+    "lrm": 13.5,
+    "measured": 13.7,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,9.662；松开时位置 4.063,9.662"
+   },
+   {
+    "i": 4,
+    "dir": "down",
+    "lrm": 12.699999999254942,
+    "measured": 12.8,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,11.162；松开时位置 4.063,11.162"
+   },
+   {
+    "i": 5,
+    "dir": "up",
+    "lrm": 14.600000001490116,
+    "measured": 16.6,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,11.112；松开时位置 4.063,11.112"
+   },
+   {
+    "i": 6,
+    "dir": "down",
+    "lrm": 16.40000000037253,
+    "measured": 16.5,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,12.125；松开时位置 4.063,12.125"
+   },
+   {
+    "i": 7,
+    "dir": "up",
+    "lrm": 14.799999998882413,
+    "measured": 15,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,10.625；松开时位置 4.063,10.625"
+   },
+   {
+    "i": 8,
+    "dir": "down",
+    "lrm": 15,
+    "measured": 15.1,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,12.125；松开时位置 4.063,12.125"
+   },
+   {
+    "i": 9,
+    "dir": "up",
+    "lrm": 14.400000000372529,
+    "measured": 14.5,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,10.625；松开时位置 4.063,10.625"
+   },
+   {
+    "i": 10,
+    "dir": "down",
+    "lrm": 13.5,
+    "measured": 13.6,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,12.125；松开时位置 4.063,12.125"
+   }
+  ]
+ },
+ "手机竖屏": {
+  "fire": [
+   {
+    "i": 1,
+    "dir": "fire",
+    "lrm": 4.199999999254942,
+    "measured": 4.6,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 2,
+    "dir": "fire",
+    "lrm": 14.5,
+    "measured": 14.9,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 3,
+    "dir": "fire",
+    "lrm": 12.099999999627471,
+    "measured": 12.4,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 4,
+    "dir": "fire",
+    "lrm": 10.600000001490116,
+    "measured": 10.8,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 5,
+    "dir": "fire",
+    "lrm": 8.900000000372529,
+    "measured": 9.2,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 6,
+    "dir": "fire",
+    "lrm": 13.300000000745058,
+    "measured": 13.5,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 7,
+    "dir": "fire",
+    "lrm": 12,
+    "measured": 12.3,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 8,
+    "dir": "fire",
+    "lrm": 8.599999999627471,
+    "measured": 8.9,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 9,
+    "dir": "fire",
+    "lrm": 3.800000000745058,
+    "measured": 4,
+    "updated": true,
+    "ok": true
+   },
+   {
+    "i": 10,
+    "dir": "fire",
+    "lrm": 4.099999999627471,
+    "measured": 4.4,
+    "updated": true,
+    "ok": true
+   }
+  ],
+  "move": [
+   {
+    "i": 1,
+    "dir": "up",
+    "lrm": 7.299999998882413,
+    "measured": 7.4,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,9.462；松开时位置 4.063,9.462"
+   },
+   {
+    "i": 2,
+    "dir": "down",
+    "lrm": 6.600000001490116,
+    "measured": 6.8,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,10.962；松开时位置 4.063,10.962"
+   },
+   {
+    "i": 3,
+    "dir": "up",
+    "lrm": 4.900000000372529,
+    "measured": 5,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 19，位置 4.063,9.462；松开时位置 4.063,9.462"
+   },
+   {
+    "i": 4,
+    "dir": "down",
+    "lrm": 2.300000000745058,
+    "measured": 2.5,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,11.012；松开时位置 4.063,11.012"
+   },
+   {
+    "i": 5,
+    "dir": "up",
+    "lrm": 14.700000001117587,
+    "measured": 14.8,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,9.512；松开时位置 4.063,9.512"
+   },
+   {
+    "i": 6,
+    "dir": "down",
+    "ok": false,
+    "why": "按下后坦克没有响应（无移动、转向或子弹）；按下前 4.0625,9.512499999999964,up，最后一帧 4.0625,9.512499999999964,up，事件 pointerdown,pointerup，帧数 54",
+    "lrm": 14.700000001117587
+   },
+   {
+    "i": 7,
+    "dir": "up",
+    "lrm": 4.099999999627471,
+    "measured": 4.2,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 19，位置 4.063,10.562；松开时位置 4.063,10.562"
+   },
+   {
+    "i": 8,
+    "dir": "down",
+    "lrm": 0.8000000007450581,
+    "measured": 0.9,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,12.113；松开时位置 4.063,12.113"
+   },
+   {
+    "i": 9,
+    "dir": "up",
+    "lrm": 0.30000000074505806,
+    "measured": 0.4,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,10.562；松开时位置 4.063,10.562"
+   },
+   {
+    "i": 10,
+    "dir": "down",
+    "lrm": 13.5,
+    "measured": 13.7,
+    "updated": true,
+    "ok": true,
+    "rel": true,
+    "relWhy": "松开后>100ms 帧数 18，位置 4.063,12.063；松开时位置 4.063,12.063"
+   }
+  ]
+ }
+}
