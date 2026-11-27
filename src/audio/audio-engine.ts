@@ -37,27 +37,41 @@ export class AudioEngine {
 
   /** Call from inside a user gesture handler: creates/resumes the context and primes output. */
   unlock(): void {
+    let created = false;
     if (!this.graph) {
       if (!this.ctor) return;
       try {
         this.graph = this.build(new this.ctor());
+        created = true;
       } catch {
         return;
       }
     }
-    const { ctx } = this.graph;
+    if (created || this.graph.ctx.state !== 'running') this.wake(this.graph.ctx);
+    if (this.wantMusic) this.graph.music.start();
+  }
+
+  /**
+   * Call from any later user gesture (touch, key, click): if the system suspended or interrupted
+   * the context (backgrounding, a call, screen lock), resume it while the gesture allows it (TD-007).
+   * Does not create the context.
+   */
+  resumeOnGesture(): void {
+    if (this.graph && this.graph.ctx.state !== 'running') this.wake(this.graph.ctx);
+  }
+
+  /** Re-resume after the page comes back (phones suspend audio in the background). */
+  resumeIfVisible(visible: boolean): void {
+    if (visible && this.graph && this.graph.ctx.state !== 'running') void this.graph.ctx.resume().catch(() => undefined);
+  }
+
+  private wake(ctx: AudioContext): void {
     if (ctx.state !== 'running') void ctx.resume().catch(() => undefined);
     // A one-sample silent buffer started in the gesture unlocks output on iOS Safari.
     const src = ctx.createBufferSource();
     src.buffer = ctx.createBuffer(1, 1, ctx.sampleRate);
     src.connect(ctx.destination);
     src.start();
-    if (this.wantMusic) this.graph.music.start();
-  }
-
-  /** Re-resume after the page comes back (phones suspend audio in the background). */
-  resumeIfVisible(visible: boolean): void {
-    if (visible && this.graph && this.graph.ctx.state !== 'running') void this.graph.ctx.resume().catch(() => undefined);
   }
 
   private build(ctx: AudioContext): Graph {

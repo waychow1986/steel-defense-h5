@@ -153,10 +153,16 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   startBtn.addEventListener('click', startGame);
   for (const b of root.querySelectorAll<HTMLButtonElement>('[data-action="to-start"]')) b.addEventListener('click', toStart);
   muteBtn.addEventListener('click', () => {
+    // TD-007: the mute button is also a gesture that creates/resumes audio.
+    audio.unlock();
     muted = !muted;
     muteBtn.setAttribute('aria-pressed', String(muted));
     audio.setMuted(muted);
   });
+  // TD-007: any key press creates/resumes audio; any touch or click resumes a context the system
+  // suspended or interrupted mid-game. Captured on the window so it also runs for the pad and fire button.
+  win.addEventListener('keydown', () => audio.unlock(), true);
+  for (const type of ['pointerdown', 'pointerup', 'touchend', 'click'] as const) win.addEventListener(type, () => audio.resumeOnGesture(), true);
   bindKeyboard(win, input);
   bindTouch(win, req<HTMLElement>(root, '.dpad'), req<HTMLElement>(root, '#fire-btn'), input);
 

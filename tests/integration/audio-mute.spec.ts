@@ -106,3 +106,85 @@ test.describe('IT-02 audio unlock and mute (AC-20, AC-21)', () => {
     await context.close();
   });
 });
+
+/** Keeps every AudioContext the page creates so a test can suspend it like a phone does in the background. */
+function trackAudioContexts(): void {
+  const Orig = window.AudioContext;
+  const list: AudioContext[] = [];
+  (window as unknown as { __audioContexts: AudioContext[] }).__audioContexts = list;
+  window.AudioContext = class extends Orig {
+    constructor(...args: ConstructorParameters<typeof AudioContext>) {
+      super(...args);
+      list.push(this);
+    }
+  };
+}
+
+const suspendAudio = (page: Page): Promise<void> =>
+  page.evaluate(async () => {
+    for (const ctx of (window as unknown as { __audioContexts: AudioContext[] }).__audioContexts) await ctx.suspend();
+  });
+
+test.describe('IT-02 audio resumes on in-game gestures (TD-007, AC-21)', () => {
+  test('desktop: a suspended context resumes on the next key press and on the mute button', async ({ page }) => {
+    await page.addInitScript(trackAudioContexts);
+    await page.goto('/?seed=1');
+    await page.getByRole('button', { name: '开始游戏' }).click();
+    await expect.poll(async () => (await snap(page)).audio.state).toBe('running');
+
+    await suspendAudio(page);
+    expect((await snap(page)).audio.state).toBe('suspended');
+    await page.keyboard.press('ArrowLeft');
+    await expect.poll(async () => (await snap(page)).audio.state).toBe('running');
+
+    await suspendAudio(page);
+    expect((await snap(page)).audio.state).toBe('suspended');
+    const muteBtn = page.getByRole('button', { name: '静音' });
+    await muteBtn.click();
+    await expect.poll(async () => (await snap(page)).audio.state).toBe('running');
+    expect((await snap(page)).audio.muted).toBe(true);
+  });
+
+  test('desktop: the mute button and a key press create the audio context before the game starts', async ({ page }) => {
+    await page.goto('/?seed=1');
+    expect((await snap(page)).audio.state).toBe('none');
+    await page.getByRole('button', { name: '静音' }).click();
+    await expect.poll(async () => (await snap(page)).audio.state).toBe('running');
+
+    const other = await page.context().newPage();
+    await other.goto('/?seed=1');
+    expect((await snap(other)).audio.state).toBe('none');
+    await other.keyboard.press('KeyX');
+    await expect.poll(async () => (await snap(other)).audio.state).toBe('running');
+  });
+
+  test('phone: after the context is suspended mid-game, touching the direction pad or fire button resumes it', async ({ browser }) => {
+    const context = await browser.newContext(PHONE);
+    const page = await context.newPage();
+    await page.addInitScript(trackAudioContexts);
+    await page.goto('/?seed=1');
+    await page.getByRole('button', { name: '开始游戏' }).tap();
+    await expect.poll(async () => (await snap(page)).screen, { timeout: 5000 }).toBe('playing');
+    expect((await snap(page)).audio.state).toBe('running');
+
+    const cdp = await context.newCDPSession(page);
+    const touch = async (name: string): Promise<void> => {
+      const box = (await page.getByRole('button', { name, exact: true }).boundingBox())!;
+      const point = { x: box.x + box.width / 2, y: box.y + box.height / 2, id: 1 };
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [point] });
+      await page.waitForTimeout(50);
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    };
+
+    await suspendAudio(page);
+    expect((await snap(page)).audio.state).toBe('suspended');
+    await touch('开火');
+    await expect.poll(async () => (await snap(page)).audio.state).toBe('running');
+
+    await suspendAudio(page);
+    expect((await snap(page)).audio.state).toBe('suspended');
+    await touch('向上');
+    await expect.poll(async () => (await snap(page)).audio.state).toBe('running');
+    await context.close();
+  });
+});
