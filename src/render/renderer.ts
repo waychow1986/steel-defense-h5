@@ -1,9 +1,23 @@
 import { CONFIG } from '../game/config';
-import type { Dir, GameState, Tank } from '../game/types';
+import type { Dir, EnemyType, GameState, Tank } from '../game/types';
 import { PALETTE } from './palette';
 import { TerrainLayer } from './terrain-layer';
 
 const ANGLE: Record<Dir, number> = { up: 0, right: Math.PI / 2, down: Math.PI, left: -Math.PI / 2 };
+
+const ENEMY_COLORS: Record<EnemyType, [string, string, string]> = {
+  normal: [PALETTE.enemyNormal, PALETTE.enemyNormalLight, PALETTE.enemyNormalDark],
+  fast: [PALETTE.enemyFast, PALETTE.enemyFastLight, PALETTE.enemyFastDark],
+  heavy: [PALETTE.enemyHeavy, PALETTE.enemyHeavyLight, PALETTE.enemyHeavyDark],
+};
+
+/** Hull width, turret radius and barrel width per tank type (fractions of the tank side / tiles). */
+const SHAPE: Record<Tank['type'], { hull: number; turret: number; barrel: number }> = {
+  player: { hull: 0.6, turret: 0.2, barrel: 0.1 },
+  normal: { hull: 0.6, turret: 0.2, barrel: 0.1 },
+  fast: { hull: 0.44, turret: 0.15, barrel: 0.07 },
+  heavy: { hull: 0.7, turret: 0.25, barrel: 0.15 },
+};
 
 /** Draws the battlefield on a square canvas (TD-005): terrain layer, base, tanks, bullets. */
 export class Renderer {
@@ -48,6 +62,10 @@ export class Renderer {
     ctx.setTransform(t, 0, 0, t, 0, 0);
     this.drawBase(ctx, state);
     if (state.player) this.drawTank(ctx, state.player, PALETTE.player, PALETTE.playerLight, PALETTE.playerDark);
+    for (const e of state.enemies) {
+      const [body, light, dark] = ENEMY_COLORS[e.type as EnemyType];
+      this.drawTank(ctx, e, body, light, dark);
+    }
     ctx.fillStyle = PALETTE.bullet;
     for (const b of state.bullets) {
       const h = CONFIG.bulletSize / 2;
@@ -97,20 +115,39 @@ export class Renderer {
     }
     ctx.strokeRect(-h, -h, s, s);
     // Hull, lit from the top-left.
+    const shape = SHAPE[tank.type];
+    const hx = -(s * shape.hull) / 2;
     ctx.fillStyle = body;
-    ctx.fillRect(-h + s * 0.2, -h + s * 0.12, s * 0.6, s * 0.76);
+    ctx.fillRect(hx, -h + s * 0.12, s * shape.hull, s * 0.76);
     ctx.fillStyle = light;
-    ctx.fillRect(-h + s * 0.2, -h + s * 0.12, s * 0.6, s * 0.12);
-    ctx.strokeRect(-h + s * 0.2, -h + s * 0.12, s * 0.6, s * 0.76);
+    ctx.fillRect(hx, -h + s * 0.12, s * shape.hull, s * 0.12);
+    ctx.strokeRect(hx, -h + s * 0.12, s * shape.hull, s * 0.76);
+    if (tank.type === 'heavy') {
+      // Armour plates across the hull.
+      ctx.fillStyle = dark;
+      ctx.fillRect(hx, h - s * 0.3, s * shape.hull, s * 0.08);
+      ctx.fillRect(hx, -h + s * 0.3, s * shape.hull, s * 0.08);
+    }
+    if (tank.type === 'fast') {
+      // Swept fins at the rear.
+      ctx.fillStyle = light;
+      ctx.beginPath();
+      ctx.moveTo(hx, h - s * 0.12);
+      ctx.lineTo(0, h - s * 0.32);
+      ctx.lineTo(-hx, h - s * 0.12);
+      ctx.closePath();
+      ctx.fill();
+    }
     // Turret and barrel.
     ctx.fillStyle = body;
     ctx.beginPath();
-    ctx.arc(0, 0.04, s * 0.2, 0, Math.PI * 2);
+    ctx.arc(0, 0.04, s * shape.turret, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    const bw = shape.barrel;
     ctx.fillStyle = dark;
-    ctx.fillRect(-0.05, -h - 0.02, 0.1, h);
-    ctx.strokeRect(-0.05, -h - 0.02, 0.1, h);
+    ctx.fillRect(-bw / 2, -h - 0.02, bw, h);
+    ctx.strokeRect(-bw / 2, -h - 0.02, bw, h);
     ctx.restore();
   }
 }

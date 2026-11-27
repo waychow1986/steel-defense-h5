@@ -54,6 +54,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   const startBtn = req<HTMLButtonElement>(root, '#start-btn');
   const muteBtn = req<HTMLButtonElement>(root, '#mute-btn');
   const howTo = req<HTMLElement>(root, '#how-to');
+  const gameOverScore = req<HTMLElement>(root, '#gameover-score');
   const hud = {
     level: req<HTMLElement>(root, '#hud-level'),
     score: req<HTMLElement>(root, '#hud-score'),
@@ -67,6 +68,8 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   let screen: Screen = 'start';
   let state: GameState | null = null;
   let screenMs = 0;
+  /** Time left before the failure screen after the base fell or the last life was lost; null when not pending. */
+  let gameOverInMs: number | null = null;
   let muted = false;
 
   const input = new InputState();
@@ -91,6 +94,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   const startGame = (): void => {
     if (screen !== 'start') return;
     state = createWorld({ seed: opts.seed, level: startLevel, screen: 'levelIntro' });
+    gameOverInMs = null;
     renderer.terrainChanged();
     const counts = levelCounts(levelDef(startLevel));
     req<HTMLElement>(root, '#intro-level').textContent = `第 ${startLevel} 关`;
@@ -125,9 +129,27 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
       return;
     }
     if (screen !== 'playing' || !state) return;
+    if (gameOverInMs !== null) {
+      gameOverInMs -= dtMs;
+      if (gameOverInMs <= 0) showGameOver();
+      return;
+    }
     const events = stepWorld(state, { direction: input.direction, fire: input.consumeFire() }, dtMs);
     if (events.responded) input.markResponded(win.performance.now());
     if (events.some((e) => e.type === 'brickHit')) renderer.terrainChanged();
+    if (events.some((e) => e.type === 'gameOver')) {
+      // A-9: no more input once the game is lost; the explosion plays before the failure screen.
+      input.setEnabled(false);
+      gameOverInMs = CONFIG.screenMs.gameOverDelay;
+    }
+  };
+
+  const showGameOver = (): void => {
+    gameOverInMs = null;
+    gameOverScore.textContent = String(state?.score ?? 0);
+    setHighScoreText();
+    overlays.show(overlayGameOver);
+    setScreen('gameOver');
   };
 
   const loop = new FixedLoop(step);

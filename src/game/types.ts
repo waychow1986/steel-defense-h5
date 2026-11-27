@@ -104,6 +104,14 @@ export interface GameState {
   lives: number;
   enemiesRemaining: number;
   enemiesSpawned: number;
+  /** False only for test worlds built from a custom layout without `spawnEnemies`. */
+  spawnEnabled: boolean;
+  /** Time since the last spawn; a spawn is due once it reaches the spawn interval. */
+  spawnTimerMs: number;
+  /** Index into CONFIG.enemySpawnCols of the next spawn point. */
+  spawnSlot: number;
+  /** Set when the base is destroyed or the last life is lost; the simulation then freezes. */
+  lost: boolean;
   timeMs: number;
   rngSeed: number;
   rngState: number;

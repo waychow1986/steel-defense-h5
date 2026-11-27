@@ -1,7 +1,17 @@
 import { CONFIG } from './config';
 import { cellAt, setCell, unitSpan } from './map';
 import { DIR_VEC, tankCenter } from './tanks';
-import { CELL_BRICK, CELL_EMPTY, CELL_STEEL, type Bullet, type GameEvent, type GameState, type Tank } from './types';
+import {
+  CELL_BRICK,
+  CELL_EMPTY,
+  CELL_STEEL,
+  type Bullet,
+  type EnemyType,
+  type GameEvent,
+  type GameState,
+  type PlayerTank,
+  type Tank,
+} from './types';
 
 const U = CONFIG.unitsPerTile;
 const B = CONFIG.bulletSize;
@@ -69,6 +79,59 @@ function hitsBase(state: GameState, b: Bullet): boolean {
   return b.x + B / 2 > x && b.x - B / 2 < x + 1 && b.y + B / 2 > y && b.y - B / 2 < y + 1;
 }
 
+function hitsTank(b: Bullet, t: Tank): boolean {
+  return b.x + B / 2 > t.x && b.x - B / 2 < t.x + S && b.y + B / 2 > t.y && b.y - B / 2 < t.y + S;
+}
+
+/** Marks the game as lost once (base destroyed or no lives left). */
+export function loseGame(state: GameState, events: GameEvent[]): void {
+  if (state.lost) return;
+  state.lost = true;
+  events.push({ type: 'gameOver' });
+}
+
+function damageEnemy(state: GameState, t: Tank, events: GameEvent[]): void {
+  const c = tankCenter(t);
+  t.hp -= 1;
+  if (t.hp > 0) {
+    events.push({ type: 'tankHit', tankId: t.id, x: c.x, y: c.y, shielded: false });
+    return;
+  }
+  state.enemies = state.enemies.filter((e) => e !== t);
+  events.push({ type: 'explode', target: 'tank', x: c.x, y: c.y });
+  state.enemiesRemaining = Math.max(0, state.enemiesRemaining - 1);
+  state.score += CONFIG.enemyScore[t.type as EnemyType];
+  events.push({ type: 'scoreChanged', score: state.score });
+}
+
+/** Enemy bullet on the player: a shield absorbs it, otherwise one life is lost (respawn happens in the step). */
+function damagePlayer(state: GameState, p: PlayerTank, events: GameEvent[]): void {
+  const c = tankCenter(p);
+  if (p.shieldMs > 0) {
+    events.push({ type: 'tankHit', tankId: p.id, x: c.x, y: c.y, shielded: true });
+    return;
+  }
+  events.push({ type: 'explode', target: 'tank', x: c.x, y: c.y });
+  state.player = null;
+  state.lives = Math.max(0, state.lives - 1);
+  events.push({ type: 'lifeLost', lives: state.lives });
+  if (state.lives === 0) loseGame(state, events);
+}
+
+/** Player bullets hit enemies; enemy bullets hit only the player (A-6). */
+function hitTank(state: GameState, b: Bullet, events: GameEvent[]): boolean {
+  if (b.owner === 'player') {
+    const t = state.enemies.find((e) => hitsTank(b, e));
+    if (!t) return false;
+    damageEnemy(state, t, events);
+    return true;
+  }
+  const p = state.player;
+  if (!p || !hitsTank(b, p)) return false;
+  damagePlayer(state, p, events);
+  return true;
+}
+
 /** Advances all bullets with sub-steps; removes those that hit something or leave the map. */
 export function stepBullets(state: GameState, dtMs: number, events: GameEvent[]): void {
   const subs = CONFIG.bulletSubSteps;
@@ -87,6 +150,11 @@ export function stepBullets(state: GameState, dtMs: number, events: GameEvent[])
       if (!state.base.destroyed && hitsBase(state, b)) {
         state.base.destroyed = true;
         events.push({ type: 'explode', target: 'base', x: state.base.x + 0.5, y: state.base.y + 0.5 });
+        loseGame(state, events);
+        gone = true;
+        break;
+      }
+      if (hitTank(state, b, events)) {
         gone = true;
         break;
       }

@@ -1,6 +1,6 @@
 import { CONFIG } from './config';
 import { blocksTank, boxHits } from './map';
-import type { Dir, GameState, PlayerTank, Tank } from './types';
+import type { Dir, EnemyType, GameState, PlayerTank, Tank } from './types';
 
 const S = CONFIG.tankSize;
 const U = CONFIG.unitsPerTile;
@@ -38,6 +38,27 @@ export function createPlayer(id: number): PlayerTank {
     shieldMs: 0,
     firepower: 0,
     maxBullets: CONFIG.playerMaxBullets,
+  };
+}
+
+/** An enemy tank on tile (col, row), facing down. */
+export function createEnemy(id: number, type: EnemyType, col: number, row: number, carrier = false): Tank {
+  return {
+    id,
+    side: 'enemy',
+    type,
+    x: col + MARGIN,
+    y: row + MARGIN,
+    dir: 'down',
+    moving: false,
+    hp: CONFIG.enemyHp[type],
+    maxHp: CONFIG.enemyHp[type],
+    carrier,
+    speed: CONFIG.enemySpeed[type],
+    fireCooldownMs: 0,
+    recoilMs: 0,
+    treadPhase: 0,
+    treadAccum: 0,
   };
 }
 

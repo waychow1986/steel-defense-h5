@@ -32,6 +32,15 @@ export const PALETTE = {
   player: '#e2b93b',
   playerLight: '#f6d873',
   playerDark: '#8f6d12',
+  enemyNormal: '#8a9a7b',
+  enemyNormalLight: '#b4c3a4',
+  enemyNormalDark: '#4d5a42',
+  enemyFast: '#5fb7c9',
+  enemyFastLight: '#9ae0ee',
+  enemyFastDark: '#2b6875',
+  enemyHeavy: '#b04a4a',
+  enemyHeavyLight: '#d98080',
+  enemyHeavyDark: '#5f2323',
   bullet: '#fff3c4',
 } as const;
 

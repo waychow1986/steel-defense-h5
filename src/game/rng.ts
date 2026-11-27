@@ -8,6 +8,13 @@ export function mulberry32(state: number): [number, number] {
   return [value, next];
 }
 
+/** Draws the next value in [0,1) from the state's PRNG and advances it. */
+export function nextRandom(holder: { rngState: number }): number {
+  const [value, next] = mulberry32(holder.rngState);
+  holder.rngState = next;
+  return value;
+}
+
 export function parseSeed(raw: string | null): number | null {
   if (raw === null || !/^\d{1,10}$/.test(raw)) return null;
   const n = Number(raw);
