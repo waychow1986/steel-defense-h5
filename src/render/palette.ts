@@ -48,6 +48,17 @@ export const PALETTE = {
   powerUpCard: '#f4efe0',
   powerUpShield: '#2f7fc1',
   powerUpFire: '#d2462e',
+
+  spark: '#fff6c8',
+  sparkHot: '#ffd256',
+  impactFlash: 'rgba(255, 246, 200, 0.9)',
+  hitFlash: 'rgba(255, 255, 255, 0.85)',
+  fireCore: 'rgba(255, 240, 170, 0.95)',
+  fireMid: 'rgba(255, 150, 40, 0.8)',
+  fireEdge: 'rgba(200, 60, 20, 0)',
+  smoke: '#6b6b6b',
+  smokeLight: '#8e8e8e',
+  pickupRing: 'rgba(255, 213, 74, 0.9)',
 } as const;
 
 const CSS_VARS: Record<string, keyof typeof PALETTE> = {

@@ -1,7 +1,9 @@
 import { CONFIG } from '../game/config';
 import { tankCenter } from '../game/tanks';
 import type { Dir, EnemyType, GameState, PowerUp, Tank } from '../game/types';
+import type { Effects } from './effects';
 import { PALETTE } from './palette';
+import { particleAlpha } from './particles';
 import { TerrainLayer } from './terrain-layer';
 
 const ANGLE: Record<Dir, number> = { up: 0, right: Math.PI / 2, down: Math.PI, left: -Math.PI / 2 };
@@ -51,7 +53,7 @@ export class Renderer {
   }
 
   /** `curtain` is the fraction (0..1) of the map hidden behind the level-intro curtains. */
-  render(state: GameState | null, curtain = 0): void {
+  render(state: GameState | null, curtain = 0, effects: Effects | null = null): void {
     const ctx = this.ctx;
     const px = this.canvas.width;
     if (!ctx || px === 0) return;
@@ -59,7 +61,7 @@ export class Renderer {
     ctx.fillStyle = PALETTE.ground;
     ctx.fillRect(0, 0, px, px);
     if (!state) return;
-    this.drawWorld(ctx, state, px);
+    this.drawWorld(ctx, state, px, effects);
     if (curtain > 0) this.drawCurtain(ctx, px, curtain);
   }
 
@@ -75,19 +77,22 @@ export class Renderer {
     ctx.fillRect(0, px - h, px, Math.min(edge, h));
   }
 
-  private drawWorld(ctx: CanvasRenderingContext2D, state: GameState, px: number): void {
-    ctx.drawImage(this.terrain.ensure(state.map, px), 0, 0);
+  private drawWorld(ctx: CanvasRenderingContext2D, state: GameState, px: number, effects: Effects | null): void {
     const t = px / CONFIG.cols;
-    ctx.setTransform(t, 0, 0, t, 0, 0);
+    const shake = effects?.shakeOffset() ?? { x: 0, y: 0 };
+    ctx.drawImage(this.terrain.ensure(state.map, px), shake.x * t, shake.y * t);
+    ctx.setTransform(t, 0, 0, t, shake.x * t, shake.y * t);
     this.drawBase(ctx, state);
     for (const u of state.powerUps) this.drawPowerUp(ctx, u);
     if (state.player) {
       this.drawTank(ctx, state.player, PALETTE.player, PALETTE.playerLight, PALETTE.playerDark);
+      if (effects) this.drawHitFlash(ctx, state.player, effects.tankFlash(state.player.id));
       if (state.player.shieldMs > 0) this.drawShield(ctx, state.player);
     }
     for (const e of state.enemies) {
       const [body, light, dark] = ENEMY_COLORS[e.type as EnemyType];
       this.drawTank(ctx, e, body, light, dark);
+      if (effects) this.drawHitFlash(ctx, e, effects.tankFlash(e.id));
       if (e.carrier) this.drawCarrierRing(ctx, e, state.timeMs);
     }
     ctx.fillStyle = PALETTE.bullet;
@@ -95,7 +100,78 @@ export class Renderer {
       const h = CONFIG.bulletSize / 2;
       ctx.fillRect(b.x - h * 0.6, b.y - h * 0.6, h * 1.2, h * 1.2);
     }
+    if (effects) this.drawEffects(ctx, effects);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  /** Brief white overlay on a tank that was hit but not destroyed (R7). */
+  private drawHitFlash(ctx: CanvasRenderingContext2D, tank: Tank, strength: number): void {
+    if (strength <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, strength + 0.2);
+    ctx.fillStyle = PALETTE.hitFlash;
+    ctx.fillRect(tank.x, tank.y, CONFIG.tankSize, CONFIG.tankSize);
+    ctx.restore();
+  }
+
+  /** Explosion fire, particles, impact flashes, shield ripples and pickup animations (AC-17). */
+  private drawEffects(ctx: CanvasRenderingContext2D, fx: Effects): void {
+    ctx.save();
+    for (const e of fx.explosions) {
+      const a = e.fireAlpha();
+      if (a <= 0) continue;
+      const r = e.fireRadius();
+      const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, r);
+      g.addColorStop(0, PALETTE.fireCore);
+      g.addColorStop(0.45, PALETTE.fireMid);
+      g.addColorStop(1, PALETTE.fireEdge);
+      ctx.globalAlpha = a;
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    for (const p of fx.particles) {
+      ctx.globalAlpha = particleAlpha(p) * (p.kind === 'smoke' ? 0.55 : 1);
+      ctx.fillStyle = p.color;
+      if (p.kind === 'smoke') {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+      }
+    }
+    for (const b of fx.bursts) {
+      const k = b.ageMs / b.lifeMs;
+      ctx.globalAlpha = Math.max(0, 1 - k);
+      ctx.fillStyle = PALETTE.impactFlash;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, 0.12 + 0.25 * k, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.lineWidth = 0.06;
+    for (const r of fx.ripples) {
+      const k = r.ageMs / r.lifeMs;
+      ctx.globalAlpha = Math.max(0, 1 - k);
+      ctx.strokeStyle = PALETTE.shield;
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, CONFIG.tankSize * (0.68 + 0.4 * k), 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    for (const u of fx.pickups) {
+      ctx.globalAlpha = u.alpha();
+      ctx.strokeStyle = PALETTE.pickupRing;
+      ctx.beginPath();
+      ctx.arc(u.x, u.y, u.ringRadius(), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.save();
+      ctx.translate(u.x, u.y);
+      ctx.scale(u.scale(), u.scale());
+      this.drawPowerUp(ctx, { id: -1, type: u.type, x: -0.5, y: -0.5 });
+      ctx.restore();
+    }
+    ctx.restore();
   }
 
   /** Shield: star-shaped badge in blue; firepower: badge with a red upward arrow. */

@@ -52,7 +52,8 @@ export interface SnapshotSources {
   level: number;
   state: GameState | null;
   highScore: number;
-  muted: boolean;
+  effects: SteelDefenseSnapshot['effects'];
+  audio: SteelDefenseSnapshot['audio'];
   perf: PerfStats;
   input: { direction: Dir | null; fire: boolean; lastResponseMs: number | null };
 }
@@ -112,8 +113,8 @@ export function buildSnapshot(src: SnapshotSources): SteelDefenseSnapshot {
       unitsPerTile: 4,
       cells: s ? mapRows(s.map) : [],
     },
-    effects: { particles: 0, shakeMs: 0, muzzleFlashes: 0, hitSparks: 0, explosions: 0, pickupAnims: 0, trails: 0 },
-    audio: { state: 'none', muted: src.muted, masterGain: src.muted ? 0 : 1, musicPlaying: false, cues: [] },
+    effects: { ...src.effects },
+    audio: { ...src.audio, cues: src.audio.cues.map((c) => ({ ...c })) },
     perf: { ...src.perf, quality: 'high' },
     input: { ...src.input },
   };

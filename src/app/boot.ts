@@ -1,3 +1,5 @@
+import { AudioEngine } from '../audio/audio-engine';
+import { cueForEvent } from '../audio/cues';
 import { CONFIG } from '../game/config';
 import { LEVELS, levelCounts, levelDef } from '../game/levels';
 import { advanceLevel, createWorld, stepWorld } from '../game/sim';
@@ -5,6 +7,7 @@ import type { GameState, Screen } from '../game/types';
 import { InputState } from '../input/input-state';
 import { bindKeyboard } from '../input/keyboard';
 import { bindTouch } from '../input/touch';
+import { Effects } from '../render/effects';
 import { applyCssPalette } from '../render/palette';
 import { Renderer } from '../render/renderer';
 import { readHighScore, safeLocalStorage, saveHighScore } from '../storage/high-score';
@@ -84,6 +87,8 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   const input = new InputState();
   const overlays = new OverlayManager();
   const renderer = new Renderer(canvas);
+  const effects = new Effects(opts.seed || 1);
+  const audio = new AudioEngine(() => win.performance.now());
   const howToPlacement = new HowToPlacement(win, app, howTo, howTo.parentElement as HTMLElement, startBtn, req<HTMLElement>(root, '#side-panel'));
 
   const setHighScoreText = (): void => {
@@ -117,11 +122,15 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     if (state) state.screen = next;
     app.dataset.screen = next;
     input.setEnabled(next === 'playing');
+    audio.setMusic(next === 'levelIntro' || next === 'playing' || next === 'levelClear');
     howToPlacement.update(next === 'start');
   };
 
   const startGame = (): void => {
     if (screen !== 'start') return;
+    // FR-043: the start tap/click is the gesture that enables sound on phones.
+    audio.unlock();
+    effects.reset();
     state = createWorld({ seed: opts.seed, level: startLevel, screen: 'levelIntro' });
     gameOverInMs = null;
     clearInMs = null;
@@ -135,6 +144,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   const toStart = (): void => {
     if (screen !== 'gameOver' && screen !== 'victory') return;
     state = null;
+    effects.reset();
     for (const el of [overlayIntro, overlayClear, overlayGameOver, overlayVictory]) overlays.hide(el);
     overlays.show(overlayStart);
     setScreen('start');
@@ -145,12 +155,14 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   muteBtn.addEventListener('click', () => {
     muted = !muted;
     muteBtn.setAttribute('aria-pressed', String(muted));
+    audio.setMuted(muted);
   });
   bindKeyboard(win, input);
   bindTouch(win, req<HTMLElement>(root, '.dpad'), req<HTMLElement>(root, '#fire-btn'), input);
 
   const step = (dtMs: number): void => {
     screenMs += dtMs;
+    effects.update(dtMs);
     if (hintMs > 0) {
       hintMs -= dtMs;
       if (hintMs <= 0) setHint('', 0);
@@ -179,6 +191,11 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     if (events.responded) input.markResponded(win.performance.now());
     recordScore();
     if (events.some((e) => e.type === 'brickHit')) renderer.terrainChanged();
+    effects.handle(events);
+    for (const e of events) {
+      const cue = cueForEvent(e);
+      if (cue) audio.play(cue);
+    }
     for (const e of events) {
       if (e.type === 'pickup') setHint(e.powerUp === 'shield' ? '护盾' : '火力升级', CONFIG.powerUpHintMs);
     }
@@ -213,6 +230,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
       return;
     }
     state = advanceLevel(state);
+    effects.reset();
     renderer.terrainChanged();
     showIntro(state.level);
   };
@@ -233,12 +251,13 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     loop.frame(now);
     overlays.update(now);
     updateHud(hud, state);
-    renderer.render(state, curtain());
+    renderer.render(state, curtain(), effects);
     win.requestAnimationFrame(frame);
   };
 
   doc.addEventListener('visibilitychange', () => {
     if (doc.visibilityState === 'visible') loop.resetClock();
+    audio.resumeIfVisible(doc.visibilityState === 'visible');
   });
   watchStage(win, stage, renderer);
   overlays.showNow(overlayStart);
@@ -255,7 +274,8 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
         level: state?.level ?? startLevel,
         state,
         highScore,
-        muted,
+        effects: effects.counts(),
+        audio: audio.status(),
         perf: loop.stats(),
         input: { direction: input.direction, fire: input.fireHeld, lastResponseMs: input.lastResponseMs },
       }),
