@@ -33,8 +33,39 @@ async function expectNoHorizontalScrollAndCanvasInside(page: Page): Promise<Rect
   expect(canvas.y).toBeGreaterThanOrEqual(0);
   expect(canvas.x + canvas.width).toBeLessThanOrEqual(m.innerW + 0.5);
   expect(canvas.y + canvas.height).toBeLessThanOrEqual(m.innerH + 0.5);
+  await expectCanvasFillsStage(page, canvas);
   return canvas;
 }
+
+/** The map is a square whose side equals the smaller of the stage's free width and height. */
+async function expectCanvasFillsStage(page: Page, canvas: Rect): Promise<void> {
+  const free = await page.evaluate(() => {
+    const stage = document.getElementById('stage')!;
+    const s = getComputedStyle(stage);
+    return Math.min(
+      stage.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight),
+      stage.clientHeight - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom),
+    );
+  });
+  expect(Math.abs(canvas.width - canvas.height)).toBeLessThanOrEqual(1);
+  expect(Math.abs(canvas.width - free)).toBeLessThanOrEqual(2);
+}
+
+test.describe('IT-03 layout: the map scales with the window (AC-22)', () => {
+  test('resizing the window resizes the square map to fit the stage', async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await startPlaying(page);
+    const small = await expectNoHorizontalScrollAndCanvasInside(page);
+    await page.setViewportSize({ width: 1280, height: 1000 });
+    await expect
+      .poll(async () => (await page.locator('canvas').boundingBox())!.width)
+      .toBeGreaterThan(small.width + 50);
+    const large = await expectNoHorizontalScrollAndCanvasInside(page);
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await expect.poll(async () => Math.round((await page.locator('canvas').boundingBox())!.width)).toBe(Math.round(small.width));
+    expect(large.width).toBeGreaterThan(small.width);
+  });
+});
 
 test.describe('IT-03 layout: desktop sizes (AC-22)', () => {
   for (const [w, h] of [

@@ -9,6 +9,7 @@ test.describe('AC-1 / AC-3 title and how-to', () => {
     const start = page.getByRole('dialog', { name: '开始画面' });
     await expect(start).toBeVisible();
     await expect(start.getByRole('button', { name: '开始游戏' })).toBeVisible();
+    await expect(start.getByText('钢铁防线', { exact: true })).toBeVisible();
     const howTo = page.getByRole('region', { name: '怎么玩' });
     await expect(howTo).toBeVisible();
     await expect(howTo.getByRole('heading', { name: '怎么玩' })).toBeVisible();
