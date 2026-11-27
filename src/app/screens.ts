@@ -49,7 +49,11 @@ export class OverlayManager {
     this.nowMs = nowMs;
     for (const p of [...this.pending.values()]) {
       if (p.phase === 'entering' && !p.armed) {
-        // Add the visible class one tick after un-hiding so the CSS transition runs.
+        // Add the visible class one tick after un-hiding so the CSS transition runs. Showing and arming can
+        // happen in the same frame (e.g. the failure screen is shown from a simulation step), so first force a
+        // style/layout flush: the browser must commit the un-hidden, transparent state, otherwise the dialog
+        // goes from display:none straight to fully visible and no transition starts.
+        void p.el.offsetWidth;
         p.el.classList.add('is-visible');
         p.armed = true;
         p.untilMs = nowMs + CONFIG.overlayEnterMs;

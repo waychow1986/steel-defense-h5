@@ -103,3 +103,27 @@ test.describe('IT-08 screen transitions (AC-18, AC-23)', () => {
     expect(s.transitioning).toBe(false);
   });
 });
+
+test.describe('IT-08 failure screen fades in (AC-8, AC-17, AC-18 — G3 fix S56)', () => {
+  test('playing → failure: while entering, the failure dialog is visibly animating, not shown fully at once', async ({ page }) => {
+    await startPlaying(page);
+    await loseByOwnFire(page);
+    const dialog = page.getByRole('dialog', { name: '失败', includeHidden: true });
+    let entering = false;
+    for (let t = 0; t < 2000 && !entering; t += 16) {
+      if ((await overlay(page, '失败')).transition === 'entering') entering = true;
+      else await page.clock.runFor(16);
+    }
+    expect(entering).toBe(true);
+    // Let the frame that arms the visible class run, then inspect the dialog in real time.
+    await page.clock.runFor(16);
+    const look = await dialog.evaluate((el) => ({
+      animations: el.getAnimations({ subtree: true }).length,
+      opacity: Number(getComputedStyle(el).opacity),
+      visible: el.classList.contains('is-visible'),
+    }));
+    expect(look.visible).toBe(true);
+    // A CSS opacity/transform transition must be running (or the dialog still partly transparent).
+    expect(look.animations > 0 || look.opacity < 1, JSON.stringify(look)).toBe(true);
+  });
+});
