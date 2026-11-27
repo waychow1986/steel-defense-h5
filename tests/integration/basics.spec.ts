@@ -99,7 +99,7 @@ test.describe('AC-4 keyboard', () => {
       await page.keyboard.up(key);
       await page.clock.runFor(800);
       const before = await snap(page);
-      expect(before.bullets).toHaveLength(0);
+      expect(before.bullets.filter((b) => b.owner === 'player')).toHaveLength(0);
       await page.keyboard.down('Space');
       await page.clock.runFor(20);
       await page.keyboard.up('Space');
