@@ -150,6 +150,18 @@ export class Renderer {
   /** Explosion fire, particles, impact flashes, shield ripples and pickup animations (AC-17). */
   private drawEffects(ctx: CanvasRenderingContext2D, fx: Effects): void {
     ctx.save();
+    for (const p of fx.particles) {
+      ctx.globalAlpha = particleAlpha(p) * (p.kind === 'smoke' ? 0.55 : 1);
+      ctx.fillStyle = p.color;
+      if (p.kind === 'smoke') {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+      }
+    }
+    // The fire goes over the smoke that spawns at the same point, otherwise the smoke buries it.
     for (const e of fx.explosions) {
       const a = e.fireAlpha();
       if (a <= 0) continue;
@@ -163,17 +175,6 @@ export class Renderer {
       ctx.beginPath();
       ctx.arc(e.x, e.y, r, 0, Math.PI * 2);
       ctx.fill();
-    }
-    for (const p of fx.particles) {
-      ctx.globalAlpha = particleAlpha(p) * (p.kind === 'smoke' ? 0.55 : 1);
-      ctx.fillStyle = p.color;
-      if (p.kind === 'smoke') {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
-      }
     }
     for (const b of fx.bursts) {
       const k = b.ageMs / b.lifeMs;
