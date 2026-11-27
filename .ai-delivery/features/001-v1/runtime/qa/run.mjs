@@ -10,6 +10,11 @@ const only = (process.env.QA_ONLY || '').split(',').filter(Boolean);
 
 // 第一批：伪时钟为主，可并发；第二批：真实时间（过渡、性能与延迟），逐个单独执行
 const PARALLEL = {
+  // 等待时间最长的放在最前，先占用并发槽
+  campaign: ['TS-20'],
+  powerup: ['TS-22', 'TS-23', 'TS-33', 'TS-24'],
+  lives: ['TS-15', 'TS-17', 'TS-18'],
+  visual: ['TS-29', 'TS-31', 'TS-32'],
   basic: ['TS-01', 'TS-02', 'TS-03', 'TS-04', 'TS-05', 'TS-06', 'TS-10', 'TS-21', 'TS-26', 'TS-38', 'TS-40', 'TS-41'],
   terrain: ['TS-07', 'TS-08', 'TS-09'],
   main: ['TS-11', 'TS-12', 'TS-13', 'TS-19', 'TS-25', 'TS-36'],
@@ -18,6 +23,8 @@ const PARALLEL = {
 };
 const SERIAL = { base: ['TS-34'], perf: ['TS-42', 'TS-43', 'TS-44'] };
 const PER_SCENARIO_MS = 15 * 60000;
+// 测试计划写明更长等待上限的场景（TS-20 为 40 分钟；TS-22/23/33 同局等待道具并观察护盾与失去生命）
+const SCENARIO_MS = { 'TS-20': 41 * 60000, 'TS-22': 32 * 60000, 'TS-23': 32 * 60000, 'TS-33': 32 * 60000 };
 
 const results = new Map();
 let written = false;
@@ -41,7 +48,7 @@ async function runOne(browser, mod, id) {
     let timer;
     const sc = await Promise.race([
       mod.scenarios[id](browser),
-      new Promise(r => { timer = setTimeout(() => { const s = new Scenario(id); s.unreachable('场景执行超时'); r(s); }, PER_SCENARIO_MS); }),
+      new Promise(r => { timer = setTimeout(() => { const s = new Scenario(id); s.unreachable('场景执行超时'); r(s); }, SCENARIO_MS[id] || PER_SCENARIO_MS); }),
     ]);
     clearTimeout(timer);
     results.set(id, sc);
@@ -67,7 +74,8 @@ try {
     const mod = await import(`./groups/${g}.mjs`);
     for (const id of ids.filter(want)) tasks.push(() => runOne(browser, mod, id));
   }
-  await pool(tasks, 4);
+  // TS-20 与道具同局各长期占用一个并发槽，其余场景在剩余槽中执行，使并行段不超过 40 分钟
+  await pool(tasks, 6);
   for (const [g, ids] of Object.entries(SERIAL)) {
     const mod = await import(`./groups/${g}.mjs`);
     for (const id of ids.filter(want)) await runOne(browser, mod, id);
