@@ -1,8 +1,8 @@
 import { CONFIG } from '../game/config';
 import { mulberry32 } from '../game/rng';
-import type { Dir, GameEvent, PowerUpType } from '../game/types';
+import type { Bullet, Dir, GameEvent, PowerUpType } from '../game/types';
 import { PALETTE } from './palette';
-import { addParticles, updateParticles, type Particle } from './particles';
+import { addParticles, MAX_PARTICLES, updateParticles, type Particle } from './particles';
 
 const FX = CONFIG.effects;
 
@@ -42,6 +42,21 @@ export interface PickupAnim {
   ringRadius(): number;
 }
 
+/** A muzzle flash: 3 frames over about 80 ms at the point a bullet left the barrel (FR-034). */
+export interface MuzzleFlash {
+  x: number;
+  y: number;
+  dir: Dir;
+  ageMs: number;
+  /** 0, 1 or 2 — brightest first. */
+  frame(): number;
+}
+
+export interface TrailPoint {
+  x: number;
+  y: number;
+}
+
 export interface EffectCounts {
   particles: number;
   shakeMs: number;
@@ -63,6 +78,10 @@ export class Effects {
   readonly ripples: Burst[] = [];
   readonly explosions: Explosion[] = [];
   readonly pickups: PickupAnim[] = [];
+  readonly muzzles: MuzzleFlash[] = [];
+  /** Recent positions per flying bullet id, oldest first (render-side, never in the simulation). */
+  readonly trails = new Map<number, TrailPoint[]>();
+  private particleCap: number = MAX_PARTICLES;
   private readonly flashes = new Map<number, number>();
   private shake = { ms: 0, total: 0, amp: 0, angle: 0 };
   private rng: number;
@@ -84,6 +103,9 @@ export class Effects {
   handle(events: readonly GameEvent[]): void {
     for (const e of events) {
       switch (e.type) {
+        case 'fire':
+          this.muzzles.push(muzzleFlash(e.x, e.y, e.dir));
+          break;
         case 'brickHit':
           this.debris(e.x, e.y, e.dir);
           break;
@@ -130,7 +152,7 @@ export class Effects {
         lifeMs: this.rand(FX.debrisMs[0], FX.debrisMs[1]),
       });
     }
-    addParticles(this.particles, added);
+    addParticles(this.particles, added, this.particleCap);
   }
 
   private sparks(x: number, y: number): void {
@@ -154,7 +176,7 @@ export class Effects {
         lifeMs: this.rand(FX.sparkMs[0], FX.sparkMs[1]),
       });
     }
-    addParticles(this.particles, added);
+    addParticles(this.particles, added, this.particleCap);
     this.bursts.push({ x, y, ageMs: 0, lifeMs: FX.sparkMs[1] });
   }
 
@@ -179,7 +201,7 @@ export class Effects {
         lifeMs: this.rand(0.8, 1) * FX.smokeMs,
       });
     }
-    addParticles(this.particles, added);
+    addParticles(this.particles, added, this.particleCap);
     this.explosions.push(explosion(x, y, base));
     const s = base ? FX.shake.base : FX.shake.tank;
     if (s.amp >= this.shake.amp * (this.shake.ms / Math.max(1, this.shake.total))) {
@@ -192,6 +214,7 @@ export class Effects {
     for (const list of [this.bursts, this.ripples]) age(list, dtMs, (b) => b.lifeMs);
     age(this.explosions, dtMs, () => FX.smokeMs);
     age(this.pickups, dtMs, () => FX.pickupMs);
+    age(this.muzzles, dtMs, () => FX.muzzleMs);
     for (const [id, ms] of this.flashes) {
       if (ms - dtMs <= 0) this.flashes.delete(id);
       else this.flashes.set(id, ms - dtMs);
@@ -201,6 +224,28 @@ export class Effects {
       this.shake.angle += 2.4 + this.rand(0, 1.2);
       if (this.shake.ms === 0) this.shake.amp = 0;
     }
+  }
+
+  /** Records each bullet's position once per simulation step; trails of gone bullets are dropped. */
+  trackBullets(bullets: readonly Bullet[]): void {
+    const alive = new Set<number>();
+    for (const b of bullets) {
+      alive.add(b.id);
+      let pts = this.trails.get(b.id);
+      if (!pts) {
+        pts = [];
+        this.trails.set(b.id, pts);
+      }
+      pts.push({ x: b.x, y: b.y });
+      if (pts.length > FX.trailPoints) pts.splice(0, pts.length - FX.trailPoints);
+    }
+    for (const id of this.trails.keys()) if (!alive.has(id)) this.trails.delete(id);
+  }
+
+  /** TD-005 adaptive quality halves the particle cap on slow devices. */
+  setParticleCap(cap: number): void {
+    this.particleCap = cap;
+    if (this.particles.length > cap) this.particles.splice(0, this.particles.length - cap);
   }
 
   /** Remaining white-flash strength (0..1) for a tank that was just hit. */
@@ -219,11 +264,11 @@ export class Effects {
     return {
       particles: this.particles.length,
       shakeMs: Math.round(this.shake.ms),
-      muzzleFlashes: 0,
+      muzzleFlashes: this.muzzles.length,
       hitSparks: this.bursts.length,
       explosions: this.explosions.length,
       pickupAnims: this.pickups.length,
-      trails: 0,
+      trails: [...this.trails.values()].filter((t) => t.length >= 2).length,
     };
   }
 
@@ -233,6 +278,8 @@ export class Effects {
     this.ripples.length = 0;
     this.explosions.length = 0;
     this.pickups.length = 0;
+    this.muzzles.length = 0;
+    this.trails.clear();
     this.flashes.clear();
     this.shake = { ms: 0, total: 0, amp: 0, angle: 0 };
   }
@@ -259,6 +306,18 @@ function explosion(x: number, y: number, base: boolean): Explosion {
     fireRadius() {
       const t = Math.min(1, this.ageMs / FX.fireMs);
       return (base ? 0.9 : 0.6) * (0.4 + 0.8 * Math.sqrt(t));
+    },
+  };
+}
+
+function muzzleFlash(x: number, y: number, dir: Dir): MuzzleFlash {
+  return {
+    x,
+    y,
+    dir,
+    ageMs: 0,
+    frame() {
+      return Math.min(2, Math.floor((this.ageMs / FX.muzzleMs) * 3));
     },
   };
 }

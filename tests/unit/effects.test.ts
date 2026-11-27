@@ -113,3 +113,47 @@ describe('effects driven by game events (AC-17)', () => {
     expect(fx.counts()).toMatchObject({ particles: 0, shakeMs: 0, hitSparks: 0, explosions: 0, pickupAnims: 0 });
   });
 });
+
+describe('tank motion effects (AC-16)', () => {
+  it('a shot shows a three-frame muzzle flash for about 80 ms at the muzzle', () => {
+    const fx = new Effects(9);
+    fx.handle([{ type: 'fire', owner: 'player', x: 4.5, y: 11.4, dir: 'up' }]);
+    expect(fx.counts().muzzleFlashes).toBe(1);
+    expect(fx.muzzles[0]).toMatchObject({ x: 4.5, y: 11.4, dir: 'up' });
+    const frames = new Set<number>();
+    for (let t = 0; t < 80; t += STEP_MS) {
+      frames.add(fx.muzzles[0].frame());
+      fx.update(STEP_MS);
+    }
+    expect([...frames].sort()).toEqual([0, 1, 2]);
+    run(fx, 40);
+    expect(fx.counts().muzzleFlashes).toBe(0);
+  });
+
+  it('each flying bullet leaves a trail through its last 6 positions; gone bullets drop their trail', () => {
+    const fx = new Effects(10);
+    const b = { id: 7, owner: 'player' as const, ownerId: 1, x: 5, y: 10, dir: 'up' as const, speed: 9 };
+    fx.trackBullets([b]);
+    expect(fx.counts().trails).toBe(0);
+    for (let i = 1; i <= 10; i++) fx.trackBullets([{ ...b, y: 10 - i * 0.15 }]);
+    expect(fx.counts().trails).toBe(1);
+    const pts = fx.trails.get(7)!;
+    expect(pts).toHaveLength(6);
+    expect(pts[pts.length - 1].y).toBeCloseTo(10 - 1.5);
+    expect(pts[0].y).toBeCloseTo(10 - 0.75);
+    fx.trackBullets([]);
+    expect(fx.counts().trails).toBe(0);
+  });
+
+  it('the particle cap can be lowered by adaptive quality, and reset clears flashes and trails', () => {
+    const fx = new Effects(11);
+    fx.setParticleCap(MAX_PARTICLES / 2);
+    for (let i = 0; i < 100; i++) fx.handle([{ type: 'explode', target: 'tank', x: 6, y: 6 }]);
+    expect(fx.counts().particles).toBeLessThanOrEqual(MAX_PARTICLES / 2);
+    fx.handle([{ type: 'fire', owner: 'enemy', x: 1, y: 1, dir: 'down' }]);
+    fx.trackBullets([{ id: 1, owner: 'enemy', ownerId: 2, x: 1, y: 1, dir: 'down', speed: 9 }]);
+    fx.trackBullets([{ id: 1, owner: 'enemy', ownerId: 2, x: 1, y: 1.2, dir: 'down', speed: 9 }]);
+    fx.reset();
+    expect(fx.counts()).toMatchObject({ muzzleFlashes: 0, trails: 0 });
+  });
+});

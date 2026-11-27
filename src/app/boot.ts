@@ -8,6 +8,7 @@ import { InputState } from '../input/input-state';
 import { bindKeyboard } from '../input/keyboard';
 import { bindTouch } from '../input/touch';
 import { Effects } from '../render/effects';
+import { AdaptiveQuality } from '../render/quality';
 import { applyCssPalette } from '../render/palette';
 import { Renderer } from '../render/renderer';
 import { readHighScore, safeLocalStorage, saveHighScore } from '../storage/high-score';
@@ -88,6 +89,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   const overlays = new OverlayManager();
   const renderer = new Renderer(canvas);
   const effects = new Effects(opts.seed || 1);
+  const quality = new AdaptiveQuality();
   const audio = new AudioEngine(() => win.performance.now());
   const howToPlacement = new HowToPlacement(win, app, howTo, howTo.parentElement as HTMLElement, startBtn, req<HTMLElement>(root, '#side-panel'));
 
@@ -195,6 +197,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     }
     const events = stepWorld(state, { direction: input.direction, fire: input.consumeFire() }, dtMs);
     if (events.responded) input.markResponded(win.performance.now());
+    effects.trackBullets(state.bullets);
     recordScore();
     if (events.some((e) => e.type === 'brickHit')) renderer.terrainChanged();
     effects.handle(events);
@@ -255,6 +258,11 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   const loop = new FixedLoop(step);
   const frame = (now: number): void => {
     loop.frame(now);
+    if (quality.frame(now)) {
+      const q = quality.settings();
+      renderer.setQuality(q);
+      effects.setParticleCap(q.particleCap);
+    }
     overlays.update(now);
     updateHud(hud, state);
     renderer.render(state, curtain(), effects);
@@ -262,7 +270,10 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   };
 
   doc.addEventListener('visibilitychange', () => {
-    if (doc.visibilityState === 'visible') loop.resetClock();
+    if (doc.visibilityState === 'visible') {
+      loop.resetClock();
+      quality.resetClock();
+    }
     audio.resumeIfVisible(doc.visibilityState === 'visible');
   });
   watchStage(win, stage, renderer);
@@ -283,6 +294,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
         effects: effects.counts(),
         audio: audio.status(),
         perf: loop.stats(),
+        quality: quality.level,
         input: { direction: input.direction, fire: input.fireHeld, lastResponseMs: input.lastResponseMs },
       }),
   });

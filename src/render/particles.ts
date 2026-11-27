@@ -24,9 +24,9 @@ export interface Particle {
 export const MAX_PARTICLES = CONFIG.effects.maxParticles;
 
 /** Adds particles, dropping the oldest when the cap is reached. */
-export function addParticles(list: Particle[], added: Particle[]): void {
+export function addParticles(list: Particle[], added: Particle[], cap: number = MAX_PARTICLES): void {
   list.push(...added);
-  if (list.length > MAX_PARTICLES) list.splice(0, list.length - MAX_PARTICLES);
+  if (list.length > cap) list.splice(0, list.length - cap);
 }
 
 /** Advances and expires particles in place. */

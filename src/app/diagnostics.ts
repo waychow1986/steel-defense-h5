@@ -55,6 +55,7 @@ export interface SnapshotSources {
   effects: SteelDefenseSnapshot['effects'];
   audio: SteelDefenseSnapshot['audio'];
   perf: PerfStats;
+  quality: 'high' | 'medium' | 'low';
   input: { direction: Dir | null; fire: boolean; lastResponseMs: number | null };
 }
 
@@ -115,7 +116,7 @@ export function buildSnapshot(src: SnapshotSources): SteelDefenseSnapshot {
     },
     effects: { ...src.effects },
     audio: { ...src.audio, cues: src.audio.cues.map((c) => ({ ...c })) },
-    perf: { ...src.perf, quality: 'high' },
+    perf: { ...src.perf, quality: src.quality },
     input: { ...src.input },
   };
 }

@@ -62,6 +62,11 @@ export const CONFIG = {
     sparkMs: [180, 320] as const,
     impactFlashMs: 160,
     hitFlashMs: 100,
+    muzzleMs: 80,
+    /** Bullet trail through the last N positions (one per simulation step). */
+    trailPoints: 6,
+    /** Barrel recoil distance, tiles; springs back over `recoilMs`. */
+    recoil: 0.08,
     rippleMs: 450,
     fireMs: 400,
     smoke: [8, 14] as const,
