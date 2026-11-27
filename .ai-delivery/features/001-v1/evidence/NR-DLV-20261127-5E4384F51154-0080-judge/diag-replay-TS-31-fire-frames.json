@@ -1,0 +1,303 @@
+[
+ {
+  "f": 0,
+  "muzzle": 1,
+  "recoil": 103.33333333333333,
+  "trails": 1,
+  "frontDiff": 266,
+  "bx": 11.662500000000001,
+  "by": 3.5,
+  "dir": "left"
+ },
+ {
+  "f": 1,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": 0,
+  "bx": 9.71250000000002,
+  "by": 3.5,
+  "dir": "left"
+ },
+ {
+  "f": 2,
+  "muzzle": 1,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": 0,
+  "bx": 8.812500000000028,
+  "by": 3.5,
+  "dir": "left"
+ },
+ {
+  "f": 3,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 2,
+  "frontDiff": 0,
+  "bx": 7.762500000000035,
+  "by": 3.5,
+  "dir": "left"
+ },
+ {
+  "f": 4,
+  "muzzle": 1,
+  "recoil": 0,
+  "trails": 3,
+  "frontDiff": null,
+  "bx": 6.862500000000033,
+  "by": 3.5,
+  "dir": "left"
+ },
+ {
+  "f": 5,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 2,
+  "frontDiff": null,
+  "bx": 5.66250000000003,
+  "by": 3.5,
+  "dir": "left"
+ },
+ {
+  "f": 6,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 2,
+  "frontDiff": null,
+  "bx": 4.612500000000027,
+  "by": 3.5,
+  "dir": "left"
+ },
+ {
+  "f": 7,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 2,
+  "frontDiff": null
+ },
+ {
+  "f": 8,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 9,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 10,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 11,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 12,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ },
+ {
+  "f": 13,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ },
+ {
+  "f": 14,
+  "muzzle": 1,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 15,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 16,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 17,
+  "muzzle": 1,
+  "recoil": 0,
+  "trails": 2,
+  "frontDiff": null
+ },
+ {
+  "f": 18,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 19,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 20,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 21,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 22,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 23,
+  "muzzle": 1,
+  "recoil": 0,
+  "trails": 2,
+  "frontDiff": null
+ },
+ {
+  "f": 24,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 2,
+  "frontDiff": null
+ },
+ {
+  "f": 25,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 26,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 27,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 28,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 29,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 30,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 31,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ },
+ {
+  "f": 32,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ },
+ {
+  "f": 33,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ },
+ {
+  "f": 34,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ },
+ {
+  "f": 35,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ },
+ {
+  "f": 36,
+  "muzzle": 1,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 37,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 1,
+  "frontDiff": null
+ },
+ {
+  "f": 38,
+  "muzzle": 1,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ },
+ {
+  "f": 39,
+  "muzzle": 0,
+  "recoil": 0,
+  "trails": 0,
+  "frontDiff": null
+ }
+]
