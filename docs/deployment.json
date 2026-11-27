@@ -17,11 +17,13 @@
     "errorLogRules": [
       {
         "name": "nginx-error",
+        "kind": "pattern",
         "pattern": "\\[(?:error|crit|alert|emerg)\\] \\d+#\\d+: (?:\\*\\d+ )?(?<message>.*)",
         "severity": "high"
       },
       {
         "name": "nginx-server-5xx",
+        "kind": "pattern",
         "pattern": "\"\\s(?<message>5\\d\\d)\\s\\d+\\s",
         "severity": "medium",
         "threshold": {

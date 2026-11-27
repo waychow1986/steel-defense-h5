@@ -357,8 +357,8 @@ type Dir = 'up' | 'down' | 'left' | 'right';
 - 运行时无配置项、无环境变量；构建时无机密。
 - 日志：nginx 访问日志写 stdout（沿用镜像默认的 `main` 格式，即 `$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent ...`），错误日志写 stderr（镜像默认）；错误级别 `warn`。
 - 错误日志识别规则（`docs/deployment.json` 的 `operations.errorLogRules`），按 nginx 实际错误日志写法 `YYYY/MM/DD HH:MM:SS [level] pid#tid: message`：
-  - `nginx-error`：正则 `\[(?:error|crit|alert|emerg)\] \d+#\d+: (?:\*\d+ )?(?<message>.*)`，严重度 `high`，出现一次即报告。因为 `log_not_found off`，扫描器请求不存在的文件不会产生 `[error]` 行，出现即表示配置或文件缺失等真实问题。
-  - `nginx-server-5xx`：访问日志中状态码为 5xx 的行，正则 `"\s(?<message>5\d\d)\s\d+\s"`（匹配默认 `combined` 格式请求行之后的状态码），严重度 `medium`，5 分钟内 3 次才报告。静态服务正常不会出现 5xx。
+  - `nginx-error`：`kind: pattern`，正则 `\[(?:error|crit|alert|emerg)\] \d+#\d+: (?:\*\d+ )?(?<message>.*)`，严重度 `high`，出现一次即报告。因为 `log_not_found off`，扫描器请求不存在的文件不会产生 `[error]` 行，出现即表示配置或文件缺失等真实问题。
+  - `nginx-server-5xx`：`kind: pattern`，访问日志中状态码为 5xx 的行，正则 `"\s(?<message>5\d\d)\s\d+\s"`（匹配默认 `combined` 格式请求行之后的状态码），严重度 `medium`，5 分钟内 3 次才报告。静态服务正常不会出现 5xx。
 - 浏览器端没有遥测（不在需求内，也不允许对外发送请求）。
 
 ## SLO、限制、扩缩容、重试与恢复
