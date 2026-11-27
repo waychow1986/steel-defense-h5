@@ -5,7 +5,7 @@ import { castShadow, litRect, type DrawOptions } from './art';
 
 /**
  * Static terrain in tile units: ground, the walls' shared bottom-right shadow, bricks and steel
- * lit from the top-left, water (TD-004, TD-005).
+ * lit from the top-left, layered water (TD-004, TD-005).
  */
 export function drawTerrain(ctx: CanvasRenderingContext2D, map: MapGrid, opts: DrawOptions): void {
   const u = 1 / CONFIG.unitsPerTile;
@@ -36,12 +36,14 @@ export function drawTerrain(ctx: CanvasRenderingContext2D, map: MapGrid, opts: D
         ctx.fillStyle = PALETTE.steelLight;
         ctx.fillRect(r.x + u * 0.25, r.y + u * 0.25, u * 0.25, u * 0.25);
       } else if (c === CELL_WATER) {
+        // Layered water: body, a dark trough and a light crest on every unit, staggered by row.
+        const shift = y % 2 === 0 ? 0 : 0.3;
         ctx.fillStyle = PALETTE.water;
         ctx.fillRect(r.x, r.y, u, u);
-        if ((x + y) % 3 === 0) {
-          ctx.fillStyle = PALETTE.waterLight;
-          ctx.fillRect(r.x + u * 0.15, r.y + u * 0.45, u * 0.6, u * 0.12);
-        }
+        ctx.fillStyle = PALETTE.waterDark;
+        ctx.fillRect(r.x + u * (0.1 + shift * 0.5), r.y + u * 0.66, u * 0.75, u * 0.2);
+        ctx.fillStyle = PALETTE.waterLight;
+        ctx.fillRect(r.x + u * (0.1 + shift), r.y + u * 0.25, u * 0.55, u * 0.25);
       }
     }
   }

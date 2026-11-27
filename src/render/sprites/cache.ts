@@ -14,7 +14,7 @@ export interface Sprite {
 }
 
 const TANK_HALF = CONFIG.tankSize / 2 + TANK_PAD;
-const CELL_PAD = 0.12;
+const CELL_PAD = 0.2;
 const BULLET_HALF = 0.2;
 const MUZZLE_HALF = 0.45;
 

@@ -9,8 +9,11 @@ import { PALETTE } from '../palette';
 export const ART = {
   logicalPxPerTile: 48,
   outlinePx: 2,
-  /** Shadow offset to the bottom-right, tiles. */
-  shadowOffset: 0.06,
+  /**
+   * Shadow offset to the bottom-right, tiles. Large enough that every shadow-casting element
+   * (tanks, base, power-ups, walls) shows its shadow on the ground beside its footprint.
+   */
+  shadowOffset: 0.12,
   shadowColor: PALETTE.shadow,
   outlineColor: PALETTE.outline,
   /** Lit (top-left) and shaded (bottom-right) edge thickness, tiles. */

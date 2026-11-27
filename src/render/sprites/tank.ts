@@ -60,7 +60,7 @@ export const TANK_STYLES: Readonly<Record<TankType, TankStyle>> = {
     body: 'enemyFast',
     light: 'enemyFastLight',
     dark: 'enemyFastDark',
-    span: 0.8,
+    span: 0.92,
     treadWidth: 0.18,
     treadLength: 1,
     hullWidth: 0.44,
@@ -91,7 +91,7 @@ const TURRET_Y = 0.04;
 const LINKS = 4;
 
 /** Extra room around the tank square in a tank sprite (barrel reach, shadow, soft edge), tiles. */
-export const TANK_PAD = 0.18;
+export const TANK_PAD = 0.26;
 
 export function tankShading(type: TankType, hit: boolean): Shading {
   if (hit) return { body: PALETTE.hitBody, light: PALETTE.hitLight, dark: PALETTE.hitDark };
@@ -114,14 +114,22 @@ function barrelRect(st: TankStyle): Rect {
   return { x: -w / 2, y: -st.barrelReach * S, w, h: st.barrelReach * S + TURRET_Y };
 }
 
+/** The tank's whole footprint (across both treads, tread length), so the shadow is cast by the whole body. */
+function footprintRect(st: TankStyle): Rect {
+  const half = (st.span * S) / 2;
+  const l = st.treadLength * S;
+  return { x: -half, y: -l / 2, w: st.span * S, h: l };
+}
+
 /** Treads (with the moving link phase), hull and type feature; the shadow covers the whole tank. */
 export function drawTankHull(ctx: CanvasRenderingContext2D, type: TankType, dir: Dir, phase: number, hit: boolean, opts: DrawOptions): void {
   const st = TANK_STYLES[type];
   const c = tankShading(type, hit);
   const treads = treadRects(st).map((r) => rotRect(dir, r));
   const barrel = rotRect(dir, barrelRect(st));
+  const footprint = rotRect(dir, footprintRect(st));
   castShadow(ctx, opts, () => {
-    for (const r of [...treads, barrel]) ctx.rect(r.x, r.y, r.w, r.h);
+    for (const r of [footprint, barrel]) ctx.rect(r.x, r.y, r.w, r.h);
   });
   const treadShade: Shading = { body: c.dark, light: c.body, dark: PALETTE.treadLink };
   for (const [i, local] of treadRects(st).entries()) {

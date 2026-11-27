@@ -5,7 +5,7 @@ import { castShadow, litRect, polygon, rotPoint, strokeOutline, type DrawOptions
 
 /** Radar bunker on a one-tile cell (0..1); a dark rubble slab once destroyed. */
 export function drawBase(ctx: CanvasRenderingContext2D, destroyed: boolean, opts: DrawOptions): void {
-  const box = { x: 0.08, y: 0.08, w: 0.84, h: 0.84 };
+  const box = { x: 0.04, y: 0.04, w: 0.92, h: 0.92 };
   castShadow(ctx, opts, () => ctx.rect(box.x, box.y, box.w, box.h));
   if (destroyed) {
     litRect(ctx, box, { body: PALETTE.baseDestroyed, light: PALETTE.smokeLight, dark: PALETTE.smoke });
@@ -31,7 +31,7 @@ export function drawBase(ctx: CanvasRenderingContext2D, destroyed: boolean, opts
 
 /** Shield: blue shield badge; firepower: red upward arrow; on a light card (one-tile cell 0..1). */
 export function drawPowerUp(ctx: CanvasRenderingContext2D, type: PowerUpType, opts: DrawOptions): void {
-  const card = { x: 0.12, y: 0.12, w: 0.76, h: 0.76 };
+  const card = { x: 0.05, y: 0.05, w: 0.9, h: 0.9 };
   castShadow(ctx, opts, () => ctx.rect(card.x, card.y, card.w, card.h));
   litRect(ctx, card, { body: PALETTE.powerUpCard, light: PALETTE.hitLight, dark: PALETTE.textDim });
   const cx = 0.5;
