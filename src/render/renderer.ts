@@ -1,5 +1,6 @@
 import { CONFIG } from '../game/config';
-import type { Dir, EnemyType, GameState, Tank } from '../game/types';
+import { tankCenter } from '../game/tanks';
+import type { Dir, EnemyType, GameState, PowerUp, Tank } from '../game/types';
 import { PALETTE } from './palette';
 import { TerrainLayer } from './terrain-layer';
 
@@ -61,10 +62,15 @@ export class Renderer {
     const t = px / CONFIG.cols;
     ctx.setTransform(t, 0, 0, t, 0, 0);
     this.drawBase(ctx, state);
-    if (state.player) this.drawTank(ctx, state.player, PALETTE.player, PALETTE.playerLight, PALETTE.playerDark);
+    for (const u of state.powerUps) this.drawPowerUp(ctx, u);
+    if (state.player) {
+      this.drawTank(ctx, state.player, PALETTE.player, PALETTE.playerLight, PALETTE.playerDark);
+      if (state.player.shieldMs > 0) this.drawShield(ctx, state.player);
+    }
     for (const e of state.enemies) {
       const [body, light, dark] = ENEMY_COLORS[e.type as EnemyType];
       this.drawTank(ctx, e, body, light, dark);
+      if (e.carrier) this.drawCarrierRing(ctx, e, state.timeMs);
     }
     ctx.fillStyle = PALETTE.bullet;
     for (const b of state.bullets) {
@@ -72,6 +78,63 @@ export class Renderer {
       ctx.fillRect(b.x - h * 0.6, b.y - h * 0.6, h * 1.2, h * 1.2);
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  /** Shield: star-shaped badge in blue; firepower: badge with a red upward arrow. */
+  private drawPowerUp(ctx: CanvasRenderingContext2D, u: PowerUp): void {
+    ctx.fillStyle = PALETTE.outline;
+    ctx.fillRect(u.x + 0.1, u.y + 0.1, 0.8, 0.8);
+    ctx.fillStyle = PALETTE.powerUpCard;
+    ctx.fillRect(u.x + 0.14, u.y + 0.14, 0.72, 0.72);
+    const cx = u.x + 0.5;
+    const cy = u.y + 0.5;
+    ctx.beginPath();
+    if (u.type === 'shield') {
+      ctx.fillStyle = PALETTE.powerUpShield;
+      ctx.moveTo(cx, cy - 0.28);
+      ctx.lineTo(cx + 0.24, cy - 0.18);
+      ctx.lineTo(cx + 0.2, cy + 0.1);
+      ctx.lineTo(cx, cy + 0.3);
+      ctx.lineTo(cx - 0.2, cy + 0.1);
+      ctx.lineTo(cx - 0.24, cy - 0.18);
+    } else {
+      ctx.fillStyle = PALETTE.powerUpFire;
+      ctx.moveTo(cx, cy - 0.3);
+      ctx.lineTo(cx + 0.24, cy);
+      ctx.lineTo(cx + 0.09, cy);
+      ctx.lineTo(cx + 0.09, cy + 0.28);
+      ctx.lineTo(cx - 0.09, cy + 0.28);
+      ctx.lineTo(cx - 0.09, cy);
+      ctx.lineTo(cx - 0.24, cy);
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  private drawShield(ctx: CanvasRenderingContext2D, tank: Tank): void {
+    const { x, y } = tankCenter(tank);
+    ctx.beginPath();
+    ctx.arc(x, y, CONFIG.tankSize * 0.68, 0, Math.PI * 2);
+    ctx.fillStyle = PALETTE.shieldFill;
+    ctx.fill();
+    ctx.lineWidth = 0.06;
+    ctx.strokeStyle = PALETTE.shield;
+    ctx.stroke();
+  }
+
+  /** TD-020: a gold dashed ring rotating around a carrier (continuous rotation, no blinking). */
+  private drawCarrierRing(ctx: CanvasRenderingContext2D, tank: Tank, timeMs: number): void {
+    const { x, y } = tankCenter(tank);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((timeMs / 1000) * Math.PI);
+    ctx.setLineDash([0.18, 0.12]);
+    ctx.lineWidth = 0.07;
+    ctx.strokeStyle = PALETTE.carrierRing;
+    ctx.beginPath();
+    ctx.arc(0, 0, CONFIG.tankSize * 0.62, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
   }
 
   private drawBase(ctx: CanvasRenderingContext2D, state: GameState): void {

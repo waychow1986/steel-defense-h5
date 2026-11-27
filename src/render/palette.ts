@@ -42,6 +42,12 @@ export const PALETTE = {
   enemyHeavyLight: '#d98080',
   enemyHeavyDark: '#5f2323',
   bullet: '#fff3c4',
+  carrierRing: '#ffd54a',
+  shield: 'rgba(124, 196, 255, 0.85)',
+  shieldFill: 'rgba(124, 196, 255, 0.18)',
+  powerUpCard: '#f4efe0',
+  powerUpShield: '#2f7fc1',
+  powerUpFire: '#d2462e',
 } as const;
 
 const CSS_VARS: Record<string, keyof typeof PALETTE> = {

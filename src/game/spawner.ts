@@ -25,8 +25,10 @@ export function stepSpawner(state: GameState, dtMs: number, events: GameEvent[])
   for (let k = 0; k < cols.length; k += 1) {
     const slot = (state.spawnSlot + k) % cols.length;
     const index = state.enemiesSpawned + 1;
-    const tank = createEnemy(state.nextId, def.order[index - 1], cols[slot], 0, def.carriers.includes(index));
+    const carrierSeq = def.carriers.indexOf(index) + 1;
+    const tank = createEnemy(state.nextId, def.order[index - 1], cols[slot], 0, carrierSeq > 0);
     if (tankBlocked(state, tank, tank.x, tank.y)) continue;
+    if (carrierSeq > 0) tank.carrierSeq = carrierSeq;
     state.nextId += 1;
     tank.fireCooldownMs = enemyFireDelay(state);
     state.enemies.push(tank);

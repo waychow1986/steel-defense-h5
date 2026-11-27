@@ -32,6 +32,8 @@ export interface Tank {
   hp: number;
   maxHp: number;
   carrier: boolean;
+  /** 1-based place of a carrier in its level's carrier list; decides the dropped power-up type. */
+  carrierSeq?: number;
   speed: number;
   fireCooldownMs: number;
   recoilMs: number;
@@ -112,6 +114,10 @@ export interface GameState {
   spawnSlot: number;
   /** Set when the base is destroyed or the last life is lost; the simulation then freezes. */
   lost: boolean;
+  /** Set once every enemy of the level is destroyed; the simulation then freezes until the next level. */
+  cleared: boolean;
+  /** Power-ups dropped this level (numbers carriers that have no `carrierSeq`). */
+  powerUpsDropped: number;
   timeMs: number;
   rngSeed: number;
   rngState: number;

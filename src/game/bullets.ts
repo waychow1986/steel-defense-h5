@@ -1,5 +1,6 @@
 import { CONFIG } from './config';
 import { cellAt, setCell, unitSpan } from './map';
+import { dropPowerUp } from './powerups';
 import { DIR_VEC, tankCenter } from './tanks';
 import {
   CELL_BRICK,
@@ -99,6 +100,7 @@ function damageEnemy(state: GameState, t: Tank, events: GameEvent[]): void {
   }
   state.enemies = state.enemies.filter((e) => e !== t);
   events.push({ type: 'explode', target: 'tank', x: c.x, y: c.y });
+  dropPowerUp(state, t);
   state.enemiesRemaining = Math.max(0, state.enemiesRemaining - 1);
   state.score += CONFIG.enemyScore[t.type as EnemyType];
   events.push({ type: 'scoreChanged', score: state.score });

@@ -1,8 +1,9 @@
 import { fireBullet, stepBullets } from './bullets';
 import { CONFIG } from './config';
-import { levelCounts, levelDef } from './levels';
+import { LEVELS, levelCounts, levelDef } from './levels';
 import { createMap } from './map';
 import { stepEnemies } from './enemy-ai';
+import { collectPowerUps } from './powerups';
 import { stepSpawner } from './spawner';
 import { createPlayer, moveTank, tankBlocked } from './tanks';
 import type { Dir, GameEvent, GameState, Screen } from './types';
@@ -34,11 +35,12 @@ export function createWorld(opts: WorldOptions): GameState {
     enemiesRemaining: levelCounts(def).total,
     enemiesSpawned: 0,
     spawnEnabled: opts.spawnEnemies ?? opts.layout === undefined,
-    // The first enemy appears as soon as play starts; later ones follow the spawn interval.
     // The first enemy arrives one spawn interval after play starts, giving the player a moment to orient.
     spawnTimerMs: 0,
     spawnSlot: 0,
     lost: false,
+    cleared: false,
+    powerUpsDropped: 0,
     timeMs: 0,
     rngSeed: opts.seed >>> 0,
     rngState: opts.seed >>> 0,
@@ -62,7 +64,7 @@ export interface StepResult extends Array<GameEvent> {
 /** One fixed simulation step. Pure with respect to the outside world (no clocks, no Math.random). */
 export function stepWorld(state: GameState, input: StepInput, dtMs: number): StepResult {
   const events: StepResult = [];
-  if (state.lost) return events;
+  if (state.lost || state.cleared) return events;
   state.timeMs += dtMs;
   respawnPlayer(state);
   const p = state.player;
@@ -71,6 +73,7 @@ export function stepWorld(state: GameState, input: StepInput, dtMs: number): Ste
     p.fireCooldownMs = Math.max(0, p.fireCooldownMs - dtMs);
     p.shieldMs = Math.max(0, p.shieldMs - dtMs);
     const moved = moveTank(state, p, input.direction, dtMs);
+    collectPowerUps(state, events);
     let fired = false;
     if (input.fire) {
       const speed = p.firepower ? CONFIG.bulletSpeedUpgraded : CONFIG.bulletSpeed;
@@ -87,7 +90,39 @@ export function stepWorld(state: GameState, input: StepInput, dtMs: number): Ste
   stepSpawner(state, dtMs, events);
   stepBullets(state, dtMs, events);
   respawnPlayer(state);
+  collectPowerUps(state, events);
+  checkLevelClear(state, events);
   return events;
+}
+
+/** All enemies of the level destroyed (none left to come, none on the field): the level is cleared; level 5 also means victory. */
+function checkLevelClear(state: GameState, events: GameEvent[]): void {
+  if (state.lost || state.cleared || state.enemiesRemaining > 0 || state.enemies.length > 0) return;
+  state.cleared = true;
+  events.push({ type: 'levelClear', level: state.level });
+  if (state.level >= LEVELS.length) events.push({ type: 'victory' });
+}
+
+/**
+ * Builds the next level's world after a clear (FR-026): score and lives carry over, and so does
+ * firepower (A-3: kept until a life is lost or the game ends). Power-ups, bullets and the shield do not
+ * (shield reset is a provisional answer pending a product decision).
+ */
+export function advanceLevel(state: GameState): GameState {
+  const next = createWorld({
+    seed: state.rngSeed,
+    level: Math.min(state.level + 1, LEVELS.length),
+    screen: 'levelIntro',
+    score: state.score,
+    lives: state.lives,
+  });
+  next.rngState = state.rngState;
+  const prev = state.player;
+  if (prev && next.player && prev.firepower) {
+    next.player.firepower = prev.firepower;
+    next.player.maxBullets = prev.maxBullets;
+  }
+  return next;
 }
 
 /** After a lost life the player reappears at the spawn point facing up with base firepower (A-12); waits while the spot is occupied. */

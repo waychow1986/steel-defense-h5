@@ -1,12 +1,12 @@
 import { CONFIG } from '../game/config';
-import { levelCounts, levelDef } from '../game/levels';
-import { createWorld, stepWorld } from '../game/sim';
+import { LEVELS, levelCounts, levelDef } from '../game/levels';
+import { advanceLevel, createWorld, stepWorld } from '../game/sim';
 import type { GameState, Screen } from '../game/types';
 import { InputState } from '../input/input-state';
 import { bindKeyboard } from '../input/keyboard';
 import { applyCssPalette } from '../render/palette';
 import { Renderer } from '../render/renderer';
-import { readHighScore, safeLocalStorage } from '../storage/high-score';
+import { readHighScore, safeLocalStorage, saveHighScore } from '../storage/high-score';
 import { buildSnapshot, type SteelDefenseSnapshot } from './diagnostics';
 import { updateHud } from './hud';
 import { HowToPlacement, watchStage } from './layout';
@@ -17,6 +17,8 @@ export interface BootOptions {
   seed: number;
   /** Test-only: first level of a new game (only the integration harness passes this). */
   startLevel?: number;
+  /** Test-only: hands the live world to the integration harness. The production entry never passes it. */
+  onTestAccess?: (access: { world(): GameState | null }) => void;
 }
 
 export interface SteelDefenseApi {
@@ -55,6 +57,9 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
   const muteBtn = req<HTMLButtonElement>(root, '#mute-btn');
   const howTo = req<HTMLElement>(root, '#how-to');
   const gameOverScore = req<HTMLElement>(root, '#gameover-score');
+  const victoryScore = req<HTMLElement>(root, '#victory-score');
+  const clearText = req<HTMLElement>(root, '#clear-text');
+  const powerUpHint = req<HTMLElement>(root, '#powerup-hint');
   const hud = {
     level: req<HTMLElement>(root, '#hud-level'),
     score: req<HTMLElement>(root, '#hud-score'),
@@ -64,12 +69,15 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
 
   const startLevel = Math.min(5, Math.max(1, Math.floor(opts.startLevel ?? 1)));
   const storage = safeLocalStorage();
-  const highScore = readHighScore(storage);
+  let highScore = readHighScore(storage);
   let screen: Screen = 'start';
   let state: GameState | null = null;
   let screenMs = 0;
   /** Time left before the failure screen after the base fell or the last life was lost; null when not pending. */
   let gameOverInMs: number | null = null;
+  /** Time left before the clear screen after the last enemy fell; null when not pending. */
+  let clearInMs: number | null = null;
+  let hintMs = 0;
   let muted = false;
 
   const input = new InputState();
@@ -81,6 +89,26 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     for (const el of root.querySelectorAll<HTMLElement>('#start-high, #gameover-high, #victory-high')) el.textContent = String(highScore);
   };
   setHighScoreText();
+
+  /** FR-030: a score above the record is saved at once, also mid-game. */
+  const recordScore = (): void => {
+    if (!state || state.score <= highScore) return;
+    highScore = saveHighScore(storage, state.score);
+    setHighScoreText();
+  };
+
+  const setHint = (text: string, ms: number): void => {
+    powerUpHint.textContent = text;
+    hintMs = ms;
+  };
+
+  const showIntro = (level: number): void => {
+    const counts = levelCounts(levelDef(level));
+    req<HTMLElement>(root, '#intro-level').textContent = `第 ${level} 关`;
+    req<HTMLElement>(root, '#intro-enemies').textContent = `敌人 ${counts.total} 辆`;
+    overlays.show(overlayIntro);
+    setScreen('levelIntro');
+  };
 
   const setScreen = (next: Screen): void => {
     screen = next;
@@ -95,14 +123,12 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     if (screen !== 'start') return;
     state = createWorld({ seed: opts.seed, level: startLevel, screen: 'levelIntro' });
     gameOverInMs = null;
+    clearInMs = null;
+    setHint('', 0);
     renderer.terrainChanged();
-    const counts = levelCounts(levelDef(startLevel));
-    req<HTMLElement>(root, '#intro-level').textContent = `第 ${startLevel} 关`;
-    req<HTMLElement>(root, '#intro-enemies').textContent = `敌人 ${counts.total} 辆`;
     if (doc.activeElement instanceof HTMLElement) doc.activeElement.blur();
     overlays.hide(overlayStart);
-    overlays.show(overlayIntro);
-    setScreen('levelIntro');
+    showIntro(startLevel);
   };
 
   const toStart = (): void => {
@@ -123,9 +149,17 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
 
   const step = (dtMs: number): void => {
     screenMs += dtMs;
+    if (hintMs > 0) {
+      hintMs -= dtMs;
+      if (hintMs <= 0) setHint('', 0);
+    }
     if (screen === 'levelIntro' && screenMs >= CONFIG.screenMs.levelIntro) {
       overlays.hide(overlayIntro);
       setScreen('playing');
+      return;
+    }
+    if (screen === 'levelClear' && screenMs >= CONFIG.screenMs.levelClear) {
+      afterClear();
       return;
     }
     if (screen !== 'playing' || !state) return;
@@ -134,19 +168,57 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
       if (gameOverInMs <= 0) showGameOver();
       return;
     }
+    if (clearInMs !== null) {
+      clearInMs -= dtMs;
+      if (clearInMs <= 0) showClear();
+      return;
+    }
     const events = stepWorld(state, { direction: input.direction, fire: input.consumeFire() }, dtMs);
     if (events.responded) input.markResponded(win.performance.now());
+    recordScore();
     if (events.some((e) => e.type === 'brickHit')) renderer.terrainChanged();
+    for (const e of events) {
+      if (e.type === 'pickup') setHint(e.powerUp === 'shield' ? '护盾' : '火力升级', CONFIG.powerUpHintMs);
+    }
     if (events.some((e) => e.type === 'gameOver')) {
       // A-9: no more input once the game is lost; the explosion plays before the failure screen.
       input.setEnabled(false);
       gameOverInMs = CONFIG.screenMs.gameOverDelay;
+    } else if (events.some((e) => e.type === 'levelClear')) {
+      // The last explosion plays before the clear screen.
+      input.setEnabled(false);
+      clearInMs = CONFIG.screenMs.clearDelay;
     }
+  };
+
+  const showClear = (): void => {
+    clearInMs = null;
+    clearText.textContent = `第 ${state?.level ?? 1} 关 过关`;
+    overlays.show(overlayClear);
+    setScreen('levelClear');
+  };
+
+  /** After the clear screen: the next level's intro, or the victory screen after the last level (FR-023). */
+  const afterClear = (): void => {
+    overlays.hide(overlayClear);
+    if (!state) return;
+    recordScore();
+    if (state.level >= LEVELS.length) {
+      victoryScore.textContent = String(state.score);
+      setHighScoreText();
+      overlays.show(overlayVictory);
+      setScreen('victory');
+      return;
+    }
+    state = advanceLevel(state);
+    renderer.terrainChanged();
+    showIntro(state.level);
   };
 
   const showGameOver = (): void => {
     gameOverInMs = null;
     gameOverScore.textContent = String(state?.score ?? 0);
+    recordScore();
     setHighScoreText();
     overlays.show(overlayGameOver);
     setScreen('gameOver');
@@ -185,5 +257,6 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
       }),
   });
   win.steelDefense = api;
+  opts.onTestAccess?.({ world: () => state });
   return api;
 }
