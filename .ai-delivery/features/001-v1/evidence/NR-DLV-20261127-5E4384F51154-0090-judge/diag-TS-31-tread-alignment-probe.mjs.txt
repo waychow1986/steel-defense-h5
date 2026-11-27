@@ -1,0 +1,68 @@
+// 只读诊断：TS-31 检查点 1 对照组差异来源（位置对齐误差 vs 履带画面变化）
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+import { openGame, FRAME } from './lib.mjs';
+import { goTo } from './bot.mjs';
+import { mapShot } from './groups/px.mjs';
+
+const TANK = 0.875;
+function crop(ms, t, padPx) {
+  const { png, T } = ms;
+  const x0 = Math.round(t.x * T) - padPx, y0 = Math.round(t.y * T) - padPx, w = Math.round(TANK * T) + 2 * padPx;
+  const px = [];
+  for (let y = y0; y < y0 + w; y++) for (let x = x0; x < x0 + w; x++) { const i = (y * png.width + x) * 4; px.push([png.data[i], png.data[i + 1], png.data[i + 2]]); }
+  return { w, px };
+}
+// 坦克车身区域（不含外圈）在 ±3 像素平移内的最小差异像素数，以及不平移时的差异
+function bestShift(A, B, pad, innerFrac) {
+  const w = A.w, core = w - 2 * pad; const lo = pad + Math.floor(core * innerFrac[0]), hi = pad + Math.ceil(core * innerFrac[1]);
+  let best = Infinity, zero = null, bestD = null;
+  for (let dx = -3; dx <= 3; dx++) for (let dy = -3; dy <= 3; dy++) {
+    let n = 0;
+    for (let y = pad; y < w - pad; y++) for (let x = pad; x < w - pad; x++) {
+      if (!(y < pad + core * 0.25 || y >= pad + core * 0.75)) continue; // 朝左行进：履带在上下两条边带
+      const p = A.px[y * w + x], q = B.px[(y + dy) * w + (x + dx)];
+      if (Math.max(Math.abs(p[0] - q[0]), Math.abs(p[1] - q[1]), Math.abs(p[2] - q[2])) > 24) n++;
+    }
+    if (dx === 0 && dy === 0) zero = n;
+    if (n < best) { best = n; bestD = [dx, dy]; }
+  }
+  return { zero, best, shift: bestD };
+}
+
+const browser = await chromium.launch();
+const out = { seeds: [] };
+for (const seed of [31, 131]) {
+  const g = await openGame(browser, { seed });
+  try {
+    await g.startToPlaying();
+    if (!await goTo(g, 12.0625, 3.0625, 30000)) { out.seeds.push({ seed, note: '未到达' }); continue; }
+    await g.until(s => s.player && !(s.player.shieldMs > 0), 20000, 100);
+    await g.hold('left');
+    const fr = [];
+    for (let t = 0; t < 500; t += FRAME) {
+      await g.adv(FRAME);
+      const s = await g.snap(); if (!s.player) continue;
+      const ms = await mapShot(g);
+      fr.push({ x: s.player.x, y: s.player.y, ph: s.player.treadPhase, T: ms.T, reg: crop(ms, s.player, 4) });
+    }
+    await g.release();
+    const same = [], diff = [];
+    for (let i = 0; i < fr.length; i++) for (let j = i + 1; j < fr.length; j++) {
+      const r = bestShift(fr[i].reg, fr[j].reg, 4, [0, 1]);
+      (fr[i].ph === fr[j].ph ? same : diff).push({ i, j, phI: fr[i].ph, phJ: fr[j].ph, ...r, subI: +((fr[i].x * fr[i].T) % 1).toFixed(2), subJ: +((fr[j].x * fr[j].T) % 1).toFixed(2) });
+    }
+    const med = a => { if (!a.length) return null; const b = [...a].sort((x, y) => x - y); return b[(b.length - 1) >> 1]; };
+    out.seeds.push({
+      seed, frames: fr.length, T: fr[0] && fr[0].T, phases: fr.map(f => f.ph).join(''),
+      stepPxPerFrame: fr.length > 1 ? +(Math.abs(fr[1].x - fr[0].x) * fr[0].T).toFixed(2) : null,
+      samePhase: { n: same.length, medZeroShift: med(same.map(p => p.zero)), medBestShift: med(same.map(p => p.best)), zeroBestCount: same.filter(p => p.best === 0).length },
+      diffPhase: { n: diff.length, medZeroShift: med(diff.map(p => p.zero)), medBestShift: med(diff.map(p => p.best)), zeroBestCount: diff.filter(p => p.best === 0).length },
+      sampleSame: same.slice(0, 8), sampleDiff: diff.slice(0, 8),
+    });
+  } catch (e) { out.seeds.push({ seed, error: e.message }); }
+  finally { await g.close(); }
+}
+await browser.close();
+fs.writeFileSync('probe31-result.json', JSON.stringify(out, null, 1));
+console.log(JSON.stringify(out.seeds.map(s => ({ ...s, sampleSame: undefined, sampleDiff: undefined }))));
