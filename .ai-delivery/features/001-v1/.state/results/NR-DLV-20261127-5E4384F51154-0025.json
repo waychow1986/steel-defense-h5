@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S47",
+  "result": "done",
+  "summary": "第 4 批（AC-2、AC-5、AC-18、AC-22）已完成：新增 src/input/touch.ts（Pointer Events 虚拟方向键与开火键：按住移动、松开或 pointercancel 即停、两指时后按者优先、滑动切换方向）并在 boot.ts 绑定，新增关卡开场 450ms 上下幕帘（screens.ts 的 curtainCover + renderer.ts 绘制，快照 transitioning 计入幕帘），新增 IT-03 layout.spec、IT-08 transitions.spec、controls.spec、单元 screens.test 与 5 个端到端用例文件（tests/e2e/，共 6 个用例）；实际运行：实现前新写测试为 7 个集成用例与 1 个幕帘单元用例失败（触控与幕帘缺失，布局用例因既有 CSS 已满足而通过），实现后 lint、typecheck、build 通过，全量单元 93 项通过（约 1 秒），全量集成 31 项通过（约 10 秒），新写端到端 6 个用例在本地 vite preview 上通过（约 7 秒）；既有端到端用例不存在、未运行，测试环境验证交由 G3 独立测试，幕帘视觉效果与真机触控手感未在真机上验证；技术细节自定：幕帘为线性合拢再拉开、手指滑出方向键区域时保持最后方向。",
+  "asks": [],
+  "outputs": [
+    "src/input/touch.ts",
+    "src/app/boot.ts",
+    "src/app/screens.ts",
+    "src/render/renderer.ts",
+    "tests/unit/screens.test.ts",
+    "tests/integration/controls.spec.ts",
+    "tests/integration/layout.spec.ts",
+    "tests/integration/transitions.spec.ts",
+    "tests/e2e/helpers.ts",
+    "tests/e2e/start-and-howto.spec.ts",
+    "tests/e2e/desktop-level-flow.spec.ts",
+    "tests/e2e/mobile-level-flow.spec.ts",
+    "tests/e2e/fail-and-return.spec.ts",
+    "tests/e2e/landscape-hint.spec.ts"
+  ]
+}

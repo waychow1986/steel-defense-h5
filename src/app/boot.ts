@@ -4,6 +4,7 @@ import { advanceLevel, createWorld, stepWorld } from '../game/sim';
 import type { GameState, Screen } from '../game/types';
 import { InputState } from '../input/input-state';
 import { bindKeyboard } from '../input/keyboard';
+import { bindTouch } from '../input/touch';
 import { applyCssPalette } from '../render/palette';
 import { Renderer } from '../render/renderer';
 import { readHighScore, safeLocalStorage, saveHighScore } from '../storage/high-score';
@@ -11,7 +12,7 @@ import { buildSnapshot, type SteelDefenseSnapshot } from './diagnostics';
 import { updateHud } from './hud';
 import { HowToPlacement, watchStage } from './layout';
 import { FixedLoop } from './loop';
-import { OverlayManager } from './screens';
+import { curtainCover, OverlayManager } from './screens';
 
 export interface BootOptions {
   seed: number;
@@ -146,6 +147,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     muteBtn.setAttribute('aria-pressed', String(muted));
   });
   bindKeyboard(win, input);
+  bindTouch(win, req<HTMLElement>(root, '.dpad'), req<HTMLElement>(root, '#fire-btn'), input);
 
   const step = (dtMs: number): void => {
     screenMs += dtMs;
@@ -224,12 +226,14 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     setScreen('gameOver');
   };
 
+  const curtain = (): number => (screen === 'levelIntro' ? curtainCover(screenMs) : 0);
+
   const loop = new FixedLoop(step);
   const frame = (now: number): void => {
     loop.frame(now);
     overlays.update(now);
     updateHud(hud, state);
-    renderer.render(state);
+    renderer.render(state, curtain());
     win.requestAnimationFrame(frame);
   };
 
@@ -246,7 +250,7 @@ export function boot(root: HTMLElement, opts: BootOptions): SteelDefenseApi {
     snapshot: (): SteelDefenseSnapshot =>
       buildSnapshot({
         screen,
-        transitioning: overlays.transitioning,
+        transitioning: overlays.transitioning || (screen === 'levelIntro' && screenMs < CONFIG.curtainMs),
         seed: opts.seed,
         level: state?.level ?? startLevel,
         state,

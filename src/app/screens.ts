@@ -62,3 +62,14 @@ export class OverlayManager {
     }
   }
 }
+
+/**
+ * Level-intro map curtain (TD-015): fraction of the map covered by the top and bottom
+ * curtains `ms` after the intro starts — closes over the first half, opens over the second.
+ */
+export function curtainCover(ms: number): number {
+  const total = CONFIG.curtainMs;
+  if (ms <= 0 || ms >= total) return 0;
+  const half = total / 2;
+  return ms <= half ? ms / half : (total - ms) / half;
+}

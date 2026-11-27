@@ -50,7 +50,8 @@ export class Renderer {
     this.terrain.invalidate();
   }
 
-  render(state: GameState | null): void {
+  /** `curtain` is the fraction (0..1) of the map hidden behind the level-intro curtains. */
+  render(state: GameState | null, curtain = 0): void {
     const ctx = this.ctx;
     const px = this.canvas.width;
     if (!ctx || px === 0) return;
@@ -58,6 +59,23 @@ export class Renderer {
     ctx.fillStyle = PALETTE.ground;
     ctx.fillRect(0, 0, px, px);
     if (!state) return;
+    this.drawWorld(ctx, state, px);
+    if (curtain > 0) this.drawCurtain(ctx, px, curtain);
+  }
+
+  /** Top and bottom curtains meeting in the middle, with a bright edge on each. */
+  private drawCurtain(ctx: CanvasRenderingContext2D, px: number, cover: number): void {
+    const h = Math.min(1, cover) * (px / 2);
+    const edge = Math.max(2, Math.round(px / 160));
+    ctx.fillStyle = PALETTE.panel;
+    ctx.fillRect(0, 0, px, h);
+    ctx.fillRect(0, px - h, px, h);
+    ctx.fillStyle = PALETTE.accent;
+    ctx.fillRect(0, Math.max(0, h - edge), px, Math.min(edge, h));
+    ctx.fillRect(0, px - h, px, Math.min(edge, h));
+  }
+
+  private drawWorld(ctx: CanvasRenderingContext2D, state: GameState, px: number): void {
     ctx.drawImage(this.terrain.ensure(state.map, px), 0, 0);
     const t = px / CONFIG.cols;
     ctx.setTransform(t, 0, 0, t, 0, 0);
