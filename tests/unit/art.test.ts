@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { PALETTE } from '../../src/render/palette';
+import { PALETTE, applyCssPalette } from '../../src/render/palette';
 import { ART, OUTLINE_WIDTH, DEFAULT_DRAW } from '../../src/render/sprites/art';
 import { allRecipes, TANK_TYPES, type SpriteRecipe } from '../../src/render/sprites';
 import { TANK_STYLES } from '../../src/render/sprites/tank';
@@ -82,6 +82,54 @@ describe('UT-art: one palette and one drawing style for every sprite (AC-15)', (
     walk(join(__dirname, '../../src'));
     const offenders = files.filter((f) => !f.endsWith(join('render', 'palette.ts')) && /#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/.test(readFileSync(f, 'utf8')));
     expect(offenders).toEqual([]);
+  });
+
+  describe('page styles and markup (interface elements)', () => {
+    const root = join(__dirname, '../../src');
+    const pageFiles = [join(root, 'styles/main.css'), join(__dirname, '../../index.html')];
+    const cssVars = new Map<string, string>();
+    const doc = { style: { setProperty: (k: string, v: string) => cssVars.set(k, v) } } as unknown as HTMLElement;
+    applyCssPalette(doc);
+    const norm = (c: string): string => c.replace(/\s+/g, '').toLowerCase();
+    const paletteNorm = new Set([...paletteValues].map(norm));
+    const COLOR = /#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?)\([^)]*\)/g;
+    // Keywords that paint nothing / reuse the current colour, not palette colours.
+    const NON_COLOUR = new Set(['transparent', 'currentcolor', 'inherit', 'initial', 'unset', 'none']);
+    const NAMED = /\b(?:black|white|red|green|blue|yellow|orange|gray|grey|silver|gold|purple|pink|brown|cyan|magenta|navy|teal|lime|maroon|olive)\b/i;
+    const COLOUR_PROPS = /^\s*(color|background(?:-color)?|border(?:-[a-z]+)*-?color|border(?:-(?:top|right|bottom|left))?|outline(?:-color)?|text-shadow|box-shadow|fill|stroke|caret-color|accent-color)\s*:\s*([^;]+);/gim;
+
+    it('every colour written in styles or markup is a palette value or a --c-* palette variable', () => {
+      const problems: string[] = [];
+      for (const f of pageFiles) {
+        const text = readFileSync(f, 'utf8');
+        // var(--c-x, fallback): the variable must exist and its fallback must equal the palette value.
+        for (const m of text.matchAll(/var\((--[\w-]+)\s*(?:,\s*((?:[^()]|\([^)]*\))*))?\)/g)) {
+          const [, name, fallback] = m;
+          if (!cssVars.has(name)) problems.push(`${f}: unknown variable ${name}`);
+          else if (fallback && norm(fallback) !== norm(cssVars.get(name)!)) problems.push(`${f}: ${name} fallback ${fallback} != ${cssVars.get(name)}`);
+        }
+        const bare = text.replace(/var\((--[\w-]+)\s*(?:,\s*((?:[^()]|\([^)]*\))*))?\)/g, '__palette_var__');
+        for (const m of bare.matchAll(COLOR)) if (!paletteNorm.has(norm(m[0]))) problems.push(`${f}: ${m[0]}`);
+        for (const m of bare.matchAll(COLOUR_PROPS)) {
+          const value = m[2].trim();
+          if (NAMED.test(value)) problems.push(`${f}: named colour in ${m[0].trim()}`);
+          if (/^[a-z-]+$/i.test(value) && !NON_COLOUR.has(value.toLowerCase()) && /color/i.test(m[1])) problems.push(`${f}: ${m[0].trim()}`);
+        }
+      }
+      expect(problems).toEqual([]);
+    });
+
+    it('every CSS shadow uses the palette shadow colour and falls to the bottom-right', () => {
+      expect(cssVars.get('--c-shadow')).toBe(PALETTE.shadow);
+      const text = readFileSync(pageFiles[0], 'utf8');
+      const shadows = [...text.matchAll(/(?:text|box)-shadow\s*:\s*([^;]+);/g)].map((m) => m[1].trim()).filter((v) => v !== 'none');
+      for (const s of shadows) {
+        expect(s, s).toMatch(/var\(--c-shadow\b/);
+        const [x, y] = s.split(/\s+/).map((v) => parseFloat(v));
+        expect(x, s).toBeGreaterThan(0);
+        expect(y, s).toBe(x);
+      }
+    });
   });
 
   it('every shadow uses the shared colour and is offset by the same amount to the bottom-right', () => {

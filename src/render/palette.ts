@@ -83,6 +83,7 @@ const CSS_VARS: Record<string, keyof typeof PALETTE> = {
   '--c-fire': 'fire',
   '--c-overlay': 'overlay',
   '--c-ground': 'ground',
+  '--c-shadow': 'shadow',
 };
 
 export function applyCssPalette(root: HTMLElement): void {

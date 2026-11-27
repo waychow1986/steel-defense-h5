@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S51",
+  "result": "done",
+  "summary": "修复 S52 两项审查问题：开始画面标题阴影改为经新增 --c-shadow 变量取调色板阴影色并向右下偏移（2px 2px），UT-art 新增两条用例扫描 src/styles/main.css 与 index.html 中的全部颜色值（含 CSS 变量后备值、阴影色、命名颜色）及 CSS 阴影方向；复现测试修改前运行 2 条失败、修改后 11 条全部通过（约 1 秒）；lint 与构建通过；全量单元测试 122 项通过（约 1 秒）、全量集成测试 45 项通过（约 34 秒）；本批未新写或改动端到端用例，既有端到端用例按规定未在会话中运行，由 G3 独立测试在测试环境验证。",
+  "asks": [],
+  "outputs": [
+    "src/render/palette.ts",
+    "src/styles/main.css",
+    "tests/unit/art.test.ts"
+  ]
+}
