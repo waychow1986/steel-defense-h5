@@ -15,7 +15,7 @@ async function installRec(page) {
     for (const ty of ['keydown', 'keyup', 'pointerdown', 'pointerup']) window.addEventListener(ty, evh, true);
     const loop = () => {
       const s = window.steelDefense.snapshot();
-      window.__qa.fr.push({ t: performance.now(), x: s.player?.x, y: s.player?.y, dir: s.player?.dir, lrm: s.input.lastResponseMs, b: s.bullets.filter(b => b.owner === 'player').map(b => b.id), lives: s.lives, screen: s.screen });
+      window.__qa.fr.push({ t: performance.now(), x: s.player?.x, y: s.player?.y, dir: s.player?.dir, lrm: s.input.lastResponseMs, b: s.bullets.filter(b => b.owner === 'player').map(b => b.id), lives: s.lives, screen: s.screen, bd: !!s.base?.destroyed, pn: !s.player, er: s.enemiesRemaining });
       if (window.__qa.fr.length > 600) window.__qa.fr.splice(0, 300);
       requestAnimationFrame(loop);
     };
@@ -55,16 +55,24 @@ function analyzePress(pre, rec, kind) {
 }
 
 // 敌人可能在测量期间摧毁指挥所：失败后开新一局继续（每次按下相互独立）
+// 指挥所已毁（失败前爆炸阶段）、玩家坦克不存在、或本关敌人已清（过关前阶段）时游戏不接受输入（规格 A-9），不能在此测量
+const notMeasurable = s => s.screen !== 'playing' || !s.player || s.transitioning || !!s.base?.destroyed || s.enemiesRemaining === 0;
+
 async function ensurePlaying(g) {
-  const s = await g.snap();
-  if (s.screen === 'playing' && s.player && !s.transitioning) return;
+  let s = await g.snap();
+  if (!notMeasurable(s)) return;
+  if (s.screen === 'playing' && (s.base?.destroyed || s.enemiesRemaining === 0)) {
+    // 等爆炸阶段结束进入失败/过关画面
+    await g.until(x => x.screen !== 'playing', 8000, 100).catch(() => { });
+    s = await g.snap();
+  }
   if (s.screen === 'gameOver' || s.screen === 'victory') {
     const btn = g.page.getByRole('button', { name: '返回开始画面' });
     if (g.touch) await btn.tap(); else await btn.click();
     await g.until(x => x.screen === 'start' && !x.transitioning, 5000, 100);
   }
   if ((await g.snap()).screen === 'start') await g.startToPlaying();
-  else await g.until(x => x.screen === 'playing' && x.player && !x.transitioning, 8000, 100);
+  else await g.until(x => !notMeasurable(x), 15000, 100);
   await g.release();
 }
 
@@ -78,7 +86,7 @@ async function presses(g, kind, n) {
       await sleep(600);
     } else await sleep(150);
     const s0 = await g.snap();
-    if (s0.screen !== 'playing' || !s0.player || s0.transitioning) { await ensurePlaying(g); lastLives = null; continue; }
+    if (notMeasurable(s0)) { await ensurePlaying(g); lastLives = null; continue; }
     // 刚重生或新开局：等待稳定后再按，避免按在出生保护/入场阶段
     if (lastLives !== s0.lives) { lastLives = s0.lives; await sleep(2000); continue; }
     if (kind === 'fire' && s0.player.dir !== 'up') { await g.hold('up'); await sleep(20); await g.release(); await sleep(300); }
@@ -91,7 +99,8 @@ async function presses(g, kind, n) {
       else { await g.hold(dir); await sleep(500); await g.release(); await sleep(400); }
     } catch { g.touchHeld = null; await g.release().catch(() => { }); continue; }
     const rec = await takeRec(page);
-    if (rec.fr.some(f => f.lives !== pr.lives || f.screen !== 'playing' || f.x === undefined)) continue; // 期间被击中或画面变化，重做
+    // 期间被击中、画面变化、指挥所被毁、玩家坦克不存在或进入过关前阶段：重做这次按下
+    if (rec.fr.some(f => f.lives !== pr.lives || f.screen !== 'playing' || f.x === undefined || f.pn || f.bd || f.er === 0)) continue;
     out.push({ i: out.length + 1, dir: kind === 'fire' ? 'fire' : dir, ...analyzePress(pre, rec, kind) });
   }
   return out;
