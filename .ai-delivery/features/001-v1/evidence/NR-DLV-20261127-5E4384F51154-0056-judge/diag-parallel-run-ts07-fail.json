@@ -1,0 +1,1166 @@
+{
+ "schemaVersion": 2,
+ "testedCommitSha": "",
+ "summary": "执行 25 个场景，报告 25 个，未通过 1 个（TS-07）",
+ "scenarios": [
+  {
+   "id": "TS-03",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 电脑：方向键与 W/A/S/D",
+     "passed": true,
+     "observation": "怎么玩 电脑：方向键 或 W / A / S / D 移动，空格开火 手机：按住屏幕下方的方向键移动，松开即停；按开火按钮发射子弹 目标：消灭本关全部敌方坦克，同时保护底部的指挥所 砖墙可以打碎，钢墙打不穿，水面不能通过 声音：右上角“静音”按钮可开关声音。手机处于静音模式等系统原因时，可能听不到音效。"
+    },
+    {
+     "step": "2 电脑：空格开火",
+     "passed": true,
+     "observation": ""
+    },
+    {
+     "step": "3 电脑：手机虚拟方向键与开火按钮",
+     "passed": true,
+     "observation": ""
+    },
+    {
+     "step": "4 电脑：目标为消灭敌方坦克、守住指挥所",
+     "passed": true,
+     "observation": ""
+    },
+    {
+     "step": "5 电脑：静音模式可能听不到音效的提示",
+     "passed": true,
+     "observation": ""
+    },
+    {
+     "step": "1 手机：方向键与 W/A/S/D",
+     "passed": true,
+     "observation": "怎么玩 电脑：方向键 或 W / A / S / D 移动，空格开火 手机：按住屏幕下方的方向键移动，松开即停；按开火按钮发射子弹 目标：消灭本关全部敌方坦克，同时保护底部的指挥所 砖墙可以打碎，钢墙打不穿，水面不能通过 声音：右上角“静音”按钮可开关声音。手机处于静音模式等系统原因时，可能听不到音效。"
+    },
+    {
+     "step": "2 手机：空格开火",
+     "passed": true,
+     "observation": ""
+    },
+    {
+     "step": "3 手机：手机虚拟方向键与开火按钮",
+     "passed": true,
+     "observation": ""
+    },
+    {
+     "step": "4 手机：目标为消灭敌方坦克、守住指挥所",
+     "passed": true,
+     "observation": ""
+    },
+    {
+     "step": "5 手机：静音模式可能听不到音效的提示",
+     "passed": true,
+     "observation": ""
+    },
+    {
+     "step": "手机：说明区域可见、不需横向滚动",
+     "passed": true,
+     "observation": "box={\"x\":39.61981964111328,\"y\":189.92063903808594,\"width\":310.76036834716797,\"height\":282.24122619628906} 视口宽=390 scrollWidth=390"
+    }
+   ],
+   "evidence": [
+    "TS-03-电脑.txt",
+    "TS-03-电脑-snapshot.json",
+    "TS-03-电脑-console.log",
+    "TS-03-电脑.png",
+    "TS-03-手机.txt",
+    "TS-03-手机-snapshot.json",
+    "TS-03-手机-console.log",
+    "TS-03-手机.png"
+   ]
+  },
+  {
+   "id": "TS-01",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 标题“钢铁防线”",
+     "passed": true,
+     "observation": "heading 数=1"
+    },
+    {
+     "step": "2 “怎么玩”说明区域",
+     "passed": true,
+     "observation": "region 怎么玩"
+    },
+    {
+     "step": "3 不出现现有游戏名称",
+     "passed": true,
+     "observation": "名单中名称均未出现；title=钢铁防线"
+    }
+   ],
+   "evidence": [
+    "TS-01-texts.txt",
+    "TS-01-end-snapshot.json",
+    "TS-01-end-console.log",
+    "TS-01-end.png"
+   ]
+  },
+  {
+   "id": "TS-02",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 电脑：首屏为开始画面且有标题、开始按钮、说明",
+     "passed": true,
+     "observation": "screen=start 可见=true 标题=1 按钮=1 文字=钢铁防线 驾驶坦克，守住指挥所，击退来犯的敌方坦克。 怎么玩 电脑：方向键 或 W / A / S / D 移动，空格开火 手机：按住屏幕下方的方向键移动，松开"
+    },
+    {
+     "step": "2 电脑：开始画面期间按键不操作坦克",
+     "passed": true,
+     "observation": "screen=start 玩家子弹=0 player前=null 后=null"
+    },
+    {
+     "step": "3 电脑：出现“第 1 关”开场后进入游戏",
+     "passed": true,
+     "observation": "开场文字=第 1 关 敌人 10 辆 之后 screen=playing level=1"
+    },
+    {
+     "step": "1 手机：首屏为开始画面且有标题、开始按钮、说明",
+     "passed": true,
+     "observation": "screen=start 可见=true 标题=1 按钮=1 文字=钢铁防线 驾驶坦克，守住指挥所，击退来犯的敌方坦克。 怎么玩 电脑：方向键 或 W / A / S / D 移动，空格开火 手机：按住屏幕下方的方向键移动，松开"
+    },
+    {
+     "step": "2 手机：开始画面期间按键不操作坦克",
+     "passed": true,
+     "observation": "screen=start 玩家子弹=0 player前=null 后=null"
+    },
+    {
+     "step": "3 手机：出现“第 1 关”开场后进入游戏",
+     "passed": true,
+     "observation": "开场文字=第 1 关 敌人 10 辆 之后 screen=playing level=1"
+    }
+   ],
+   "evidence": [
+    "TS-02-电脑-playing.png",
+    "TS-02-电脑-snapshot.json",
+    "TS-02-电脑-console.log",
+    "TS-02-电脑.png",
+    "TS-02-手机-playing.png",
+    "TS-02-手机-snapshot.json",
+    "TS-02-手机-console.log",
+    "TS-02-手机.png"
+   ]
+  },
+  {
+   "id": "TS-10",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 5 关布局都同时含砖、钢、水",
+     "passed": true,
+     "observation": "1:true 2:true 3:true 4:true 5:true"
+    },
+    {
+     "step": "2 第 1 关实际地图含三种地形且与布局一致",
+     "passed": true,
+     "observation": "一致"
+    }
+   ],
+   "evidence": [
+    "TS-10-end-snapshot.json",
+    "TS-10-end-console.log",
+    "TS-10-end.png"
+   ]
+  },
+  {
+   "id": "TS-21",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 恰好 5 关",
+     "passed": true,
+     "observation": "关数=5"
+    },
+    {
+     "step": "2 每关敌人总数严格多于上一关",
+     "passed": true,
+     "observation": "总数=10,12,14,16,18"
+    },
+    {
+     "step": "3 较强类型数量不少于上一关",
+     "passed": true,
+     "observation": "快速+重甲=3,5,7,9,11"
+    },
+    {
+     "step": "4 第 5 关较强类型多于第 1 关",
+     "passed": true,
+     "observation": "3 → 11"
+    },
+    {
+     "step": "5 各类型之和等于总数，5 关布局两两不同",
+     "passed": true,
+     "observation": "和一致=true 不同布局数=5"
+    },
+    {
+     "step": "6 第 1 关开场提示敌人数等于数据",
+     "passed": true,
+     "observation": "开场文字=第 1 关 敌人 10 辆 数据总数=10"
+    }
+   ],
+   "evidence": [
+    "TS-21-levels.json",
+    "TS-21-end-snapshot.json",
+    "TS-21-end-console.log",
+    "TS-21-end.png"
+   ]
+  },
+  {
+   "id": "TS-05",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 显示方向键组与开火按钮",
+     "passed": true,
+     "observation": "可见方向键=向上,向下,向左,向右 开火=true"
+    },
+    {
+     "step": "2 触摸 向右：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(3.063,5.112) 读数=right(3.31,5.06) right(3.61,5.06) right(3.96,5.06) right(4.26,5.06) right(4.51,5.06) 松开时=(4.562,5.063) 再0.5s=(4.562,5.063,right) 再0.3s=(4.562,5.063)"
+    },
+    {
+     "step": "2 触摸 向右：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(3.063,5.112) 读数=right(3.31,5.06) right(3.61,5.06) right(3.96,5.06) right(4.26,5.06) right(4.51,5.06) 松开时=(4.562,5.063) 再0.5s=(4.562,5.063,right) 再0.3s=(4.562,5.063)"
+    },
+    {
+     "step": "3 触摸“开火”朝right开火：子弹沿车头方向",
+     "passed": true,
+     "observation": "朝向right 子弹dir=right (5.59,5.50)→(5.89,5.50)"
+    },
+    {
+     "step": "2 触摸 向左：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(4.562,5.063) 读数=left(4.26,5.06) left(3.96,5.06) left(3.66,5.06) left(3.36,5.06) left(3.06,5.06) 松开时=(3.063,5.063) 再0.5s=(3.063,5.063,left) 再0.3s=(3.063,5.063)"
+    },
+    {
+     "step": "2 触摸 向左：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(4.562,5.063) 读数=left(4.26,5.06) left(3.96,5.06) left(3.66,5.06) left(3.36,5.06) left(3.06,5.06) 松开时=(3.063,5.063) 再0.5s=(3.063,5.063,left) 再0.3s=(3.063,5.063)"
+    },
+    {
+     "step": "3 触摸“开火”朝left开火：子弹沿车头方向",
+     "passed": true,
+     "observation": "朝向left 子弹dir=left (2.76,5.50)→(2.46,5.50)"
+    },
+    {
+     "step": "2 触摸 向下：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(3.063,5.063) 读数=down(3.06,5.36) down(3.06,5.71) down(3.06,6.01) down(3.06,6.31) down(3.06,6.61) 松开时=(3.063,6.662) 再0.5s=(3.063,6.662,down) 再0.3s=(3.063,6.662)"
+    },
+    {
+     "step": "2 触摸 向下：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(3.063,5.063) 读数=down(3.06,5.36) down(3.06,5.71) down(3.06,6.01) down(3.06,6.31) down(3.06,6.61) 松开时=(3.063,6.662) 再0.5s=(3.063,6.662,down) 再0.3s=(3.063,6.662)"
+    },
+    {
+     "step": "3 触摸“开火”朝down开火：子弹沿车头方向",
+     "passed": true,
+     "observation": "朝向down 子弹dir=down (3.50,7.99)→(3.50,8.29)"
+    },
+    {
+     "step": "2 触摸 向上：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(3.063,6.662) 读数=up(3.06,6.31) up(3.06,6.01) up(3.06,5.71) up(3.06,5.41) 松开时=(3.063,5.412) 再0.5s=(3.063,5.412,up) 再0.3s=(3.063,5.412)"
+    },
+    {
+     "step": "2 触摸 向上：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(3.063,6.662) 读数=up(3.06,6.31) up(3.06,6.01) up(3.06,5.71) up(3.06,5.41) 松开时=(3.063,5.412) 再0.5s=(3.063,5.412,up) 再0.3s=(3.063,5.412)"
+    },
+    {
+     "step": "3 触摸“开火”朝up开火：子弹沿车头方向",
+     "passed": true,
+     "observation": "朝向up 子弹dir=up (3.50,5.26)→(3.50,5.11)"
+    },
+    {
+     "step": "4 按住“向左”再按住“向上” → 向上移动",
+     "passed": true,
+     "observation": "(6.56,4.71,up)→(6.56,4.31,up)"
+    },
+    {
+     "step": "4 抬起“向上” → 转为向左",
+     "passed": true,
+     "observation": "(6.26,4.56,left)→(5.76,4.56,left)"
+    }
+   ],
+   "evidence": [
+    "TS-05-end-snapshot.json",
+    "TS-05-end-console.log",
+    "TS-05-end.png"
+   ]
+  },
+  {
+   "id": "TS-26",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "A 不预置：历史最高分显示 0",
+     "passed": true,
+     "observation": "显示“0”"
+    },
+    {
+     "step": "B 预置 50：历史最高分显示 50",
+     "passed": true,
+     "observation": "显示“50”"
+    }
+   ],
+   "evidence": [
+    "TS-26-A-snapshot.json",
+    "TS-26-A-console.log",
+    "TS-26-A.png",
+    "TS-26-B-snapshot.json",
+    "TS-26-B-console.log",
+    "TS-26-B.png"
+   ]
+  },
+  {
+   "id": "TS-04",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "5 对照：开场提示期间按键无效",
+     "passed": true,
+     "observation": "screen=levelIntro 前=[4.0625,12.0625] 后=[4.0625,12.0625] 子弹=0"
+    },
+    {
+     "step": "1 键盘 →：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(3.063,5.112) 读数=right(3.41,5.06) right(3.66,5.06) right(3.96,5.06) right(4.26,5.06) right(4.61,5.06) 松开时=(4.612,5.063) 再0.5s=(4.612,5.063,right) 再0.3s=(4.612,5.063)"
+    },
+    {
+     "step": "1 键盘 →：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(3.063,5.112) 读数=right(3.41,5.06) right(3.66,5.06) right(3.96,5.06) right(4.26,5.06) right(4.61,5.06) 松开时=(4.612,5.063) 再0.5s=(4.612,5.063,right) 再0.3s=(4.612,5.063)"
+    },
+    {
+     "step": "2 键盘 朝right开火：子弹沿车头方向",
+     "passed": true,
+     "observation": "朝向right 子弹dir=right (5.79,5.50)→(6.09,5.50)"
+    },
+    {
+     "step": "1 键盘 D：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(4.612,5.063) 读数=right(4.96,5.06) right(5.26,5.06) right(5.56,5.06) right(5.91,5.06) right(6.26,5.06) 松开时=(6.262,5.063) 再0.5s=(6.262,5.063,right) 再0.3s=(6.262,5.063)"
+    },
+    {
+     "step": "1 键盘 D：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(4.612,5.063) 读数=right(4.96,5.06) right(5.26,5.06) right(5.56,5.06) right(5.91,5.06) right(6.26,5.06) 松开时=(6.262,5.063) 再0.5s=(6.262,5.063,right) 再0.3s=(6.262,5.063)"
+    },
+    {
+     "step": "1 键盘 ←：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(6.262,5.063) 读数=left(6.01,5.06) left(5.66,5.06) left(5.36,5.06) left(4.91,5.06) left(4.61,5.06) 松开时=(4.612,5.063) 再0.5s=(4.612,5.063,left) 再0.3s=(4.612,5.063)"
+    },
+    {
+     "step": "1 键盘 ←：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(6.262,5.063) 读数=left(6.01,5.06) left(5.66,5.06) left(5.36,5.06) left(4.91,5.06) left(4.61,5.06) 松开时=(4.612,5.063) 再0.5s=(4.612,5.063,left) 再0.3s=(4.612,5.063)"
+    },
+    {
+     "step": "2 键盘 朝left开火：子弹沿车头方向",
+     "passed": true,
+     "observation": "朝向left 子弹dir=left (4.46,5.50)→(4.16,5.50)"
+    },
+    {
+     "step": "1 键盘 A：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(4.612,5.063) 读数=left(4.31,5.06) left(3.96,5.06) left(3.66,5.06) left(3.41,5.06) left(3.06,5.06) 松开时=(3.063,5.063) 再0.5s=(3.063,5.063,left) 再0.3s=(3.063,5.063)"
+    },
+    {
+     "step": "1 键盘 A：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(4.612,5.063) 读数=left(4.31,5.06) left(3.96,5.06) left(3.66,5.06) left(3.41,5.06) left(3.06,5.06) 松开时=(3.063,5.063) 再0.5s=(3.063,5.063,left) 再0.3s=(3.063,5.063)"
+    },
+    {
+     "step": "1 键盘 ↓：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(3.063,5.063) 读数=down(3.06,5.36) down(3.06,5.66) down(3.06,5.96) down(3.06,6.26) down(3.06,6.56) 松开时=(3.063,6.612) 再0.5s=(3.063,6.612,down) 再0.3s=(3.063,6.612)"
+    },
+    {
+     "step": "1 键盘 ↓：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(3.063,5.063) 读数=down(3.06,5.36) down(3.06,5.66) down(3.06,5.96) down(3.06,6.26) down(3.06,6.56) 松开时=(3.063,6.612) 再0.5s=(3.063,6.612,down) 再0.3s=(3.063,6.612)"
+    },
+    {
+     "step": "2 键盘 朝down开火：子弹沿车头方向",
+     "passed": true,
+     "observation": "朝向down 子弹dir=down (3.50,7.64)→(3.50,7.94)"
+    },
+    {
+     "step": "1 键盘 S：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(3.063,6.612) 读数=down(3.06,6.96) down(3.06,7.21) down(3.06,7.56) down(3.06,7.86) down(3.06,8.16) 松开时=(3.063,8.162) 再0.5s=(3.063,8.162,down) 再0.3s=(3.063,8.162)"
+    },
+    {
+     "step": "1 键盘 S：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(3.063,6.612) 读数=down(3.06,6.96) down(3.06,7.21) down(3.06,7.56) down(3.06,7.86) down(3.06,8.16) 松开时=(3.063,8.162) 再0.5s=(3.063,8.162,down) 再0.3s=(3.063,8.162)"
+    },
+    {
+     "step": "1 键盘 ↑：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(3.063,8.162) 读数=up(3.06,7.86) up(3.06,7.51) up(3.06,7.21) up(3.06,6.96) 松开时=(3.063,6.912) 再0.5s=(3.063,6.912,up) 再0.3s=(3.063,6.912)"
+    },
+    {
+     "step": "1 键盘 ↑：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(3.063,8.162) 读数=up(3.06,7.86) up(3.06,7.51) up(3.06,7.21) up(3.06,6.96) 松开时=(3.063,6.912) 再0.5s=(3.063,6.912,up) 再0.3s=(3.063,6.912)"
+    },
+    {
+     "step": "2 键盘 朝up开火：子弹沿车头方向",
+     "passed": true,
+     "observation": "朝向up 子弹dir=up (3.50,6.61)→(3.50,6.16)"
+    },
+    {
+     "step": "1 键盘 W：朝向与持续移动",
+     "passed": true,
+     "observation": "起点(3.063,6.912) 读数=up(3.06,6.61) up(3.06,6.31) up(3.06,5.96) up(3.06,5.66) 松开时=(3.063,5.612) 再0.5s=(3.063,5.612,up) 再0.3s=(3.063,5.612)"
+    },
+    {
+     "step": "1 键盘 W：松开后停止且朝向保持",
+     "passed": true,
+     "observation": "起点(3.063,6.912) 读数=up(3.06,6.61) up(3.06,6.31) up(3.06,5.96) up(3.06,5.66) 松开时=(3.063,5.612) 再0.5s=(3.063,5.612,up) 再0.3s=(3.063,5.612)"
+    },
+    {
+     "step": "3 多键：按住←再按住↑ → 朝上并向上移动",
+     "passed": true,
+     "observation": "(6.56,4.76,up)→(6.56,4.31,up)"
+    },
+    {
+     "step": "3 多键：松开↑（仍按←）→ 转向左并向左移动",
+     "passed": true,
+     "observation": "(6.26,4.56,left)→(5.81,4.56,left)"
+    },
+    {
+     "step": "4 朝水面按住 2 秒：停在障碍前不进入",
+     "passed": true,
+     "observation": "坦克 y=5.000（水面在第 4 行，下边界 y=5）"
+    }
+   ],
+   "evidence": [
+    "TS-04-end-snapshot.json",
+    "TS-04-end-console.log",
+    "TS-04-end.png"
+   ]
+  },
+  {
+   "id": "TS-06",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 360×640 开场提示：虚拟按键与地图不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "2 360×640 开场提示：虚拟按键与四项信息不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "3 360×640 开场提示：元素都在可视区域内",
+     "passed": true,
+     "observation": "全部在视口内"
+    },
+    {
+     "step": "1 360×640 游戏进行中：虚拟按键与地图不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "2 360×640 游戏进行中：虚拟按键与四项信息不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "3 360×640 游戏进行中：元素都在可视区域内",
+     "passed": true,
+     "observation": "全部在视口内"
+    },
+    {
+     "step": "4 360×640 命中测试：地图四角与中心、四项信息中心不被虚拟按键盖住",
+     "passed": true,
+     "observation": "CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,OUTPUT#hud-level,OUTPUT#hud-score,OUTPUT#hud-lives,OUTPUT#hud-enemies"
+    },
+    {
+     "step": "1 390×844 开场提示：虚拟按键与地图不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "2 390×844 开场提示：虚拟按键与四项信息不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "3 390×844 开场提示：元素都在可视区域内",
+     "passed": true,
+     "observation": "全部在视口内"
+    },
+    {
+     "step": "1 390×844 游戏进行中：虚拟按键与地图不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "2 390×844 游戏进行中：虚拟按键与四项信息不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "3 390×844 游戏进行中：元素都在可视区域内",
+     "passed": true,
+     "observation": "全部在视口内"
+    },
+    {
+     "step": "4 390×844 命中测试：地图四角与中心、四项信息中心不被虚拟按键盖住",
+     "passed": true,
+     "observation": "CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,OUTPUT#hud-level,OUTPUT#hud-score,OUTPUT#hud-lives,OUTPUT#hud-enemies"
+    },
+    {
+     "step": "1 430×932 开场提示：虚拟按键与地图不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "2 430×932 开场提示：虚拟按键与四项信息不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "3 430×932 开场提示：元素都在可视区域内",
+     "passed": true,
+     "observation": "全部在视口内"
+    },
+    {
+     "step": "1 430×932 游戏进行中：虚拟按键与地图不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "2 430×932 游戏进行中：虚拟按键与四项信息不相交",
+     "passed": true,
+     "observation": "交集面积均为 0"
+    },
+    {
+     "step": "3 430×932 游戏进行中：元素都在可视区域内",
+     "passed": true,
+     "observation": "全部在视口内"
+    },
+    {
+     "step": "4 430×932 命中测试：地图四角与中心、四项信息中心不被虚拟按键盖住",
+     "passed": true,
+     "observation": "CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,CANVAS#battlefield,OUTPUT#hud-level,OUTPUT#hud-score,OUTPUT#hud-lives,OUTPUT#hud-enemies"
+    }
+   ],
+   "evidence": [
+    "TS-06-360-开场提示.json",
+    "TS-06-360-游戏进行中.json",
+    "TS-06-360-snapshot.json",
+    "TS-06-360-console.log",
+    "TS-06-360.png",
+    "TS-06-390-开场提示.json",
+    "TS-06-390-游戏进行中.json",
+    "TS-06-390-snapshot.json",
+    "TS-06-390-console.log",
+    "TS-06-390.png",
+    "TS-06-430-开场提示.json",
+    "TS-06-430-游戏进行中.json",
+    "TS-06-430-snapshot.json",
+    "TS-06-430-console.log",
+    "TS-06-430.png"
+   ]
+  },
+  {
+   "id": "TS-40",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 触摸开始后音频运行、未静音、音量非 0、音乐播放",
+     "passed": true,
+     "observation": "{\"state\":\"running\",\"muted\":false,\"masterGain\":1,\"musicPlaying\":true}"
+    },
+    {
+     "step": "2 触摸“开火”后新增“开火”音效",
+     "passed": true,
+     "observation": "fire 次数 0→1"
+    },
+    {
+     "step": "3 说明中有静音可能听不到音效的提示",
+     "passed": true,
+     "observation": "怎么玩 电脑：方向键 或 W / A / S / D 移动，空格开火 手机：按住屏幕下方的方向键移动，松开即停；按开火按钮发射子弹 目标：消灭本关全部敌方坦克，同时保护底部的指挥所 砖墙可以打碎，钢墙打不穿，水面不能通过 声音：右上角“静音”按钮可开关声音。手机处于静音模式等系统原因时，可能听不到音效。"
+    }
+   ],
+   "evidence": [
+    "TS-40-end-snapshot.json",
+    "TS-40-end-console.log",
+    "TS-40-end.png"
+   ]
+  },
+  {
+   "id": "TS-38",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 默认有声、开始与游戏中都能看到静音按钮、背景音乐播放",
+     "passed": true,
+     "observation": "开始画面可见=true 游戏中可见=true aria-pressed=false muted=false/false music=true gain=1"
+    },
+    {
+     "step": "2 点击后静音：aria-pressed=true、muted、总音量 0",
+     "passed": true,
+     "observation": "aria-pressed=true muted=true gain=0"
+    },
+    {
+     "step": "3 再点击恢复有声、音乐仍在播放",
+     "passed": true,
+     "observation": "aria-pressed=false muted=false gain=1 music=true"
+    },
+    {
+     "step": "4 开始画面静音后重新加载又为有声",
+     "passed": true,
+     "observation": "重载前 aria-pressed=true；重载后 aria-pressed=false muted=false"
+    }
+   ],
+   "evidence": [
+    "TS-38-end-snapshot.json",
+    "TS-38-end-console.log",
+    "TS-38-end.png"
+   ]
+  },
+  {
+   "id": "TS-07",
+   "passed": false,
+   "checkpoints": [
+    {
+     "step": "4 对照：打通前驶向砖墙停在砖墙前",
+     "passed": true,
+     "observation": "坦克 y=11.000（砖墙下边界 y=11）"
+    },
+    {
+     "step": "1 第一枪：子弹在砖墙处消失",
+     "passed": false,
+     "observation": "开火后没有出现玩家子弹"
+    }
+   ],
+   "evidence": [
+    "TS-07-end-snapshot.json",
+    "TS-07-end-console.log",
+    "TS-07-end.png"
+   ]
+  },
+  {
+   "id": "TS-09",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 坦克不进入水面单元，停在水边",
+     "passed": true,
+     "observation": "坦克 y=5.000（水面下边界 y=5）"
+    },
+    {
+     "step": "2 子弹越过水面继续飞行",
+     "passed": true,
+     "observation": "子弹轨迹 y：4.85 3.95；越过水面后仍存在的读数 4 次"
+    },
+    {
+     "step": "2 水面单元不变",
+     "passed": true,
+     "observation": "前=WWWW/WWWW/WWWW/WWWW 后=WWWW/WWWW/WWWW/WWWW"
+    }
+   ],
+   "evidence": [
+    "TS-09-end-snapshot.json",
+    "TS-09-end-console.log",
+    "TS-09-end.png"
+   ]
+  },
+  {
+   "id": "TS-08",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 每颗子弹在钢墙处消失",
+     "passed": true,
+     "observation": "第1枪最高 y=9.26消失；第2枪最高 y=9.26消失；第3枪最高 y=9.26消失；第4枪最高 y=9.26消失；第5枪最高 y=9.26消失"
+    },
+    {
+     "step": "2 5 次后该钢墙单元全部仍为钢墙",
+     "passed": true,
+     "observation": "前=SSSS/SSSS/SSSS/SSSS 后=SSSS/SSSS/SSSS/SSSS"
+    },
+    {
+     "step": "2 击中前后钢墙区域截图相同（效果消失后）",
+     "passed": true,
+     "observation": "钢墙格截图相同"
+    },
+    {
+     "step": "3 坦克停在钢墙前不进入",
+     "passed": true,
+     "observation": "坦克 y=9.000（钢墙下边界 y=9）"
+    }
+   ],
+   "evidence": [
+    "TS-08-end-snapshot.json",
+    "TS-08-end-console.log",
+    "TS-08-end.png"
+   ]
+  },
+  {
+   "id": "TS-41",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 1024×768 开始画面：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":1024,\"cw\":1024,\"sx\":0}"
+    },
+    {
+     "step": "1 1024×768 游戏进行中：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":1024,\"cw\":1024,\"sx\":0}"
+    },
+    {
+     "step": "2 1024×768：地图与 HUD 在视口内",
+     "passed": true,
+     "observation": "地图={\"x\":26,\"y\":90,\"width\":672,\"height\":672} HUD={\"x\":0,\"y\":44,\"width\":1024,\"height\":40}"
+    },
+    {
+     "step": "1 1280×800 开始画面：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":1280,\"cw\":1280,\"sx\":0}"
+    },
+    {
+     "step": "1 1280×800 游戏进行中：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":1280,\"cw\":1280,\"sx\":0}"
+    },
+    {
+     "step": "2 1280×800：地图与 HUD 在视口内",
+     "passed": true,
+     "observation": "地图={\"x\":138,\"y\":90,\"width\":704,\"height\":704} HUD={\"x\":0,\"y\":44,\"width\":1280,\"height\":40}"
+    },
+    {
+     "step": "1 1920×1080 开始画面：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":1920,\"cw\":1920,\"sx\":0}"
+    },
+    {
+     "step": "1 1920×1080 游戏进行中：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":1920,\"cw\":1920,\"sx\":0}"
+    },
+    {
+     "step": "2 1920×1080：地图与 HUD 在视口内",
+     "passed": true,
+     "observation": "地图={\"x\":318,\"y\":90,\"width\":984,\"height\":984} HUD={\"x\":0,\"y\":44,\"width\":1920,\"height\":40}"
+    },
+    {
+     "step": "1 360×640 开始画面：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":360,\"cw\":360,\"sx\":0}"
+    },
+    {
+     "step": "1 360×640 游戏进行中：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":360,\"cw\":360,\"sx\":0}"
+    },
+    {
+     "step": "2 360×640：地图与 HUD 在视口内",
+     "passed": true,
+     "observation": "地图={\"x\":6,\"y\":112,\"width\":348,\"height\":348} HUD={\"x\":0,\"y\":44,\"width\":360,\"height\":40}"
+    },
+    {
+     "step": "1 390×844 开始画面：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":390,\"cw\":390,\"sx\":0}"
+    },
+    {
+     "step": "1 390×844 游戏进行中：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":390,\"cw\":390,\"sx\":0}"
+    },
+    {
+     "step": "2 390×844：地图与 HUD 在视口内",
+     "passed": true,
+     "observation": "地图={\"x\":6,\"y\":199,\"width\":378,\"height\":378} HUD={\"x\":0,\"y\":44,\"width\":390,\"height\":40}"
+    },
+    {
+     "step": "1 430×932 开始画面：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":430,\"cw\":430,\"sx\":0}"
+    },
+    {
+     "step": "1 430×932 游戏进行中：无横向滚动",
+     "passed": true,
+     "observation": "{\"sw\":430,\"cw\":430,\"sx\":0}"
+    },
+    {
+     "step": "2 430×932：地图与 HUD 在视口内",
+     "passed": true,
+     "observation": "地图={\"x\":6,\"y\":223,\"width\":418,\"height\":418} HUD={\"x\":0,\"y\":44,\"width\":430,\"height\":40}"
+    },
+    {
+     "step": "3 等比缩放：宽高比一致（≤1%），较宽视口地图不更小",
+     "passed": true,
+     "observation": "1024×768:672×672 1280×800:704×704 1920×1080:984×984 360×640:348×348 390×844:378×378 430×932:418×418"
+    },
+    {
+     "step": "4 横屏显示“请旋转手机”，改回竖屏后消失且画面正常",
+     "passed": true,
+     "observation": "横屏提示可见=true 竖屏提示可见=false 地图可见=true 开始画面可见=true"
+    }
+   ],
+   "evidence": [
+    "TS-41-1024x768.png",
+    "TS-41-1280x800.png",
+    "TS-41-1920x1080.png",
+    "TS-41-360x640.png",
+    "TS-41-390x844.png",
+    "TS-41-430x932.png",
+    "TS-41-rotate-snapshot.json",
+    "TS-41-rotate-console.log",
+    "TS-41-rotate.png"
+   ]
+  },
+  {
+   "id": "TS-11",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 每辆敌人第一次出现时位于地图最上面一行",
+     "passed": true,
+     "observation": "首次出现纵坐标：0.06 0.13 0.13 0.06 0.16 0.10 0.06 0.10 0.12 0.10"
+    },
+    {
+     "step": "2 任一时刻场上敌人数少于本关敌人总数",
+     "passed": true,
+     "observation": "场上最多 4 辆，本关总数 10"
+    },
+    {
+     "step": "3 消灭后有新敌人补上；累计出现数等于开场总数",
+     "passed": true,
+     "observation": "消灭后有新敌人出现=true；累计出现 10 辆，开场总数 10"
+    }
+   ],
+   "evidence": [
+    "TS-11-main-snapshot.json",
+    "TS-11-main-console.log",
+    "TS-11-main.png"
+   ]
+  },
+  {
+   "id": "TS-12",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 出现过普通型、快速型、重甲型",
+     "passed": true,
+     "observation": "出现类型：normal,fast,heavy"
+    },
+    {
+     "step": "2 快速型速度 ÷ 普通型速度 ≥ 1.5",
+     "passed": true,
+     "observation": "普通型 2.063 格/秒（33 段），快速型 3.622 格/秒（5 段），比值 1.756"
+    }
+   ],
+   "evidence": [
+    "TS-12-main-snapshot.json",
+    "TS-12-main-console.log",
+    "TS-12-main.png"
+   ]
+  },
+  {
+   "id": "TS-13",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 第 1 次命中后仍在场、分数不变",
+     "passed": true,
+     "observation": "第1次命中后 hp 3→2，仍在场，分数 500→500"
+    },
+    {
+     "step": "2 被消灭时累计命中 ≥ 2，分数增加、剩余敌人减 1",
+     "passed": true,
+     "observation": "累计命中 3；heavy 消灭：分数 500→800，剩余 6→5"
+    },
+    {
+     "step": "3 其他类型被消灭时分数增加、剩余敌人减 1",
+     "passed": true,
+     "observation": "normal 消灭：分数 0→100，剩余 10→9；normal 消灭：分数 100→200，剩余 9→8；fast 消灭：分数 200→400，剩余 8→7；normal 消灭：分数 400→500，剩余 7→6；normal 消灭：分数 800→900，剩余 5→4；normal 消灭：分数 900→1000，剩余 4→3"
+    }
+   ],
+   "evidence": [
+    "TS-13-main-snapshot.json",
+    "TS-13-main-console.log",
+    "TS-13-main.png"
+   ]
+  },
+  {
+   "id": "TS-19",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 对照：剩余敌人为 1 时仍为游戏进行中",
+     "passed": true,
+     "observation": "剩余敌人为 1 时画面=playing"
+    },
+    {
+     "step": "2 最后一辆被消灭后出现过关画面且播放 levelClear",
+     "passed": true,
+     "observation": "过关画面文字：第 1 关 过关；levelClear 音效=true"
+    },
+    {
+     "step": "3 关卡开场显示“第 2 关”与第 2 关敌人总数，且多于第 1 关",
+     "passed": true,
+     "observation": "开场文字：第 2 关 敌人 12 辆；快照第 2 关总数 12，第 1 关 10"
+    },
+    {
+     "step": "4 第 2 关 HUD：关卡 2、分数与生命带入、剩余敌人为本关总数",
+     "passed": true,
+     "observation": "HUD={\"关卡\":\"2\",\"分数\":\"1400\",\"生命\":\"2\",\"剩余敌人\":\"12\"}；第 1 关结束 分数1400 生命2；第 2 关总数 12"
+    },
+    {
+     "step": "5 第 2 关地图与第 1 关不同，且含砖、钢、水",
+     "passed": true,
+     "observation": "地图不同=true"
+    }
+   ],
+   "evidence": [
+    "TS-19-main-snapshot.json",
+    "TS-19-main-console.log",
+    "TS-19-main.png"
+   ]
+  },
+  {
+   "id": "TS-25",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "2 开场提示时：关卡为当前关、剩余敌人等于本关敌人总数",
+     "passed": true,
+     "observation": "HUD={\"关卡\":\"1\",\"分数\":\"0\",\"生命\":\"3\",\"剩余敌人\":\"10\"} 快照 level=1 total=10"
+    },
+    {
+     "step": "1 levelIntro 画面期间四项信息可见",
+     "passed": true,
+     "observation": "{\"关卡\":{\"ok\":true,\"text\":\"1\",\"inView\":true,\"covered\":false},\"分数\":{\"ok\":true,\"text\":\"0\",\"inView\":true,\"covered\":false},\"生命\":{\"ok\":true,\"text\":\"3\",\"inView\":true,\"covered\":false},\"剩余敌人\":{\"ok\":true,\"text\":\"10\",\"inView\":true,\"covered\":false}}"
+    },
+    {
+     "step": "1 playing 画面期间四项信息可见",
+     "passed": true,
+     "observation": "{\"关卡\":{\"ok\":true,\"text\":\"1\",\"inView\":true,\"covered\":false},\"分数\":{\"ok\":true,\"text\":\"0\",\"inView\":true,\"covered\":false},\"生命\":{\"ok\":true,\"text\":\"3\",\"inView\":true,\"covered\":false},\"剩余敌人\":{\"ok\":true,\"text\":\"10\",\"inView\":true,\"covered\":false}}"
+    },
+    {
+     "step": "1 levelClear 画面期间四项信息可见",
+     "passed": true,
+     "observation": "{\"关卡\":{\"ok\":true,\"text\":\"1\",\"inView\":true,\"covered\":false},\"分数\":{\"ok\":true,\"text\":\"1400\",\"inView\":true,\"covered\":false},\"生命\":{\"ok\":true,\"text\":\"2\",\"inView\":true,\"covered\":false},\"剩余敌人\":{\"ok\":true,\"text\":\"0\",\"inView\":true,\"covered\":false}}"
+    },
+    {
+     "step": "3/6 消灭敌人后 100ms 内 HUD 分数与剩余敌人与快照一致",
+     "passed": true,
+     "observation": "事件前 快照 分数0 生命3 剩余10 关卡1；事件后≤50ms HUD={\"关卡\":\"1\",\"分数\":\"100\",\"生命\":\"3\",\"剩余敌人\":\"9\"} 快照 分数100 生命3 剩余9 关卡1 | 事件前 快照 分数100 生命3 剩余9 关卡1；事件后≤50ms HUD={\"关卡\":\"1\",\"分数\":\"200\",\"生命\":\"3\",\"剩余敌人\":\"8\"} 快照 分数200 生命3 剩余8 关卡1 | 事件前 快照 分数200 生命3 剩余8 关卡1；事件后≤50ms HUD={\"关卡\":\"1\",\"分数\":\"400\",\"生命\":\"3\",\"剩余敌人\":\"7\"} 快照 分数400 生命3 剩余7 关卡1 | 事件前 快照 分数400 生命3 剩余7 关卡1；事件后≤50ms HUD={\"关卡\":\"1\",\"分数\":\"500\",\"生命\":\"3\",\"剩余敌人\":\"6\"} 快照 分数500 生命3 剩余6 关卡1 | 事件前 快照 分数500 生命2 剩余6 关卡1；事件后≤50ms HUD={\"关卡\":\"1\",\"分数\":\"800\",\"生命\":\"2\",\"剩余敌人\":\"5\"} 快照 分数800 生命2 剩余5 关卡1"
+    },
+    {
+     "step": "3 敌人出现时剩余敌人不变",
+     "passed": true,
+     "observation": "敌人出现时剩余敌人均未变化"
+    },
+    {
+     "step": "4/6 失去生命后 100ms 内 HUD 生命减 1",
+     "passed": true,
+     "observation": "事件前 快照 分数500 生命3 剩余6 关卡1；事件后≤50ms HUD={\"关卡\":\"1\",\"分数\":\"500\",\"生命\":\"2\",\"剩余敌人\":\"6\"} 快照 分数500 生命2 剩余6 关卡1"
+    },
+    {
+     "step": "5/6 过关后 100ms 内 HUD 关卡变为下一关",
+     "passed": true,
+     "observation": "事件前 快照 分数1400 生命2 剩余0 关卡1；事件后≤50ms HUD={\"关卡\":\"2\",\"分数\":\"1400\",\"生命\":\"2\",\"剩余敌人\":\"12\"} 快照 分数1400 生命2 剩余12 关卡2"
+    }
+   ],
+   "evidence": [
+    "TS-25-main-snapshot.json",
+    "TS-25-main-console.log",
+    "TS-25-main.png"
+   ]
+  },
+  {
+   "id": "TS-36",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "拾取后新增“拾取”音效",
+     "passed": true,
+     "observation": "拾取道具：pickup 音效 1→2"
+    },
+    {
+     "step": "过关后新增“过关”音效",
+     "passed": true,
+     "observation": "levelClear 音效=true"
+    }
+   ],
+   "evidence": [
+    "TS-36-main-snapshot.json",
+    "TS-36-main-console.log",
+    "TS-36-main.png"
+   ]
+  },
+  {
+   "id": "TS-14",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 子弹在指挥所处消失的同一次快照中指挥所已摧毁",
+     "passed": true,
+     "observation": "前一帧子弹存在=true，本帧子弹消失=true，指挥所已摧毁=true"
+    },
+    {
+     "step": "2 判为失败：不再接受移动与开火，出现失败画面，期间无过关画面",
+     "passed": true,
+     "observation": "screen=gameOver 失败浮层可见=true 坦克未移动=true 无玩家子弹=true 出现过关=false"
+    },
+    {
+     "step": "3 指挥所爆炸：爆炸记录与画面震动",
+     "passed": true,
+     "observation": "爆炸记录最大 1，震动时长最大 483ms"
+    },
+    {
+     "step": "4 进入失败画面时有过渡（过渡进行中，且浮层部分透明或处于移动/动画中间状态）",
+     "passed": true,
+     "observation": "过渡进行中读数 20 次，浮层部分透明读数 41 次，移动/动画中间状态 21 次；样例 [{\"t\":17,\"screen\":\"playing\",\"transitioning\":false,\"hidden\":true,\"op\":0,\"tr\":null,\"top\":0,\"an\":0,\"anyT\":[]},{\"t\":267,\"screen\":\"playing\",\"transitioning\":false,\"hidden\":true,\"op\":0,\"tr\":null,\"top\":0,\"an\":0,\"anyT\":[]},{\"t\":517,\"screen\":\"playing\",\"transitioning\":false,\"hidden\":true,\"op\":0,\"tr\":null,\"top\":0,\"an\":0,\"anyT\":[]},{\"t\":767,\"screen\":\"playing\",\"transitioning\":false,\"hidden\":true,\"op\":0,\"tr\":null,\"top\":0,\"an\":0,\"anyT\":[]},{\"t\":1017,\"screen\":\"playing\",\"transitioning\":false,\"hidden\":true,\"op\":0,\"tr\":null,\"top\":0,\"an\":0,\"anyT\":[]},{\"t\":1267,\"screen\":"
+    },
+    {
+     "step": "5 失败音效 gameOver",
+     "passed": true,
+     "observation": "gameOver 音效 0→1"
+    }
+   ],
+   "evidence": [
+    "TS-14-transition.json",
+    "TS-14-end-snapshot.json",
+    "TS-14-end-console.log",
+    "TS-14-end.png"
+   ]
+  },
+  {
+   "id": "TS-16",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 失败画面显示本局分数、历史最高分 99999 与返回按钮",
+     "passed": true,
+     "observation": "本局分数“100”（失败前 HUD 分数 100），历史最高分“99999”，按钮可见=true"
+    },
+    {
+     "step": "2 点击后回到开始画面",
+     "passed": true,
+     "observation": "screen=start 开始画面可见=true"
+    },
+    {
+     "step": "3 新一局：关卡 1、分数 0、生命 3，HUD 与快照一致",
+     "passed": true,
+     "observation": "快照 关卡1 分数0 生命3；HUD={\"关卡\":\"1\",\"分数\":\"0\",\"生命\":\"3\",\"剩余敌人\":\"10\"}"
+    },
+    {
+     "step": "4 新一局地图为第 1 关完整地图，指挥所未摧毁",
+     "passed": true,
+     "observation": "地图与 levels[0] 一致=true，指挥所已摧毁=false"
+    }
+   ],
+   "evidence": [
+    "TS-16-end-snapshot.json",
+    "TS-16-end-console.log",
+    "TS-16-end.png"
+   ]
+  },
+  {
+   "id": "TS-35",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 开火后新增“开火”音效",
+     "passed": true,
+     "observation": "fire 音效 0→1"
+    },
+    {
+     "step": "2 子弹击中砖墙后新增“击中”音效",
+     "passed": true,
+     "observation": "hit 音效 0→1"
+    },
+    {
+     "step": "3 消灭敌人后新增“爆炸”音效",
+     "passed": true,
+     "observation": "explosion 音效 0→1"
+    },
+    {
+     "step": "4 失败后新增“失败”音效",
+     "passed": true,
+     "observation": "gameOver 音效 0→1"
+    },
+    {
+     "step": "5 四类事件的音效名称互不相同",
+     "passed": true,
+     "observation": "记录中的音效名称：fire,hit,explosion,gameOver"
+    }
+   ],
+   "evidence": [
+    "TS-35-end-snapshot.json",
+    "TS-35-end-console.log",
+    "TS-35-end.png"
+   ]
+  },
+  {
+   "id": "TS-27",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 本局分数超过 50 的时刻，本地保存的最高分已等于本局分数（进行中即保存）",
+     "passed": true,
+     "observation": "首次超过 50：本局分数 100，保存值“100”，screen=playing"
+    },
+    {
+     "step": "1b 本局分数继续增加时保存值随之增加",
+     "passed": true,
+     "observation": "分数 100→200，保存值“200”"
+    },
+    {
+     "step": "1c 关闭前保存值等于本局分数",
+     "passed": true,
+     "observation": "关闭前 screen=playing 本局分数 200，保存值 200"
+    },
+    {
+     "step": "2 重新打开回到开始画面，历史最高分显示关闭前的本局分数",
+     "passed": true,
+     "observation": "screen=start 开始画面可见=true，历史最高分“200”，期望 200"
+    },
+    {
+     "step": "3 失败画面历史最高分仍为第 1 步的分数（本局分数更低）",
+     "passed": true,
+     "observation": "本局分数“0”（快照 0，开局 0），历史最高分“200”，期望 200"
+    },
+    {
+     "step": "3b 返回后开始画面历史最高分仍为第 1 步的分数",
+     "passed": true,
+     "observation": "开始画面历史最高分“200”，保存值“200”，期望 200"
+    },
+    {
+     "step": "4 再次重新打开后仍显示第 1 步的分数",
+     "passed": true,
+     "observation": "开始画面历史最高分“200”，期望 200"
+    }
+   ],
+   "evidence": [
+    "TS-27-end-snapshot.json",
+    "TS-27-end-console.log",
+    "TS-27-end.png"
+   ]
+  }
+ ]
+}

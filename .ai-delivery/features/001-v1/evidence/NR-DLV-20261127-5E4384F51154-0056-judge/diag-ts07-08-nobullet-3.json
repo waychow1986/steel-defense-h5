@@ -1,0 +1,658 @@
+{
+ "before": {
+  "screen": "playing",
+  "tr": false,
+  "player": {
+   "x": 0.0625,
+   "y": 10.062499999999972,
+   "dir": "up",
+   "moving": false,
+   "shieldMs": 0,
+   "firepower": 0,
+   "maxBullets": 1,
+   "speed": 3,
+   "recoilMs": 0,
+   "treadPhase": 1
+  },
+  "bullets": [],
+  "input": {
+   "direction": null,
+   "fire": false,
+   "lastResponseMs": 15
+  },
+  "lives": 3,
+  "cues": [
+   {
+    "name": "hit",
+    "atMs": 8064
+   },
+   {
+    "name": "fire",
+    "atMs": 8512
+   },
+   {
+    "name": "hit",
+    "atMs": 8608
+   }
+  ],
+  "enemies": [
+   {
+    "id": 2,
+    "type": "normal",
+    "x": 0.0625,
+    "y": 3.1624999999999974,
+    "dir": "down",
+    "moving": true,
+    "hp": 1,
+    "maxHp": 1,
+    "speed": 2,
+    "carrier": false
+   },
+   {
+    "id": 5,
+    "type": "normal",
+    "x": 6.0625,
+    "y": 0.5666666666666667,
+    "dir": "down",
+    "moving": true,
+    "hp": 1,
+    "maxHp": 1,
+    "speed": 2,
+    "carrier": false
+   }
+  ]
+ },
+ "after": {
+  "screen": "playing",
+  "player": {
+   "x": 0.0625,
+   "y": 10.062499999999972,
+   "dir": "up",
+   "moving": false,
+   "shieldMs": 0,
+   "firepower": 0,
+   "maxBullets": 1,
+   "speed": 3,
+   "recoilMs": 0,
+   "treadPhase": 1
+  },
+  "bullets": [],
+  "input": {
+   "direction": null,
+   "fire": false,
+   "lastResponseMs": 15
+  },
+  "lives": 3,
+  "eff": {
+   "particles": 0,
+   "shakeMs": 0,
+   "muzzleFlashes": 0,
+   "hitSparks": 0,
+   "explosions": 0,
+   "pickupAnims": 0,
+   "trails": 0
+  },
+  "cues": [
+   {
+    "name": "hit",
+    "atMs": 8064
+   },
+   {
+    "name": "fire",
+    "atMs": 8512
+   },
+   {
+    "name": "hit",
+    "atMs": 8608
+   }
+  ]
+ },
+ "events": [
+  [
+   "keydown",
+   "Space",
+   9276
+  ],
+  [
+   "keydown",
+   "Space",
+   9276
+  ],
+  [
+   "keydown",
+   "Space",
+   9276
+  ],
+  [
+   "keydown",
+   "Space",
+   9276
+  ],
+  [
+   "keyup",
+   "Space",
+   9294
+  ],
+  [
+   "keyup",
+   "Space",
+   9294
+  ],
+  [
+   "keyup",
+   "Space",
+   9294
+  ],
+  [
+   "keyup",
+   "Space",
+   9294
+  ]
+ ],
+ "nextFrames": [
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 103.33333333333333,
+    "treadPhase": 1
+   },
+   "bullets": [
+    {
+     "id": 9,
+     "owner": "player",
+     "x": 0.5,
+     "y": 9.762499999999974,
+     "dir": "up",
+     "speed": 9
+    }
+   ],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 0,
+    "shakeMs": 0,
+    "muzzleFlashes": 1,
+    "hitSparks": 0,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 1
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 8512
+    },
+    {
+     "name": "hit",
+     "atMs": 8608
+    },
+    {
+     "name": "fire",
+     "atMs": 9296
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 86.66666666666666,
+    "treadPhase": 1
+   },
+   "bullets": [
+    {
+     "id": 9,
+     "owner": "player",
+     "x": 0.5,
+     "y": 9.612499999999976,
+     "dir": "up",
+     "speed": 9
+    }
+   ],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 0,
+    "shakeMs": 0,
+    "muzzleFlashes": 1,
+    "hitSparks": 0,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 1
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 8512
+    },
+    {
+     "name": "hit",
+     "atMs": 8608
+    },
+    {
+     "name": "fire",
+     "atMs": 9296
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 69.99999999999999,
+    "treadPhase": 1
+   },
+   "bullets": [
+    {
+     "id": 9,
+     "owner": "player",
+     "x": 0.5,
+     "y": 9.462499999999977,
+     "dir": "up",
+     "speed": 9
+    },
+    {
+     "id": 10,
+     "owner": "enemy",
+     "x": 6.5,
+     "y": 1.7916666666666665,
+     "dir": "down",
+     "speed": 9
+    }
+   ],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 0,
+    "shakeMs": 0,
+    "muzzleFlashes": 2,
+    "hitSparks": 0,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 1
+   },
+   "cues": [
+    {
+     "name": "hit",
+     "atMs": 8608
+    },
+    {
+     "name": "fire",
+     "atMs": 9296
+    },
+    {
+     "name": "fire",
+     "atMs": 9344
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 53.333333333333314,
+    "treadPhase": 1
+   },
+   "bullets": [
+    {
+     "id": 9,
+     "owner": "player",
+     "x": 0.5,
+     "y": 9.312499999999979,
+     "dir": "up",
+     "speed": 9
+    }
+   ],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 8,
+    "shakeMs": 0,
+    "muzzleFlashes": 2,
+    "hitSparks": 1,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 1
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 9296
+    },
+    {
+     "name": "fire",
+     "atMs": 9344
+    },
+    {
+     "name": "hit",
+     "atMs": 9360
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 19.999999999999975,
+    "treadPhase": 1
+   },
+   "bullets": [],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 16,
+    "shakeMs": 0,
+    "muzzleFlashes": 1,
+    "hitSparks": 2,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 0
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 9344
+    },
+    {
+     "name": "hit",
+     "atMs": 9360
+    },
+    {
+     "name": "hit",
+     "atMs": 9392
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 3.3333333333333073,
+    "treadPhase": 1
+   },
+   "bullets": [],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 16,
+    "shakeMs": 0,
+    "muzzleFlashes": 1,
+    "hitSparks": 2,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 0
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 9344
+    },
+    {
+     "name": "hit",
+     "atMs": 9360
+    },
+    {
+     "name": "hit",
+     "atMs": 9392
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 0,
+    "treadPhase": 1
+   },
+   "bullets": [],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 16,
+    "shakeMs": 0,
+    "muzzleFlashes": 0,
+    "hitSparks": 2,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 0
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 9344
+    },
+    {
+     "name": "hit",
+     "atMs": 9360
+    },
+    {
+     "name": "hit",
+     "atMs": 9392
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 0,
+    "treadPhase": 1
+   },
+   "bullets": [],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 16,
+    "shakeMs": 0,
+    "muzzleFlashes": 0,
+    "hitSparks": 2,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 0
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 9344
+    },
+    {
+     "name": "hit",
+     "atMs": 9360
+    },
+    {
+     "name": "hit",
+     "atMs": 9392
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 0,
+    "treadPhase": 1
+   },
+   "bullets": [],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 16,
+    "shakeMs": 0,
+    "muzzleFlashes": 0,
+    "hitSparks": 2,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 0
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 9344
+    },
+    {
+     "name": "hit",
+     "atMs": 9360
+    },
+    {
+     "name": "hit",
+     "atMs": 9392
+    }
+   ]
+  },
+  {
+   "screen": "playing",
+   "tr": false,
+   "player": {
+    "x": 0.0625,
+    "y": 10.062499999999972,
+    "dir": "up",
+    "moving": false,
+    "shieldMs": 0,
+    "firepower": 0,
+    "maxBullets": 1,
+    "speed": 3,
+    "recoilMs": 0,
+    "treadPhase": 1
+   },
+   "bullets": [],
+   "input": {
+    "direction": null,
+    "fire": false,
+    "lastResponseMs": 20
+   },
+   "lives": 3,
+   "eff": {
+    "particles": 16,
+    "shakeMs": 0,
+    "muzzleFlashes": 0,
+    "hitSparks": 2,
+    "explosions": 0,
+    "pickupAnims": 0,
+    "trails": 0
+   },
+   "cues": [
+    {
+     "name": "fire",
+     "atMs": 9344
+    },
+    {
+     "name": "hit",
+     "atMs": 9360
+    },
+    {
+     "name": "hit",
+     "atMs": 9392
+    }
+   ]
+  }
+ ]
+}
