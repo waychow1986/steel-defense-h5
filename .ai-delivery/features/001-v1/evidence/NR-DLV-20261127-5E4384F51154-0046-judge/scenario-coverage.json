@@ -1,0 +1,31 @@
+{
+  "purpose": "G3 归类依据：平台算出无法验证（passed=null）的场景为何没有结论",
+  "source": "锁定测试脚本 .ai-delivery/features/001-v1/runtime/qa/run.mjs 的场景清单（指纹 sha256:6b27c10599babffc532ed314ead938a9b70177e15eea3327b98d54b248c6fa20）；平台脚本结果 phase 1 摘要“执行 29 个场景，报告 28 个，未通过 1 个（TS-42）”",
+  "scriptScenarioLists": {
+    "PARALLEL": {
+      "basic": ["TS-01", "TS-02", "TS-03", "TS-04", "TS-05", "TS-06", "TS-10", "TS-21", "TS-26", "TS-38", "TS-40", "TS-41"],
+      "terrain": ["TS-07", "TS-08", "TS-09"],
+      "main": ["TS-11", "TS-12", "TS-13", "TS-19", "TS-25", "TS-36"],
+      "base": ["TS-14", "TS-16", "TS-35"],
+      "persist": ["TS-27"]
+    },
+    "SERIAL": { "base": ["TS-34"], "perf": ["TS-42", "TS-43", "TS-44"] },
+    "total": 29
+  },
+  "notImplementedInLockedScript": {
+    "scenarios": ["TS-15", "TS-17", "TS-18", "TS-20", "TS-22", "TS-23", "TS-24", "TS-29", "TS-31", "TS-32", "TS-33"],
+    "explanation": "测试计划把这些场景写为由测试脚本验证（kind=script），但锁定的测试脚本没有实现、也没有执行它们，平台因此得不到结论。不是产品出错，也不是等到上限仍没有结果，归为测试脚本问题（test-script）。上一轮 G3 已指出 TS-15、TS-20、TS-24、TS-32、TS-33 需补齐，本轮锁定脚本仍未包含。",
+    "affectedCriteria": { "AC-7": ["TS-29"], "AC-8": ["TS-15", "TS-24"], "AC-9": ["TS-17", "TS-18", "TS-22"], "AC-10": ["TS-20"], "AC-12": ["TS-22", "TS-23", "TS-24"], "AC-15": ["TS-29"], "AC-16": ["TS-31"], "AC-17": ["TS-32", "TS-33"], "AC-18": ["TS-20"] }
+  },
+  "executedButNotReported": {
+    "scenario": "TS-43",
+    "testPlan": "tasks-qa.md 第 4 节与 TS-43：测试等待上限 6 分钟真实时间，不作为产品要求；到上限没有不少于 60 秒的测量时段则不报告",
+    "observation": "锁定脚本 perfRun 在 6 分钟上限内依次换种子（43 起）新开第 1 关自动游玩，每局都在 60 秒内结束（过关或失败），凑不出 60 秒连续测量区间，按约定不报告。服务日志（logs.jsonl，status=ok，gaps=[]）中本时段对游戏页面与资源的请求全部 200，最后一条 TS-43 相关日志为 05:22:01 GET /?seed=50 200；无错误、无异常响应；05:25:07 一批 404 来自外部扫描器（非测试 UA、外部 IP），与本场景无关。同轮 TS-44（手机）以同一方法得到结果并通过。没有产品出错的证据。",
+    "classification": "test-plan"
+  },
+  "developerChecks": {
+    "TS-30": { "check": "developerTests `npm run test:unit` 中 UT-art", "step": "developerTests[0]", "exitCode": 0 },
+    "TS-37": { "check": "integrationTests `npm run test:integration` 中 IT-01", "step": "integrationTests[0]", "exitCode": 0 },
+    "TS-39": { "check": "integrationTests `npm run test:integration` 中 IT-02", "step": "integrationTests[0]", "exitCode": 0 }
+  }
+}
