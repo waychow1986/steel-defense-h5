@@ -24,6 +24,20 @@ test.describe('AC-1 / AC-3 title and how-to', () => {
     }
   });
 
+  test('how-to explains the phone virtual controls and the system-mute hint (AC-3)', async ({ page }) => {
+    await page.goto('/?seed=1');
+    const items = await page.getByRole('region', { name: '怎么玩' }).getByRole('listitem').allInnerTexts();
+    const phone = items.filter((t) => t.includes('手机') && t.includes('方向键'));
+    expect(phone, items.join('\n')).toHaveLength(1);
+    for (const part of ['按住', '移动', '松开即停', '开火按钮']) {
+      expect(phone[0]).toContain(part);
+    }
+    const desktop = items.filter((t) => !t.includes('手机'));
+    expect(desktop.some((t) => t.includes('方向键') && t.includes('W / A / S / D'))).toBe(true);
+    expect(desktop.some((t) => t.includes('空格') && t.includes('开火'))).toBe(true);
+    expect(items.join('\n')).toContain('手机处于静音模式等系统原因时，可能听不到音效。');
+  });
+
   test('how-to is readable on a phone without horizontal scrolling', async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
     const page = await ctx.newPage();
