@@ -18,6 +18,13 @@ describe('UT-levels: five levels that grow harder (AC-11)', () => {
     expect(strong(b)).toBeGreaterThanOrEqual(strong(a));
   });
 
+  it.each([1, 2, 3, 4])('level %i → next: no fewer fast and no fewer heavy enemies, each on its own', (n) => {
+    const a = levelCounts(LEVELS[n - 1]).byType;
+    const b = levelCounts(LEVELS[n]).byType;
+    expect(b.fast).toBeGreaterThanOrEqual(a.fast);
+    expect(b.heavy).toBeGreaterThanOrEqual(a.heavy);
+  });
+
   it('level 5 has more stronger enemies than level 1', () => {
     expect(strong(LEVELS[4])).toBeGreaterThan(strong(LEVELS[0]));
   });

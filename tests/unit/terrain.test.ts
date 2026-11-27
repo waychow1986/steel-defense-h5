@@ -203,6 +203,52 @@ describe('UT-terrain: levels', () => {
     }
   });
 
+  // Brick and open ground count as passable (brick can be shot away); steel and water do not.
+  function reachesBase(layout: readonly string[], start: { row: number; col: number }): boolean {
+    const rows = layout.length;
+    const cols = layout[0].length;
+    const passable = (r: number, c: number): boolean =>
+      r >= 0 && r < rows && c >= 0 && c < cols && (layout[r][c] === '.' || layout[r][c] === 'B');
+    const isBase = (r: number, c: number): boolean => r >= 0 && r < rows && c >= 0 && c < cols && layout[r][c] === 'H';
+    const seen = new Set<string>([`${start.row},${start.col}`]);
+    const queue = [start];
+    while (queue.length > 0) {
+      const { row, col } = queue.shift()!;
+      const next = [
+        [row - 1, col],
+        [row + 1, col],
+        [row, col - 1],
+        [row, col + 1],
+      ];
+      if (next.some(([r, c]) => isBase(r, c))) return true;
+      for (const [r, c] of next) {
+        const key = `${r},${c}`;
+        if (!seen.has(key) && passable(r, c)) {
+          seen.add(key);
+          queue.push({ row: r, col: c });
+        }
+      }
+    }
+    return false;
+  }
+
+  it.each(LEVELS.map((lv) => [lv.level, lv] as const))(
+    'level %i: the player spawn and all three enemy spawns can reach the command post',
+    (_n, lv) => {
+      expect(reachesBase(lv.layout, CONFIG.playerSpawn)).toBe(true);
+      for (const col of CONFIG.enemySpawnCols) {
+        expect(reachesBase(lv.layout, { row: 0, col })).toBe(true);
+      }
+    },
+  );
+
+  it('the reachability check rejects a base sealed by steel and water', () => {
+    const sealed = [...LEVELS[0].layout];
+    sealed[10] = 'SSSSSSWWWWWWW';
+    expect(reachesBase(sealed, CONFIG.playerSpawn)).toBe(true);
+    expect(reachesBase(sealed, { row: 0, col: 0 })).toBe(false);
+  });
+
   it('builds the 52x52 unit map from the layout', () => {
     const s = createWorld({ seed: 1, level: 1 });
     const rows = mapRows(s.map);
