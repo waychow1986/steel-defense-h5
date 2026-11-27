@@ -1,0 +1,26 @@
+{
+ "schemaVersion": 2,
+ "testedCommitSha": "",
+ "summary": "执行 1 个场景，报告 1 个，未通过 0 个",
+ "scenarios": [
+  {
+   "id": "TS-15",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 敌方子弹击中指挥所的同一次快照中指挥所已摧毁",
+     "passed": true,
+     "observation": "种子 150，第 14.8 秒；指挥所附近消失的敌方子弹 53，附近的玩家子弹 0；指挥所已摧毁=true；预先打开上方砖墙=true"
+    },
+    {
+     "step": "2 随后显示失败画面",
+     "passed": true,
+     "observation": "画面 gameOver，失败浮层可见=true"
+    }
+   ],
+   "evidence": [
+    "TS-15-gameover.png"
+   ]
+  }
+ ]
+}
