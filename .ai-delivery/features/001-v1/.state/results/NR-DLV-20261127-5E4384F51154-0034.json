@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S51",
+  "result": "done",
+  "summary": "第 6 批（统一画风与预渲染精灵、履带/炮口火光/后坐/弹道拖尾、自适应画质与输入帧率检查）已实现。会话中实际运行了以下检查，全部通过：lint、typecheck、build；单元测试共 120 项，约 1 秒，其中新写的 UT-art、quality 和 effects 新用例在实现前失败，实现后通过；集成测试共 45 项，约 33 秒，其中新写的 IT-04 input-latency 3 项、IT-05 frame-pacing 1 项和 AC-16 tank-fx 2 项，tank-fx 的火光与拖尾用例在实现前失败。既有端到端用例没有在会话中运行，由 G3 在测试环境中验证；IT-05 在无头浏览器中通过，只作为回归信号，真机帧率与输入响应同样留给 G3 验证。",
+  "asks": [],
+  "outputs": [
+    "src/render/sprites/art.ts",
+    "src/render/sprites/tank.ts",
+    "src/render/sprites/items.ts",
+    "src/render/sprites/terrain.ts",
+    "src/render/sprites/index.ts",
+    "src/render/sprites/cache.ts",
+    "src/render/quality.ts",
+    "src/render/renderer.ts",
+    "src/render/terrain-layer.ts",
+    "src/render/effects.ts",
+    "src/render/particles.ts",
+    "src/render/palette.ts",
+    "src/app/boot.ts",
+    "src/app/diagnostics.ts",
+    "src/game/config.ts",
+    "tests/unit/art.test.ts",
+    "tests/unit/quality.test.ts",
+    "tests/unit/effects.test.ts",
+    "tests/integration/input-latency.spec.ts",
+    "tests/integration/frame-pacing.spec.ts",
+    "tests/integration/tank-fx.spec.ts"
+  ]
+}

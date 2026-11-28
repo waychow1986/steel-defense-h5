@@ -1,0 +1,46 @@
+import fs from 'node:fs';
+import { chromium } from 'playwright';
+import { openGame, FRAME } from './lib.mjs';
+import { mapShot, groundColor, shadowSides } from './groups/px.mjs';
+
+const TANK = 0.875;
+const isolated = (s, t) => [s.player, ...s.enemies, ...s.powerUps].filter(Boolean).every(o => (o.x === t.x && o.y === t.y) || Math.abs(o.x - t.x) > 1.6 || Math.abs(o.y - t.y) > 1.6);
+// strips free of walls: map cells (quarter tiles) right/below the tank are all empty
+const clear = (s, t) => {
+  const q = (x, y) => (s.map.cells[Math.floor(y * 4)] || '')[Math.floor(x * 4)];
+  const pts = [];
+  for (let k = 0; k <= 4; k++) { pts.push([t.x + TANK + 0.1, t.y + k * TANK / 4]); pts.push([t.x + k * TANK / 4, t.y + TANK + 0.1]); pts.push([t.x - 0.1, t.y + k * TANK / 4]); }
+  return pts.every(([x, y]) => { const c = q(x, y); return c !== undefined && !/[BSW]/.test(c); });
+};
+const out = { player: [], enemies: [], cellsSample: null };
+const browser = await chromium.launch();
+for (const seed of [29, 31]) {
+  const g = await openGame(browser, { seed });
+  await g.startToPlaying();
+  await g.adv(1500);
+  let s = await g.snap();
+  out.cellsSample ??= [...new Set(s.map.cells.join(''))].join('');
+  for (const dir of ['up', 'right', 'down', 'left', 'up']) {
+    await g.hold(dir); await g.adv(FRAME * 3); await g.release(); await g.adv(FRAME * 2);
+    s = await g.snap();
+    if (!s.player) continue;
+    const ms = await mapShot(g); const ground = groundColor(ms, s);
+    const o = shadowSides(ms, s.player.x, s.player.y, TANK, TANK, ground);
+    out.player.push({ seed, dir: s.player.dir, x: s.player.x, y: s.player.y, clear: clear(s, s.player), sides: o.sides, f: o.f });
+  }
+  for (let i = 0; i < 60; i++) {
+    await g.adv(500);
+    s = await g.snap();
+    if (s.screen !== 'playing') break;
+    const cand = s.enemies.filter(e => isolated(s, e) && clear(s, e));
+    if (!cand.length) continue;
+    const ms = await mapShot(g); const ground = groundColor(ms, s);
+    for (const e of cand) { const o = shadowSides(ms, e.x, e.y, TANK, TANK, ground); out.enemies.push({ seed, type: e.type, dir: e.dir, sides: o.sides, f: o.f }); }
+  }
+  await g.close();
+}
+await browser.close();
+fs.writeFileSync('diag-shadow.json', JSON.stringify(out, null, 1));
+const agg = {};
+for (const e of [...out.player.map(p => ({ ...p, type: 'player' })), ...out.enemies]) { const k = `${e.type}/${e.dir}`; (agg[k] ??= {})[e.sides] = ((agg[k] ??= {})[e.sides] || 0) + 1; }
+console.log(out.cellsSample); console.log(JSON.stringify(agg, null, 1));

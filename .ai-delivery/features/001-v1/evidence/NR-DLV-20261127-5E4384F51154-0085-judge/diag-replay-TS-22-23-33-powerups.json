@@ -1,0 +1,264 @@
+{
+ "carriers": [],
+ "kills": [
+  {
+   "pu": {
+    "id": 33,
+    "type": "shield",
+    "tile": "0,3"
+   },
+   "kill": {
+    "id": 16,
+    "carrier": true,
+    "tile": "0,3",
+    "t": 3700,
+    "dropped": {
+     "id": 33,
+     "type": "shield",
+     "x": 0,
+     "y": 3
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 20,
+    "type": "shield",
+    "tile": "0,2"
+   },
+   "kill": {
+    "id": 17,
+    "carrier": true,
+    "tile": "0,2",
+    "t": 13550,
+    "dropped": {
+     "id": 20,
+     "type": "shield",
+     "x": 0,
+     "y": 2
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 69,
+    "type": "firepower",
+    "tile": "10,1"
+   },
+   "kill": {
+    "id": 49,
+    "carrier": true,
+    "tile": "10,1",
+    "t": 28150,
+    "dropped": {
+     "id": 69,
+     "type": "firepower",
+     "x": 10,
+     "y": 1
+    }
+   }
+  }
+ ],
+ "pickups": [
+  {
+   "type": "shield",
+   "at": 3750,
+   "lives": 3,
+   "shieldMs": 9950.000000000002,
+   "firepower": 0,
+   "stillListed": false,
+   "anims": 1,
+   "regionDiff": 6205,
+   "firstText": "护盾",
+   "texts": [
+    "护盾",
+    "护盾",
+    "护盾",
+    ""
+   ],
+   "goneAt": 1500
+  },
+  {
+   "type": "firepower",
+   "at": 29450,
+   "lives": 3,
+   "shieldMs": 0,
+   "firepower": 1,
+   "stillListed": false,
+   "anims": 1,
+   "regionDiff": 4222,
+   "firstText": "火力升级",
+   "texts": [
+    "火力升级",
+    "火力升级",
+    "火力升级",
+    ""
+   ],
+   "goneAt": 1500
+  }
+ ],
+ "fire": {
+  "before": {
+   "speed": 9,
+   "maxCount": 1,
+   "at": {
+    "x": 11.912500000000012,
+    "y": 3.0625,
+    "dir": "left",
+    "firepower": 0,
+    "lives": 3
+   },
+   "reachedLane": true,
+   "firepower": 0
+  },
+  "after": {
+   "speed": 13,
+   "maxCount": 2,
+   "at": {
+    "x": 11.962500000000041,
+    "y": 3.0625,
+    "dir": "left",
+    "firepower": 1,
+    "lives": 3
+   },
+   "reachedLane": true,
+   "firepower": 1
+  },
+  "afterLife": {
+   "speed": 9,
+   "maxCount": 1,
+   "at": {
+    "x": 12.0125,
+    "y": 3.0625,
+    "dir": "left",
+    "firepower": 0,
+    "lives": 2
+   },
+   "reachedLane": true,
+   "firepower": 0
+  }
+ },
+ "shield": {
+  "startLives": 3,
+  "endAt": 4700,
+  "frames": {
+   "SF": 18,
+   "NF": 35,
+   "pre": 16
+  },
+  "diffs": {
+   "shieldVsPre": 2184,
+   "shieldVsPreN": 3,
+   "preSame": 1065,
+   "preSameN": 1,
+   "offVsPre": 976,
+   "offVsPreN": 9,
+   "offVsOn": 2162,
+   "offVsOnN": 8,
+   "offSame": 310,
+   "offSameN": 4
+  },
+  "hitsOn": [
+   {
+    "t": 3050,
+    "livesBefore": 3,
+    "livesAfter": 3,
+    "hitSparks": 1,
+    "explosions": 0,
+    "respawnJump": 0,
+    "shieldBefore": 2966.666666666668,
+    "livesLater": 3
+   },
+   {
+    "t": 3650,
+    "livesBefore": 3,
+    "livesAfter": 3,
+    "hitSparks": 2,
+    "explosions": 0,
+    "respawnJump": 0,
+    "shieldBefore": 2100.000000000009,
+    "livesLater": 3
+   },
+   {
+    "t": 3700,
+    "livesBefore": 3,
+    "livesAfter": 3,
+    "hitSparks": 2,
+    "explosions": 0,
+    "respawnJump": 0,
+    "shieldBefore": 2033.3333333333428,
+    "livesLater": 3
+   }
+  ],
+  "hitsOff": []
+ },
+ "seeds": [
+  22,
+  122
+ ],
+ "cp1": {
+  "d": 1031,
+  "c": {
+   "id": 49,
+   "type": "normal",
+   "dir": "left"
+  },
+  "n": {
+   "id": 32
+  }
+ },
+ "carrierDrops": [
+  {
+   "same": true,
+   "kill": "0,3",
+   "pu": "0,3",
+   "type": "shield"
+  },
+  {
+   "same": true,
+   "kill": "0,2",
+   "pu": "0,2",
+   "type": "shield"
+  },
+  {
+   "same": true,
+   "kill": "10,1",
+   "pu": "10,1",
+   "type": "firepower"
+  }
+ ],
+ "nonCarrierKills": [
+  {
+   "drop": false,
+   "tile": "12,1"
+  },
+  {
+   "drop": false,
+   "tile": "0,3"
+  },
+  {
+   "drop": false,
+   "tile": "0,0"
+  },
+  {
+   "drop": false,
+   "tile": "11,3"
+  },
+  {
+   "drop": false,
+   "tile": "8,3"
+  },
+  {
+   "drop": false,
+   "tile": "1,0"
+  },
+  {
+   "drop": false,
+   "tile": "0,3"
+  },
+  {
+   "drop": false,
+   "tile": "11,5"
+  }
+ ]
+}

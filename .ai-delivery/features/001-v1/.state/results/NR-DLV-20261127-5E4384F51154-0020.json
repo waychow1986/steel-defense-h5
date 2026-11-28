@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S45",
+  "result": "needs-answer",
+  "summary": "第 3 批（AC-10 过关/全部通关、AC-11 五关递增、AC-12 护盾与火力道具、AC-14 最高分持久化）已实现并自验证：lint、typecheck、build（含 dist 检查）通过；全量单元测试 75 项全部通过（约 1 秒，其中新写 UT-levels/UT-powerups/UT-highscore 与 UT-flow 过关用例）；全量集成测试 16 项全部通过（约 6 秒），其中新写 IT-06、IT-07 共 4 项在实现前（仅还原 src）运行 4 项全部失败、实现后 4 项全部通过（约 4 秒）；本批未新写或改动端到端用例，既有端到端用例未在会话中运行，由 G3 独立测试在测试环境验证；护盾是否带入下一关暂按“清零”实现且未写断言，待业务决定。",
+  "asks": [
+    {
+      "kind": "decide",
+      "category": "business",
+      "question": "玩家过关进入下一关时，若护盾（10 秒）尚未耗尽，剩余护盾时间是否带入下一关？规格、技术方案与测试计划均未规定（火力升级已按 A-3 保留到失去一条命或本局结束）。当前实现暂按推荐答案处理，未为此写断言。",
+      "recommended": "下一关开始时护盾清零（剩余护盾时间不带入）",
+      "alternatives": [
+        "保留剩余护盾时间，在下一关继续倒计时"
+      ]
+    }
+  ],
+  "outputs": [
+    "src/app/boot.ts",
+    "src/game/bullets.ts",
+    "src/game/powerups.ts",
+    "src/game/sim.ts",
+    "src/game/spawner.ts",
+    "src/game/types.ts",
+    "src/render/palette.ts",
+    "src/render/renderer.ts",
+    "src/storage/high-score.ts",
+    "tests/integration/harness/harness.ts",
+    "tests/integration/high-score.spec.ts",
+    "tests/integration/victory.spec.ts",
+    "tests/unit/flow.test.ts",
+    "tests/unit/high-score.test.ts",
+    "tests/unit/levels.test.ts",
+    "tests/unit/powerups.test.ts"
+  ]
+}

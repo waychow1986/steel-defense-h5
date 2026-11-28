@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S67",
+  "result": "done",
+  "summary": "根因：renderer.ts 的 drawEffects 先画爆炸火光（半透明橙黄径向渐变）再画同一点生成的 8～14 个烟雾粒子，烟雾把火光几乎完全盖住，指挥所被击中时击中后画面上几乎没有火光（坦克爆炸走同一绘制路径，一并修复）；修复只改绘制顺序，火光在烟雾之上绘制，渐变、时长与淡出按设计不变。复现测试 tests/integration/base-explosion-fire.spec.ts（击中指挥所后的第一帧，指挥所周围 ±1.2 格内火光色像素占比应 ≥1%）修改前失败（占比 0.0014），修改后通过；本次运行：lint、typecheck、build 通过，全量单元测试 122/122 通过（约 1 秒），全量集成测试 49/49 通过（含新测试，约 34 秒）；没有新写或改动的端到端用例，既有端到端用例按规定未在会话中运行，AC-17 由 G3 独立测试重新验证。",
+  "asks": [],
+  "outputs": [
+    "src/render/renderer.ts",
+    "tests/integration/base-explosion-fire.spec.ts"
+  ]
+}

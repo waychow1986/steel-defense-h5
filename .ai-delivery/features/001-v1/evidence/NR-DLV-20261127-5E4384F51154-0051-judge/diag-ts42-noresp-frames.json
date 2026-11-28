@@ -1,0 +1,60 @@
+[
+ {
+  "pre": {
+   "x": 4.0625,
+   "y": 9.512499999999964,
+   "dir": "up",
+   "lrm": 14.700000001117587,
+   "b": []
+  },
+  "ev": [
+   {
+    "type": "pointerdown",
+    "t": 30551.800000000745
+   },
+   {
+    "type": "pointerup",
+    "t": 31054.700000001118
+   }
+  ],
+  "first": {
+   "t": 30561.900000000373,
+   "x": 4.0625,
+   "y": 9.512499999999964,
+   "dir": "up",
+   "lrm": 14.700000001117587,
+   "b": [],
+   "lives": 2,
+   "screen": "playing",
+   "inp": "{\"direction\":null,\"fire\":false,\"lastResponseMs\":14.700000001117587}",
+   "moving": false,
+   "tr": false
+  },
+  "mid": {
+   "t": 31011.700000001118,
+   "x": 4.0625,
+   "y": 9.512499999999964,
+   "dir": "up",
+   "lrm": 14.700000001117587,
+   "b": [],
+   "lives": 2,
+   "screen": "playing",
+   "inp": "{\"direction\":null,\"fire\":false,\"lastResponseMs\":14.700000001117587}",
+   "moving": false,
+   "tr": false
+  },
+  "last": {
+   "t": 31445.10000000149,
+   "x": 4.0625,
+   "y": 9.512499999999964,
+   "dir": "up",
+   "lrm": 14.700000001117587,
+   "b": [],
+   "lives": 2,
+   "screen": "playing",
+   "inp": "{\"direction\":null,\"fire\":false,\"lastResponseMs\":14.700000001117587}",
+   "moving": false,
+   "tr": false
+  }
+ }
+]

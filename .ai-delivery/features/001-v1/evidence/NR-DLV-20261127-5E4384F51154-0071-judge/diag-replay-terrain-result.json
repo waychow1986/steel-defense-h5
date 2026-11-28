@@ -1,0 +1,105 @@
+{
+ "schemaVersion": 2,
+ "testedCommitSha": "",
+ "summary": "执行 3 个场景，报告 3 个，未通过 0 个",
+ "scenarios": [
+  {
+   "id": "TS-09",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 坦克不进入水面单元，停在水边",
+     "passed": true,
+     "observation": "坦克 y=5.000（水面下边界 y=5）"
+    },
+    {
+     "step": "2 子弹越过水面继续飞行",
+     "passed": true,
+     "observation": "子弹轨迹 y：4.85 3.50；越过水面后仍存在的读数 4 次"
+    },
+    {
+     "step": "2 水面单元不变",
+     "passed": true,
+     "observation": "前=WWWW/WWWW/WWWW/WWWW 后=WWWW/WWWW/WWWW/WWWW"
+    }
+   ],
+   "evidence": [
+    "TS-09-end-snapshot.json",
+    "TS-09-end-console.log",
+    "TS-09-end.png"
+   ]
+  },
+  {
+   "id": "TS-08",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 每颗子弹在钢墙处消失",
+     "passed": true,
+     "observation": "第1枪最高 y=9.16消失；第2枪最高 y=9.31消失；第3枪最高 y=9.31消失；第4枪最高 y=9.16消失；第5枪最高 y=9.31消失"
+    },
+    {
+     "step": "2 5 次后该钢墙单元全部仍为钢墙",
+     "passed": true,
+     "observation": "前=SSSS/SSSS/SSSS/SSSS 后=SSSS/SSSS/SSSS/SSSS"
+    },
+    {
+     "step": "2 击中前后钢墙区域截图相同（效果消失后）",
+     "passed": true,
+     "observation": "钢墙格截图相同"
+    },
+    {
+     "step": "3 坦克停在钢墙前不进入",
+     "passed": true,
+     "observation": "坦克 y=9.000（钢墙下边界 y=9）"
+    }
+   ],
+   "evidence": [
+    "TS-08-end-snapshot.json",
+    "TS-08-end-console.log",
+    "TS-08-end.png"
+   ]
+  },
+  {
+   "id": "TS-07",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "4 对照：打通前驶向砖墙停在砖墙前",
+     "passed": true,
+     "observation": "坦克 y=11.000（砖墙下边界 y=11）"
+    },
+    {
+     "step": "1 第一枪：子弹在砖墙处消失",
+     "passed": true,
+     "observation": "子弹最高到 y=11.30，已消失"
+    },
+    {
+     "step": "1 第一枪：部分砖块变空地、同一面砖墙仍有其余砖块",
+     "passed": true,
+     "observation": "变为空地 8 块，剩余砖块 24 块；前=BBBB/BBBB/BBBB/BBBB|BBBB/BBBB/BBBB/BBBB 后=BBBB/BBBB/..../....|BBBB/BBBB/BBBB/BBBB"
+    },
+    {
+     "step": "2 截图对比：击中处画面发生变化",
+     "passed": true,
+     "observation": "击中前后砖墙格截图不同"
+    },
+    {
+     "step": "3 打通后：子弹从缺口飞过不消失",
+     "passed": true,
+     "observation": "子弹最高到 y=0.20（原砖墙上边界 y=10）"
+    },
+    {
+     "step": "3 打通后：坦克驶入并越过原砖墙格",
+     "passed": true,
+     "observation": "坦克 y=8.450（原砖墙格 y∈[10,11)）"
+    }
+   ],
+   "evidence": [
+    "TS-07-end-snapshot.json",
+    "TS-07-end-console.log",
+    "TS-07-end.png"
+   ]
+  }
+ ]
+}

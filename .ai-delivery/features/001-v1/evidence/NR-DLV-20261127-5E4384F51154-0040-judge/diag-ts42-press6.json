@@ -1,0 +1,16 @@
+{
+  "purpose": "G3 只读诊断（仅用于归类，不改判、不补测）：TS-42 两台设备都在第 6 次移动按下（向下）没有响应，确认是产品丢弃输入还是脚本操作问题",
+  "method": "在临时目录用锁定脚本 groups/perf.mjs 的同一操作序列（seed=42、真实时间、先 10 次开火再 10 次上/下交替移动）在测试环境重放两次；仅额外在每帧记录里加入 snapshot.input 与 snapshot.player，并在无响应时导出该次按下的全部事件与帧记录。未修改锁定脚本。",
+  "runs": [
+    { "run": 1, "电脑键盘": "#6down 无响应（按下前 4.0625,9.5625,up），其余 9 次 lrm 0.2–16 ms", "手机竖屏虚拟按键": "#6down 无响应（按下前 4.0625,9.4625,up，事件 pointerdown,pointerup，帧数 55），其余 9 次 lrm 0.7–4.3 ms" },
+    { "run": 2, "电脑键盘": "#6down 本次有响应 lrm=2.8ms", "手机竖屏虚拟按键": "#6down 再次无响应" }
+  ],
+  "press6MobileRun2": {
+    "beforePress": { "screen": "playing", "transitioning": false, "player": { "x": 4.0625, "y": 9.5625, "dir": "up", "moving": false }, "input": { "direction": null, "fire": false, "lastResponseMs": 2.3 } },
+    "events": [ { "type": "pointerdown", "t": 30518.1 }, { "type": "pointerup", "t": 31020.6 } ],
+    "framesDuringHold": "pointerdown 后到 pointerup 后 400ms 的全部帧（约 55 帧）中：screen=playing、未在过渡、生命数不变，snapshot.input.direction 始终为 null、lastResponseMs 始终为上一次的 2.3，player 位置/朝向/moving 全部不变",
+    "firstFrame": { "t": 30468.3, "x": 4.0625, "y": 9.5625, "dir": "up", "input": "{\"direction\":null,\"fire\":false,\"lastResponseMs\":2.3}" },
+    "lastFrame": { "t": 31418.2, "x": 4.0625, "y": 9.5625, "dir": "up", "input": "{\"direction\":null,\"fire\":false,\"lastResponseMs\":2.3}" }
+  },
+  "finding": "页面在捕获阶段收到了按下事件（keydown 或 pointerdown）且持续按住 500ms，游戏处于游戏进行中、未过渡、未被击中，但产品快照中的输入方向从未变为“下”，坦克既不移动也不转向，也没有更新本次响应记录。同一操作序列在不同设备、不同运行中都复现于同一次按下，前后其他按下均在数毫秒内响应，说明输入被产品丢弃，而非脚本未发出操作或判定有误。归为产品缺陷。"
+}

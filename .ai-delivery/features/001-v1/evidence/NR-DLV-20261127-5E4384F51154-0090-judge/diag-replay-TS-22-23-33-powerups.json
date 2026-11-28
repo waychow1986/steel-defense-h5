@@ -1,0 +1,287 @@
+{
+ "carriers": [],
+ "kills": [
+  {
+   "pu": {
+    "id": 26,
+    "type": "shield",
+    "tile": "0,1"
+   },
+   "kill": {
+    "id": 15,
+    "carrier": true,
+    "tile": "0,1",
+    "t": 4800,
+    "dropped": {
+     "id": 26,
+     "type": "shield",
+     "x": 0,
+     "y": 1
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 19,
+    "type": "shield",
+    "tile": "0,2"
+   },
+   "kill": {
+    "id": 17,
+    "carrier": true,
+    "tile": "0,2",
+    "t": 33200,
+    "dropped": {
+     "id": 19,
+     "type": "shield",
+     "x": 0,
+     "y": 2
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 60,
+    "type": "firepower",
+    "tile": "9,1"
+   },
+   "kill": {
+    "id": 48,
+    "carrier": true,
+    "tile": "9,1",
+    "t": 44500,
+    "dropped": {
+     "id": 60,
+     "type": "firepower",
+     "x": 9,
+     "y": 1
+    }
+   }
+  }
+ ],
+ "pickups": [
+  {
+   "type": "shield",
+   "at": 5000,
+   "lives": 3,
+   "shieldMs": 10000,
+   "firepower": 0,
+   "stillListed": false,
+   "anims": 1,
+   "regionDiff": 5721,
+   "firstText": "护盾",
+   "texts": [
+    "护盾",
+    "护盾",
+    "护盾",
+    ""
+   ],
+   "goneAt": 1500
+  },
+  {
+   "type": "firepower",
+   "at": 44700,
+   "lives": 3,
+   "shieldMs": 0,
+   "firepower": 1,
+   "stillListed": false,
+   "anims": 1,
+   "regionDiff": 5065,
+   "firstText": "火力升级",
+   "texts": [
+    "火力升级",
+    "火力升级",
+    "火力升级",
+    ""
+   ],
+   "goneAt": 1500
+  }
+ ],
+ "fire": {
+  "before": {
+   "speed": 9,
+   "maxCount": 1,
+   "at": {
+    "x": 11.912500000000053,
+    "y": 3.0625,
+    "dir": "left",
+    "firepower": 0,
+    "lives": 3
+   },
+   "reachedLane": true,
+   "firepower": 0
+  },
+  "after": {
+   "speed": 13,
+   "maxCount": 2,
+   "at": {
+    "x": 12.012500000000042,
+    "y": 3.0625,
+    "dir": "left",
+    "firepower": 1,
+    "lives": 3
+   },
+   "reachedLane": true,
+   "firepower": 1
+  },
+  "afterLife": {
+   "speed": 9,
+   "maxCount": 1,
+   "at": {
+    "x": 12.0125,
+    "y": 3.0625,
+    "dir": "left",
+    "firepower": 0,
+    "lives": 2
+   },
+   "reachedLane": true,
+   "firepower": 0
+  }
+ },
+ "shield": {
+  "startLives": 3,
+  "endAt": 6400,
+  "frames": {
+   "SF": 21,
+   "NF": 0,
+   "pre": 23
+  },
+  "diffs": {
+   "shieldVsPre": 2121,
+   "shieldVsPreN": 1,
+   "preSame": 1190,
+   "preSameN": 9,
+   "offVsPre": null,
+   "offVsPreN": 0,
+   "offVsOn": null,
+   "offVsOnN": 0,
+   "offSame": null,
+   "offSameN": 0
+  },
+  "hitsOn": [
+   {
+    "t": 900,
+    "livesBefore": 3,
+    "livesAfter": 3,
+    "hitSparks": 1,
+    "explosions": 0,
+    "respawnJump": 0,
+    "shieldBefore": 7600.000000000055,
+    "livesLater": 3
+   },
+   {
+    "t": 2400,
+    "livesBefore": 3,
+    "livesAfter": 3,
+    "hitSparks": 1,
+    "explosions": 0,
+    "respawnJump": 0.15,
+    "shieldBefore": 5950.000000000025,
+    "livesLater": 3
+   },
+   {
+    "t": 3150,
+    "livesBefore": 3,
+    "livesAfter": 3,
+    "hitSparks": 1,
+    "explosions": 0,
+    "respawnJump": 0.4,
+    "shieldBefore": 5050.000000000008,
+    "livesLater": 3
+   },
+   {
+    "t": 6350,
+    "livesBefore": 3,
+    "livesAfter": 3,
+    "hitSparks": 1,
+    "explosions": 0,
+    "respawnJump": 0,
+    "shieldBefore": 50.00000000000587,
+    "livesLater": 3
+   }
+  ],
+  "hitsOff": [
+   {
+    "t": 7450,
+    "livesBefore": 3,
+    "livesAfter": 2,
+    "hitSparks": 1,
+    "explosions": 1,
+    "respawnJump": 9,
+    "shieldBefore": 0,
+    "livesLater": 2
+   }
+  ]
+ },
+ "seeds": [
+  22,
+  122
+ ],
+ "cp1": null,
+ "carrierDrops": [
+  {
+   "same": true,
+   "kill": "0,1",
+   "pu": "0,1",
+   "type": "shield"
+  },
+  {
+   "same": true,
+   "kill": "0,2",
+   "pu": "0,2",
+   "type": "shield"
+  },
+  {
+   "same": true,
+   "kill": "9,1",
+   "pu": "9,1",
+   "type": "firepower"
+  }
+ ],
+ "nonCarrierKills": [
+  {
+   "drop": false,
+   "tile": "12,0"
+  },
+  {
+   "drop": false,
+   "tile": "1,5"
+  },
+  {
+   "drop": false,
+   "tile": "0,3"
+  },
+  {
+   "drop": false,
+   "tile": "2,6"
+  },
+  {
+   "drop": false,
+   "tile": "1,2"
+  },
+  {
+   "drop": false,
+   "tile": "5,1"
+  },
+  {
+   "drop": false,
+   "tile": "0,0"
+  },
+  {
+   "drop": false,
+   "tile": "0,0"
+  },
+  {
+   "drop": false,
+   "tile": "3,1"
+  },
+  {
+   "drop": false,
+   "tile": "12,3"
+  },
+  {
+   "drop": false,
+   "tile": "11,7"
+  }
+ ]
+}

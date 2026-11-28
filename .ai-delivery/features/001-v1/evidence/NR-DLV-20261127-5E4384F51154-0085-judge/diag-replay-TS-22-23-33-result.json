@@ -1,0 +1,70 @@
+{
+ "schemaVersion": 2,
+ "testedCommitSha": "",
+ "summary": "执行 3 个场景，报告 2 个，未通过 0 个",
+ "scenarios": [
+  {
+   "id": "TS-23",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 拾取后道具从列表消失",
+     "passed": true,
+     "observation": "拾取快照：道具仍在列表=false；火力 1"
+    },
+    {
+     "step": "2 拾取后至少一项可观察的增强",
+     "passed": true,
+     "observation": "拾取前：子弹速度 9 格/秒，同时在场最多 1 颗；拾取后（测量开始时火力 1）：13 格/秒，2 颗"
+    },
+    {
+     "step": "3 失去生命并重生后火力与拾取前相同",
+     "passed": true,
+     "observation": "重生后 9 格/秒，1 颗；拾取前 9 格/秒，1 颗"
+    }
+   ],
+   "evidence": [
+    "TS-22-23-33-powerups.json"
+   ]
+  },
+  {
+   "id": "TS-33",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 护盾：拾取动画记录出现，拾取位置附近截图与拾取前不同",
+     "passed": true,
+     "observation": "拾取动画记录 1；拾取处截图差异 6205"
+    },
+    {
+     "step": "2 护盾：“道具提示”含“护盾”",
+     "passed": true,
+     "observation": "提示文本“护盾”"
+    },
+    {
+     "step": "3 护盾：提示随后自动消失",
+     "passed": true,
+     "observation": "拾取后约 1500ms 游戏时间时提示不再显示；读取序列 护盾、护盾、护盾、（空）"
+    },
+    {
+     "step": "1 火力升级：拾取动画记录出现，拾取位置附近截图与拾取前不同",
+     "passed": true,
+     "observation": "拾取动画记录 1；拾取处截图差异 4222"
+    },
+    {
+     "step": "2 火力升级：“道具提示”含“火力升级”",
+     "passed": true,
+     "observation": "提示文本“火力升级”"
+    },
+    {
+     "step": "3 火力升级：提示随后自动消失",
+     "passed": true,
+     "observation": "拾取后约 1500ms 游戏时间时提示不再显示；读取序列 火力升级、火力升级、火力升级、（空）"
+    }
+   ],
+   "evidence": [
+    "TS-22-23-33-powerups.json"
+   ]
+  }
+ ]
+}

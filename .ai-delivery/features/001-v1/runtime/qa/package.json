@@ -1,0 +1,9 @@
+{
+  "name": "steel-defense-qa",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "playwright": "1.65.1",
+    "pngjs": "7.0.0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S8",
+  "result": "done",
+  "summary": "按确定性检查反馈修正部署声明：docs/deployment.json 的两条错误日志识别规则（nginx-error、nginx-server-5xx）补上必填字段 kind: \"pattern\"（按正则在行内查找，见 runtime/candidate.md），design.md 的“配置、可观测性与运维”一节同步写明规则类型；技术方案其余内容（TypeScript + Vite 纯前端、Canvas 2D 程序化绘制、Web Audio 合成音效与背景音乐、nginx 非 root 单服务部署、实验 E-1～E-3、可测性约定、开放决策）不变。",
+  "asks": [],
+  "outputs": [
+    ".ai-delivery/features/001-v1/design.md",
+    ".ai-delivery/features/001-v1/runtime/deployment.json",
+    "docs/dependencies.json",
+    "docs/deployment.json",
+    ".ai-delivery/features/001-v1/.state/results/NR-DLV-20261127-5E4384F51154-0006.json"
+  ]
+}

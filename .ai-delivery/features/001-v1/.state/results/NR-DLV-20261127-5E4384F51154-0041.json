@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S56",
+  "result": "done",
+  "summary": "根因（AC-8/AC-17/AC-18 失败画面无过渡，TS-14/TS-34）：OverlayManager 在同一帧内先取消 hidden、再加 is-visible（失败画面由模拟步内调用 show，随后同帧 overlays.update 即加类），浏览器从 display:none 直接计算到完全不透明，CSS 过渡从未启动；修复为加类前强制提交一次样式/布局（src/app/screens.ts），同一根因可能涉及的其他浮层（开场/过关/通关）随共用的 OverlayManager 一并修复。复现测试 tests/integration/transitions.spec.ts“playing → failure: ... visibly animating”修改前失败（{animations:0, opacity:1}，与 G3 诊断一致），修改后通过。AC-23 TS-42 第 6 次按下无响应：用锁定脚本副本（/tmp，仅加记录 base.destroyed）对本地构建按 seed=42 重放，手机复现同一症状，但按下前快照 base.destroyed 已为 true——敌方已击毁指挥所，游戏已判失败，处于设计规定的 1200ms 爆炸动画阶段（design“画面时序”，此时 screen 仍为 playing），输入按 A-9 与设计停用；这不是产品丢弃输入，属测试脚本没有检查 base.destroyed/失败状态（应在下游测试脚本步骤处理），本次不改产品行为；TS-43/44 与 TS-15/20/24/32/33 等未实现场景属测试计划/脚本问题，本次不处理。实际运行：复现测试修改前后各一次（各约 5s）；npm run test:unit 全量 122 个通过（约 1s）；npm run test:integration 全量 46 个通过（含新测试，约 33s）；typecheck、build 通过；npm run lint 有 24 个既有错误，全部位于只读的测试脚本目录 .ai-delivery/.../runtime/qa（非本次改动）；无新写或改动的端到端用例，既有端到端用例未运行（由 G3 独立测试验证）。",
+  "asks": [],
+  "outputs": [
+    "src/app/screens.ts",
+    "tests/integration/transitions.spec.ts"
+  ]
+}

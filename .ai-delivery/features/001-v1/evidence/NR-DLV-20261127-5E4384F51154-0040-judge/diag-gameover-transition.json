@@ -1,0 +1,21 @@
+{
+  "purpose": "G3 只读诊断（仅用于归类，不改判、不补测）：TS-14 第 4 步与 TS-34“游戏进行中→失败画面 有过渡”未通过，确认是产品缺少过渡还是脚本漏检",
+  "target": "测试环境 ?seed=34（真实时间，不装伪时钟，Chromium 1280x800）",
+  "method": "每个动画帧读取 window.steelDefense.snapshot() 的 screen/transitioning，以及名为“失败”的对话框自身与全部子元素的 hidden、display、opacity、transform、data-transition、getAnimations()；同时连续截图（约每 85ms 一张）计算整屏平均亮度",
+  "frameSamples": 324,
+  "dialogStateChanges": [
+    { "pageMs": 3033, "screen": "playing", "transitioning": false, "hidden": true, "opacity": "0", "transform": "none", "dataTransition": null, "animations": 0, "childOpacity": ["1", "1", "1", "1"] },
+    { "pageMs": 4301, "screen": "gameOver", "transitioning": true, "hidden": false, "opacity": "1", "transform": "none", "dataTransition": "entering", "animations": 0, "childOpacity": ["1", "1", "1", "1"] },
+    { "pageMs": 4650, "screen": "gameOver", "transitioning": false, "hidden": false, "opacity": "1", "transform": "none", "dataTransition": null, "animations": 0, "childOpacity": ["1", "1", "1", "1"] }
+  ],
+  "screenshotMeanBrightness": [
+    { "pageMs": 4200, "screen": "playing", "transitioning": false, "mean": 43.3 },
+    { "pageMs": 4281, "screen": "playing", "transitioning": false, "mean": 43.2 },
+    { "pageMs": 4366, "screen": "gameOver", "transitioning": true, "mean": 27.1 },
+    { "pageMs": 4448, "screen": "gameOver", "transitioning": true, "mean": 27.1 },
+    { "pageMs": 4548, "screen": "gameOver", "transitioning": true, "mean": 27.1 },
+    { "pageMs": 4648, "screen": "gameOver", "transitioning": true, "mean": 27.1 },
+    { "pageMs": 4731, "screen": "gameOver", "transitioning": false, "mean": 27.1 }
+  ],
+  "finding": "过渡标志（transitioning=true、data-transition=entering）持续约 350ms，但这段时间内失败对话框及其子元素始终完全不透明、无变换、无任何 CSS/Web 动画；截图亮度在一帧内从 43.2 跳到 27.1，过渡期间 4 张截图完全相同。即失败画面是瞬间出现的，只有标志、没有可见过渡。与平台证据 TS-34-records.json（空白占比 0.20→0.37 突变）、TS-14-transition.json 一致。其他画面切换（开始→关卡开场、关卡开场→游戏进行中、失败→开始）在同一脚本中用同一方法检测通过，因此判断为产品缺陷而非脚本漏检。"
+}

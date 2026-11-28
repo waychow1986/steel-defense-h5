@@ -1,0 +1,63 @@
+{
+ "spawn": {
+  "x": 4.0625,
+  "y": 12.0625,
+  "dir": "up",
+  "moving": false,
+  "shieldMs": 0,
+  "firepower": 0,
+  "maxBullets": 1,
+  "speed": 3,
+  "recoilMs": 0,
+  "treadPhase": 0
+ },
+ "hits": [
+  {
+   "snapLives": 2,
+   "hudLives": 2,
+   "expl": 1,
+   "hitExplosion": true,
+   "wentNull": false,
+   "respawn": {
+    "x": 4.0625,
+    "y": 12.0625,
+    "dir": "up"
+   },
+   "screen": "playing",
+   "livesBefore": 3,
+   "act": {
+    "moved": true,
+    "fired": true
+   }
+  },
+  {
+   "snapLives": 1,
+   "hudLives": 1,
+   "expl": 1,
+   "hitExplosion": true,
+   "wentNull": false,
+   "respawn": {
+    "x": 4.0625,
+    "y": 12.0625,
+    "dir": "up"
+   },
+   "screen": "playing",
+   "livesBefore": 2,
+   "act": {
+    "moved": true,
+    "fired": true
+   }
+  },
+  {
+   "snapLives": 0,
+   "hudLives": 0,
+   "expl": 1,
+   "hitExplosion": true,
+   "wentNull": true,
+   "screen": "gameOver",
+   "minLives": 0,
+   "playerAfter": false,
+   "livesBefore": 1
+  }
+ ]
+}

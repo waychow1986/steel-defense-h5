@@ -1,0 +1,333 @@
+{
+ "carriers": [],
+ "kills": [
+  {
+   "pu": {
+    "id": 37,
+    "type": "shield",
+    "tile": "4,1"
+   },
+   "kill": {
+    "id": 17,
+    "carrier": true,
+    "tile": "4,1",
+    "t": 5150,
+    "dropped": {
+     "id": 37,
+     "type": "shield",
+     "x": 4,
+     "y": 1
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 21,
+    "type": "shield",
+    "tile": "0,1"
+   },
+   "kill": {
+    "id": 18,
+    "carrier": true,
+    "tile": "0,1",
+    "t": 15050,
+    "dropped": {
+     "id": 21,
+     "type": "shield",
+     "x": 0,
+     "y": 1
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 69,
+    "type": "shield",
+    "tile": "1,8"
+   },
+   "kill": {
+    "id": 18,
+    "carrier": true,
+    "tile": "1,8",
+    "t": 47200,
+    "dropped": {
+     "id": 69,
+     "type": "shield",
+     "x": 1,
+     "y": 8
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 393,
+    "type": "firepower",
+    "tile": "12,3"
+   },
+   "kill": {
+    "id": 70,
+    "carrier": true,
+    "tile": "12,3",
+    "t": 80900,
+    "dropped": {
+     "id": 393,
+     "type": "firepower",
+     "x": 12,
+     "y": 3
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 42,
+    "type": "shield",
+    "tile": "1,0"
+   },
+   "kill": {
+    "id": 28,
+    "carrier": true,
+    "tile": "1,0",
+    "t": 112750,
+    "dropped": {
+     "id": 42,
+     "type": "shield",
+     "x": 1,
+     "y": 0
+    }
+   }
+  },
+  {
+   "pu": {
+    "id": 84,
+    "type": "firepower",
+    "tile": "12,3"
+   },
+   "kill": {
+    "id": 62,
+    "carrier": true,
+    "tile": "12,3",
+    "t": 121950,
+    "dropped": {
+     "id": 84,
+     "type": "firepower",
+     "x": 12,
+     "y": 3
+    }
+   }
+  }
+ ],
+ "pickups": [
+  {
+   "type": "shield",
+   "at": 5300,
+   "lives": 2,
+   "shieldMs": 9966.666666666668,
+   "firepower": 0,
+   "stillListed": false,
+   "anims": 1,
+   "regionDiff": 5913,
+   "firstText": "护盾",
+   "texts": [
+    "护盾",
+    "护盾",
+    "护盾",
+    ""
+   ],
+   "goneAt": 1500
+  },
+  {
+   "type": "firepower",
+   "at": 124950,
+   "lives": 3,
+   "shieldMs": 0,
+   "firepower": 1,
+   "stillListed": false,
+   "anims": 1,
+   "regionDiff": 3487,
+   "firstText": "火力升级",
+   "texts": [
+    "火力升级",
+    "火力升级",
+    "火力升级",
+    ""
+   ],
+   "goneAt": 1500
+  }
+ ],
+ "fire": {
+  "before": {
+   "speed": 9,
+   "maxCount": 1,
+   "at": {
+    "x": 12.012500000000014,
+    "y": 3.0625,
+    "dir": "left",
+    "firepower": 0,
+    "lives": 3
+   },
+   "reachedLane": true,
+   "firepower": 0
+  },
+  "after": {
+   "speed": 13,
+   "maxCount": 2,
+   "at": {
+    "x": 11.912500000000012,
+    "y": 3.0625,
+    "dir": "left",
+    "firepower": 1,
+    "lives": 3
+   },
+   "reachedLane": true,
+   "firepower": 1
+  }
+ },
+ "shield": {
+  "startLives": 2,
+  "endAt": null,
+  "frames": {
+   "SF": 36,
+   "NF": 0,
+   "pre": 18
+  },
+  "diffs": {
+   "shieldVsPre": null,
+   "shieldVsPreN": 0,
+   "preSame": 1136,
+   "preSameN": 2,
+   "offVsPre": null,
+   "offVsPreN": 0,
+   "offVsOn": null,
+   "offVsOnN": 0,
+   "offSame": null,
+   "offSameN": 0
+  },
+  "hitsOn": [],
+  "hitsOff": []
+ },
+ "seeds": [
+  22,
+  122,
+  222,
+  322
+ ],
+ "cp1": {
+  "d": 654,
+  "c": {
+   "id": 70,
+   "type": "normal",
+   "dir": "left"
+  },
+  "n": {
+   "id": 30
+  }
+ },
+ "carrierDrops": [
+  {
+   "same": true,
+   "kill": "4,1",
+   "pu": "4,1",
+   "type": "shield"
+  },
+  {
+   "same": true,
+   "kill": "0,1",
+   "pu": "0,1",
+   "type": "shield"
+  },
+  {
+   "same": true,
+   "kill": "1,8",
+   "pu": "1,8",
+   "type": "shield"
+  },
+  {
+   "same": true,
+   "kill": "12,3",
+   "pu": "12,3",
+   "type": "firepower"
+  },
+  {
+   "same": true,
+   "kill": "1,0",
+   "pu": "1,0",
+   "type": "shield"
+  },
+  {
+   "same": true,
+   "kill": "12,3",
+   "pu": "12,3",
+   "type": "firepower"
+  }
+ ],
+ "nonCarrierKills": [
+  {
+   "drop": false,
+   "tile": "1,6"
+  },
+  {
+   "drop": false,
+   "tile": "0,0"
+  },
+  {
+   "drop": false,
+   "tile": "1,3"
+  },
+  {
+   "drop": false,
+   "tile": "0,2"
+  },
+  {
+   "drop": false,
+   "tile": "1,4"
+  },
+  {
+   "drop": false,
+   "tile": "12,2"
+  },
+  {
+   "drop": false,
+   "tile": "12,1"
+  },
+  {
+   "drop": false,
+   "tile": "11,9"
+  },
+  {
+   "drop": false,
+   "tile": "12,9"
+  },
+  {
+   "drop": false,
+   "tile": "12,11"
+  },
+  {
+   "drop": false,
+   "tile": "3,6"
+  },
+  {
+   "drop": false,
+   "tile": "4,3"
+  },
+  {
+   "drop": false,
+   "tile": "0,7"
+  },
+  {
+   "drop": false,
+   "tile": "0,1"
+  },
+  {
+   "drop": false,
+   "tile": "0,2"
+  },
+  {
+   "drop": false,
+   "tile": "0,0"
+  },
+  {
+   "drop": false,
+   "tile": "2,1"
+  }
+ ]
+}

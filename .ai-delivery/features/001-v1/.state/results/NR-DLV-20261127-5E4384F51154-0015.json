@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S41",
+  "result": "done",
+  "summary": "按 S42 审查意见修复 AC-3：“怎么玩”说明按技术方案补全手机用法（按住屏幕下方的方向键移动，松开即停；按开火按钮发射子弹），提示句改为“手机处于静音模式等系统原因时，可能听不到音效。”。新增的集成复现测试（basics.spec.ts“how-to explains the phone virtual controls…”）修改前运行失败（缺“按住”），修改后通过（约 1.5 秒）；lint、typecheck 与构建通过；全量单元测试 26 项通过（约 0.6 秒）；全量集成测试 10 项通过（约 5 秒）；本次没有新写或改动端到端用例，既有端到端用例按规定未运行，交由 G3 独立测试验证。",
+  "asks": [],
+  "outputs": [
+    "index.html",
+    "tests/integration/basics.spec.ts"
+  ]
+}

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="钢铁防线：俯视角坦克射击小游戏，守住指挥所。" />
+    <title>钢铁防线</title>
+  </head>
+  <body>
+    <div id="app" class="app" data-screen="start">
+      <header class="app-header">
+        <h1 class="app-title">钢铁防线</h1>
+        <button type="button" class="mute-btn" id="mute-btn" aria-pressed="false">静音</button>
+      </header>
+
+      <section class="hud" id="hud" role="group" aria-label="战况">
+        <span class="hud-item"><span class="hud-label">关卡</span><output id="hud-level" role="status" aria-label="关卡">1</output></span>
+        <span class="hud-item"><span class="hud-label">分数</span><output id="hud-score" role="status" aria-label="分数">0</output></span>
+        <span class="hud-item"><span class="hud-label">生命</span><output id="hud-lives" role="status" aria-label="生命">3</output></span>
+        <span class="hud-item"><span class="hud-label">剩余敌人</span><output id="hud-enemies" role="status" aria-label="剩余敌人">0</output></span>
+      </section>
+
+      <main class="stage" id="stage">
+        <div class="board" id="board">
+          <canvas id="battlefield" role="img" aria-label="战场"></canvas>
+          <p class="powerup-hint" id="powerup-hint" role="status" aria-label="道具提示"></p>
+        </div>
+
+        <div class="overlay" id="overlay-intro" role="dialog" aria-label="关卡开场" hidden>
+          <div class="overlay-card">
+            <p class="overlay-big" id="intro-level">第 1 关</p>
+            <p id="intro-enemies">敌人 10 辆</p>
+          </div>
+        </div>
+        <div class="overlay" id="overlay-clear" role="dialog" aria-label="过关" hidden>
+          <div class="overlay-card"><p class="overlay-big" id="clear-text">第 1 关 过关</p></div>
+        </div>
+        <div class="overlay" id="overlay-gameover" role="dialog" aria-label="失败" hidden>
+          <div class="overlay-card">
+            <p class="overlay-big">失败</p>
+            <p>本局分数 <output role="status" aria-label="本局分数" id="gameover-score">0</output></p>
+            <p>历史最高分 <output role="status" aria-label="历史最高分" id="gameover-high">0</output></p>
+            <button type="button" class="primary-btn" data-action="to-start">返回开始画面</button>
+          </div>
+        </div>
+        <div class="overlay" id="overlay-victory" role="dialog" aria-label="全部通关" hidden>
+          <div class="overlay-card">
+            <p class="overlay-big">全部通关</p>
+            <p>本局分数 <output role="status" aria-label="本局分数" id="victory-score">0</output></p>
+            <p>历史最高分 <output role="status" aria-label="历史最高分" id="victory-high">0</output></p>
+            <button type="button" class="primary-btn" data-action="to-start">返回开始画面</button>
+          </div>
+        </div>
+      </main>
+
+      <aside class="side-panel" id="side-panel"></aside>
+
+      <div class="controls" id="controls">
+        <div class="dpad" role="group" aria-label="方向键">
+          <button type="button" class="dpad-btn dpad-up" data-dir="up" aria-label="向上">▲</button>
+          <button type="button" class="dpad-btn dpad-left" data-dir="left" aria-label="向左">◀</button>
+          <button type="button" class="dpad-btn dpad-right" data-dir="right" aria-label="向右">▶</button>
+          <button type="button" class="dpad-btn dpad-down" data-dir="down" aria-label="向下">▼</button>
+        </div>
+        <button type="button" class="fire-btn" id="fire-btn">开火</button>
+      </div>
+
+      <div class="overlay overlay-start" id="overlay-start" role="dialog" aria-label="开始画面">
+        <div class="overlay-card start-card">
+          <p class="start-title">钢铁防线</p>
+          <p class="tagline">驾驶坦克，守住指挥所，击退来犯的敌方坦克。</p>
+          <section class="how-to" id="how-to" aria-labelledby="how-to-title">
+            <h2 id="how-to-title">怎么玩</h2>
+            <ul>
+              <li>电脑：方向键 或 W / A / S / D 移动，空格开火</li>
+              <li>手机：按住屏幕下方的方向键移动，松开即停；按开火按钮发射子弹</li>
+              <li>目标：消灭本关全部敌方坦克，同时保护底部的指挥所</li>
+              <li>砖墙可以打碎，钢墙打不穿，水面不能通过</li>
+              <li>声音：右上角“静音”按钮可开关声音。手机处于静音模式等系统原因时，可能听不到音效。</li>
+            </ul>
+          </section>
+          <button type="button" class="primary-btn" id="start-btn">开始游戏</button>
+          <p class="high-score">历史最高分 <output role="status" aria-label="历史最高分" id="start-high">0</output></p>
+        </div>
+      </div>
+
+      <div class="rotate-hint" role="alertdialog" aria-label="请旋转手机">
+        <p>请将手机竖过来玩</p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

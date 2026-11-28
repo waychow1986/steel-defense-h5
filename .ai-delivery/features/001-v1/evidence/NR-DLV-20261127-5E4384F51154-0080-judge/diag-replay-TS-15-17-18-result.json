@@ -1,0 +1,69 @@
+{
+ "schemaVersion": 2,
+ "testedCommitSha": "",
+ "summary": "执行 3 个场景，报告 3 个，未通过 0 个",
+ "scenarios": [
+  {
+   "id": "TS-17",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 被击中后有爆炸效果，生命 3→2（快照与 HUD 一致）",
+     "passed": true,
+     "observation": "种子 17；爆炸记录 1（爆炸=true）；生命 3→快照 2，HUD 2"
+    },
+    {
+     "step": "2 重新出现在出生位置，朝上",
+     "passed": true,
+     "observation": "出生位置 (4.0625,12.0625)；重生 (4.0625,12.0625) 朝up"
+    },
+    {
+     "step": "3 游戏继续进行，可以移动与开火",
+     "passed": true,
+     "observation": "画面 playing；移动=true 开火=true"
+    }
+   ],
+   "evidence": [
+    "TS-17-hits-seed17.json"
+   ]
+  },
+  {
+   "id": "TS-18",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 第 2 次被击中后生命为 1，在出生点重生，游戏继续",
+     "passed": true,
+     "observation": "生命 快照 1 HUD 1；重生 (4.0625,12.0625)；画面 playing"
+    },
+    {
+     "step": "2 第 3 次被击中后生命为 0，显示失败画面，生命不为负，不再重生",
+     "passed": true,
+     "observation": "生命 快照 0 HUD 0，最小 0；画面 gameOver，失败浮层可见=true；之后仍有玩家坦克=false"
+    }
+   ],
+   "evidence": [
+    "TS-17-hits-seed17.json"
+   ]
+  },
+  {
+   "id": "TS-15",
+   "passed": true,
+   "checkpoints": [
+    {
+     "step": "1 敌方子弹击中指挥所的同一次快照中指挥所已摧毁",
+     "passed": true,
+     "observation": "种子 150，第 16.4 秒；指挥所附近消失的敌方子弹 53，附近的玩家子弹 0；指挥所已摧毁=true；预先打开上方砖墙=true"
+    },
+    {
+     "step": "2 随后显示失败画面",
+     "passed": true,
+     "observation": "画面 gameOver，失败浮层可见=true"
+    }
+   ],
+   "evidence": [
+    "TS-15-gameover.png"
+   ]
+  }
+ ]
+}

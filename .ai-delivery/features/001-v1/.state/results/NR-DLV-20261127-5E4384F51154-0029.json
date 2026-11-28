@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S49",
+  "result": "done",
+  "summary": "第 5 批（AC-17、AC-19、AC-20、AC-21）已按先写测试再实现完成：新写的 11 个单元用例和 4 个集成用例在实现前全部失败、实现后全部通过。静态检查（lint、typecheck）和构建通过。全量单元测试 104 项通过（约 1 秒），全量集成测试 36 项通过（约 13 秒），其中包含新写的 IT-01 音效互异、IT-02 解锁与静音（含手机触摸开始）、特效与音效接线。新写的端到端用例 tests/e2e/mute.spec.ts 共 1 个，单独运行通过（约 3 秒）。既有端到端用例没有在会话里运行，交由 G3 的独立测试在测试环境中验证。技术细节由我按现有约定决定，包括特效自带的种子化随机数（不影响模拟）、粒子上限 300、静音时音乐继续排程但总增益为 0，以及音效记录只在音频已创建后写入。",
+  "asks": [],
+  "outputs": [
+    "src/audio/cues.ts",
+    "src/audio/music.ts",
+    "src/audio/audio-engine.ts",
+    "src/render/effects.ts",
+    "src/render/particles.ts",
+    "src/render/renderer.ts",
+    "src/render/palette.ts",
+    "src/game/config.ts",
+    "src/app/boot.ts",
+    "src/app/diagnostics.ts",
+    "tests/unit/effects.test.ts",
+    "tests/unit/cues.test.ts",
+    "tests/integration/audio-cues.spec.ts",
+    "tests/integration/audio-mute.spec.ts",
+    "tests/integration/effects.spec.ts",
+    "tests/e2e/mute.spec.ts",
+    ".ai-delivery/features/001-v1/.state/results/NR-DLV-20261127-5E4384F51154-0029.json"
+  ]
+}

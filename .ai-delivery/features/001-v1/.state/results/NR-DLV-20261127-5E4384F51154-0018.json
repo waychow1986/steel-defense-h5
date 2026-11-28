@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S43",
+  "result": "done",
+  "summary": "按人的决定把批次 1 集成用例 basics.spec.ts「space fires a bullet travelling along the facing in all four directions」开火前的断言改为只检查玩家子弹为 0（与同一用例后半段一致），批次 2（AC-7/8/9/13）实现沿用上一会话提交未改动；实际运行：lint、typecheck、build 通过；单元测试全量 46 项通过（约 1 秒）；集成测试全量 12 项通过（约 6 秒）；该用例在修改前运行一次失败（toHaveLength 断言，敌方子弹在场）、修改后通过；本批未新写或改动端到端用例，既有端到端用例按规则未运行，交由 G3 独立测试在测试环境验证。",
+  "asks": [],
+  "outputs": [
+    "tests/integration/basics.spec.ts",
+    "src/game/spawner.ts",
+    "src/game/enemy-ai.ts",
+    "src/game/bullets.ts",
+    "src/game/sim.ts",
+    "src/game/tanks.ts",
+    "src/game/types.ts",
+    "src/game/rng.ts",
+    "src/app/boot.ts",
+    "src/render/renderer.ts",
+    "src/render/palette.ts",
+    "tests/unit/enemies.test.ts",
+    "tests/unit/rules.test.ts",
+    "tests/unit/flow.test.ts",
+    "tests/integration/rules.spec.ts"
+  ]
+}

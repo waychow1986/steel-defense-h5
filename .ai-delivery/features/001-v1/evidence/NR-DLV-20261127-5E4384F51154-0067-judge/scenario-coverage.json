@@ -1,0 +1,43 @@
+{
+  "purpose": "G3 归类依据（本轮 NR-DLV-20261127-5E4384F51154-0067）：平台算出无法验证的标准中，没有结论的场景为何没有结论；引用开发者检查的场景对应哪一项",
+  "source": "锁定测试脚本第 3 版（指纹 sha256:abdef8d92e0b743896194244cc41f6fe5d4800c704732049fdd350ee292f04fd，提交 62fd621be3b7eb8c6f7258aab1a1ba43459cc783）中 runtime/qa/run.mjs 的场景清单；平台脚本结果 phase 1（14:10:32–14:17:45Z）摘要“执行 29 个场景，报告 29 个，未通过 0 个”；被测版本 f49598f1cf1f982c3433995bc1e7674f7e30bda4；测试计划第 2 版（指纹 sha256:59d7fd0b905da2b8263ea417136ba3c72a1b3375014871a10aeae64592e30c1e）",
+  "scriptScenarioLists": {
+    "PARALLEL": {
+      "basic": ["TS-01", "TS-02", "TS-03", "TS-04", "TS-05", "TS-06", "TS-10", "TS-21", "TS-26", "TS-38", "TS-40", "TS-41"],
+      "terrain": ["TS-07", "TS-08", "TS-09"],
+      "main": ["TS-11", "TS-12", "TS-13", "TS-19", "TS-25", "TS-36"],
+      "base": ["TS-14", "TS-16", "TS-35"],
+      "persist": ["TS-27"]
+    },
+    "SERIAL": { "base": ["TS-34"], "perf": ["TS-42", "TS-43", "TS-44"] },
+    "total": 29,
+    "allReportedAndPassed": true
+  },
+  "notImplementedInLockedScript": {
+    "scenarios": ["TS-15", "TS-17", "TS-18", "TS-20", "TS-22", "TS-23", "TS-24", "TS-29", "TS-31", "TS-32", "TS-33"],
+    "explanation": "测试计划把这些场景写为由测试脚本验证（kind=script），但锁定的测试脚本第 3 版的场景清单（run.mjs 的 PARALLEL/SERIAL）与 groups/*.mjs 中都没有实现这些场景编号，脚本没有执行、也没有报告它们，平台因此得不到结论。脚本结果中执行的 29 个场景全部报告且通过；服务日志（status=ok，gaps=[]，droppedOldest=0）全部为 200，没有错误或产品出错证据。不是产品出错，也不是测试等待上限场景，归为测试脚本问题（test-script）。与第 0040～0060 轮归类时的未实现清单相同，第 3 版修订（仅针对 AC-23）没有补齐。",
+    "affectedCriteria": {
+      "AC-7": ["TS-29"],
+      "AC-8": ["TS-15", "TS-24"],
+      "AC-9": ["TS-17", "TS-18", "TS-22"],
+      "AC-10": ["TS-20"],
+      "AC-12": ["TS-22", "TS-23", "TS-24"],
+      "AC-15": ["TS-29"],
+      "AC-16": ["TS-31"],
+      "AC-17": ["TS-32", "TS-33"],
+      "AC-18": ["TS-20"]
+    }
+  },
+  "previouslyFailedNowPassed": {
+    "TS-14/TS-34 失败画面过渡": "本轮 TS-14 第 4 步与 TS-34“游戏进行中→失败画面有过渡”均通过（过渡进行中读数 20/21 次、浮层部分透明 40/15 次、动画中间状态 21/22 次）。",
+    "TS-42 按下响应与松开停止": "本轮电脑键盘与手机虚拟按键各 10/10 次按下都有本次响应记录（0.7–16.7ms），松开后 100ms 起位置不变，通过。",
+    "TS-43": "本轮累计游戏进行中 65.2 秒（2 段，到达第 2 关），平均 60.0 帧/秒、最大帧间隔 16.8ms，通过。"
+  },
+  "failedScenarios": {},
+  "developerChecks": {
+    "TS-30": { "check": "developerTests `npm run test:unit` 中 UT-art", "step": "developerTests[0]", "exitCode": 0, "criteria": ["AC-15"] },
+    "TS-37": { "check": "integrationTests `npm run test:integration` 中 IT-01 音效互异", "step": "integrationTests[0]", "exitCode": 0, "criteria": ["AC-19"] },
+    "TS-39": { "check": "integrationTests `npm run test:integration` 中 IT-02 解锁与静音", "step": "integrationTests[0]", "exitCode": 0, "criteria": ["AC-20", "AC-21"] }
+  },
+  "g2TestGapDecisions": "G2 决定（I1–I9 与退回意见）中没有把任何验收标准定为按测试缺口处理，因此本轮不使用 test-gap。I7～I9 的假设已在 G2 由人确认并写进预期结果，本轮没有仍依据未决假设的场景。"
+}

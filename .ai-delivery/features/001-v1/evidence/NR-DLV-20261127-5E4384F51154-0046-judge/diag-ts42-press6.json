@@ -1,0 +1,15 @@
+{
+  "purpose": "G3 只读诊断（仅用于归类，不改判、不补测）：TS-42 第 6 次移动按下（向下）没有响应，确认是产品丢弃输入还是脚本操作问题",
+  "target": "测试环境 https://cand-5e4384f51154.eastus2.cloudapp.azure.com/?seed=42（候选 22217e6398a93a2839dbb384d63327b53b786964），真实时间",
+  "method": "在临时目录复制锁定脚本 groups/perf.mjs 的同一操作序列（seed=42，先 10 次开火再 10 次上/下交替移动，电脑键盘与手机竖屏虚拟按键），仅在每帧记录中额外加入 snapshot.input、snapshot.player 与 transitioning，并在无响应时导出该次按下的事件与首/中/末帧。未修改锁定脚本，未调用任何改变游戏的方法。",
+  "platformRun": "锁定脚本本轮（scriptResults phase 1）：电脑键盘与手机竖屏虚拟按键都在 #6down 无响应（按下前 4.0625,9.4625,up；事件 keydown,keyup / pointerdown,pointerup；帧数 55/54），其余 9 次 lrm 0.3–16.7ms。",
+  "diagRun": {
+    "time": "2026-11-27T05:28–05:30Z",
+    "电脑键盘": "本次 10 次移动全部响应（偶发，与上一轮诊断中电脑第 2 次重放有响应一致）",
+    "手机竖屏虚拟按键": "#6down 再次无响应：按下前 4.0625,9.5125,up；事件 pointerdown(t=30534.0)、pointerup(t=31036.8)，按住约 503ms；其余 9 次 lrm 0.2–3.7ms",
+    "framesDuringHold": "首帧 t=30485.1、中帧 t=30968.3、末帧 t=31435.0：screen=playing、transitioning=false、lives=2 不变；snapshot.input={direction:null, fire:false, lastResponseMs:3.2}（始终为上一次的值）；player={x:4.0625, y:9.5125, dir:up, moving:false, shieldMs:0}，全程不变",
+    "frames": "diag-ts42-press6-frames.json",
+    "presses": "diag-ts42-presses.json"
+  },
+  "finding": "页面在捕获阶段收到按下事件并持续按住约 500ms，游戏处于游戏进行中、未过渡、生命不变，但产品快照的输入方向始终为 null、坦克不移动也不转向、本次响应记录不更新。同一序列在本轮锁定脚本（两种设备）与本次诊断（手机）中都复现于同一次按下，前后其他按下均在数毫秒内响应，说明输入被产品丢弃，而非脚本未发出操作或判定有误。与上一轮 G3 的同一缺陷相同，修复步骤 S56 后仍存在。归为产品缺陷（product）。"
+}

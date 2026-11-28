@@ -1,0 +1,18 @@
+{
+  "purpose": "G3 只读诊断（仅用于归类，不改判、不补测）：TS-07 第一枪“开火后没有出现玩家子弹”是产品丢弃开火输入，还是锁定脚本判定时机有误",
+  "target": "测试环境 https://cand-5e4384f51154.eastus2.cloudapp.azure.com/?seed=7（候选 fcc328e2a1e9ae245e87ad10a832db763dd90112），伪时钟",
+  "platformRun": "锁定脚本本轮（scriptResults phase 1，13:09–13:19Z）TS-07：对照检查点通过（坦克 y=11.000 停在砖墙前），第一枪检查点记为“开火后没有出现玩家子弹”后场景提前结束；同轮 TS-08、TS-09 的开火均正常。",
+  "lockedScriptLogic": "groups/terrain.mjs fireTrack()：按下空格 → 伪时钟推进 1 帧（1000/60ms）→ 松开 → 立即读取一次快照；该次快照中没有新的玩家子弹即返回 null，场景判为未通过，不再等待后续帧。",
+  "method": "在 /tmp 临时目录复制锁定脚本 runtime/qa（未修改仓库与锁定脚本），仅在 fireTrack 中加入：按下前快照、页面捕获阶段的 keydown/keyup 记录，以及判为“没有子弹”后再逐帧读取 10 帧快照。未调用任何改变游戏状态的方法。诊断结果不计入结论。",
+  "runs": {
+    "standalone": "只执行 TS-07 共 3 次：3/3 通过",
+    "parallelLoad": "按锁定脚本的并发方式（4 路并发）执行全部第一批场景 8 次：第 3 次 TS-07 未通过，观察值与平台本轮完全相同（“开火后没有出现玩家子弹”）；第 2、6 次 TS-08 出现同样的“未出现子弹”；第 7 次 TS-04、TS-05 也出现“开火后没有新的玩家子弹”，第 8 次 TS-05 一次移动未检测到（这些场景平台本轮均通过，仅作同类时序现象的旁证）"
+  },
+  "captures": {
+    "diag-ts07-08-nobullet-2.json": "TS-07 那一次：坦克 1.0625,12.05 朝上、screen=playing、无过渡、生命 3；页面收到 keydown/keyup（Space）；按下后第 1 帧快照无子弹；再推进 1 帧后出现玩家子弹（speed 9，向上），快照 input.lastResponseMs=24ms",
+    "diag-ts07-08-nobullet-1.json": "TS-08 第 1 枪：同样在下一帧出现子弹，lastResponseMs=29ms",
+    "diag-ts07-08-nobullet-3.json": "TS-08 第 4 枪：同样在下一帧出现子弹，lastResponseMs=20ms（该文件的重复 keydown/keyup 是诊断监听器重复注册所致）",
+    "diag-parallel-run-ts07-fail.json": "第 3 次并发执行的脚本结果（TS-07 未通过）"
+  },
+  "finding": "开火输入没有被丢弃：子弹在按下后第 2 帧出现，响应时间 20–29ms，符合规格“按下 100 毫秒内响应”（同轮 TS-04、TS-05、TS-42 的开火检查也都通过）。测试计划 TS-07 只要求第一枪后子弹在砖墙处消失、砖墙逐块破损，并不要求子弹在按下后的第 1 帧就出现；锁定脚本只在推进 1 帧后读取一次快照，并发负载下页面帧处理稍晚时就误判为“没有出现子弹”。归为测试脚本问题（test-script）：fireTrack 应在规格允许的响应时间内（例如 100ms）多帧等待新子弹出现。"
+}

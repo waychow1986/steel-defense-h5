@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S10",
+  "result": "done",
+  "summary": "细化计划：保持完整档与 6 批编码（每批之后有代码审查），按技术方案的技术依赖把调色板、事件类型、诊断快照与工程脚本前移到第 1 批，把 AC-17 与音效同批、AC-16 与造型同批，并把测试计划引用的开发者检查排进对应批次；各批预计 70～80 分钟。",
+  "asks": [],
+  "outputs": [],
+  "plan": {
+    "schemaVersion": 1,
+    "steps": [
+      {"id": "P1", "capability": "code", "zone": "build", "dependsOn": [], "batch": 1},
+      {"id": "P2", "capability": "review", "zone": "build", "dependsOn": ["P1"], "batch": 1},
+      {"id": "P3", "capability": "code", "zone": "build", "dependsOn": ["P2"], "batch": 2},
+      {"id": "P4", "capability": "review", "zone": "build", "dependsOn": ["P3"], "batch": 2},
+      {"id": "P5", "capability": "code", "zone": "build", "dependsOn": ["P4"], "batch": 3},
+      {"id": "P6", "capability": "review", "zone": "build", "dependsOn": ["P5"], "batch": 3},
+      {"id": "P7", "capability": "code", "zone": "build", "dependsOn": ["P6"], "batch": 4},
+      {"id": "P8", "capability": "review", "zone": "build", "dependsOn": ["P7"], "batch": 4},
+      {"id": "P9", "capability": "code", "zone": "build", "dependsOn": ["P8"], "batch": 5},
+      {"id": "P10", "capability": "review", "zone": "build", "dependsOn": ["P9"], "batch": 5},
+      {"id": "P11", "capability": "code", "zone": "build", "dependsOn": ["P10"], "batch": 6},
+      {"id": "P12", "capability": "review", "zone": "build", "dependsOn": ["P11"], "batch": 6}
+    ],
+    "omitted": [
+      {"capability": "spec", "reason": "规格 spec.md 已写成，技术方案与测试计划没有发现需要重做规格的问题，本次细化之后不再安排规格。"},
+      {"capability": "solution", "reason": "技术方案 design.md 已写成，给出了技术依赖、可测性约定与开发者检查，足以拆批，不需要重做。"},
+      {"capability": "plan", "reason": "本步骤即技术方案之后的细化计划，之后不再需要计划步骤。"}
+    ],
+    "batches": [
+      {"n": 1, "criteria": ["AC-1", "AC-3", "AC-4", "AC-6"]},
+      {"n": 2, "criteria": ["AC-7", "AC-8", "AC-9", "AC-13"]},
+      {"n": 3, "criteria": ["AC-10", "AC-11", "AC-12", "AC-14"]},
+      {"n": 4, "criteria": ["AC-2", "AC-5", "AC-18", "AC-22"]},
+      {"n": 5, "criteria": ["AC-17", "AC-19", "AC-20", "AC-21"]},
+      {"n": 6, "criteria": ["AC-15", "AC-16", "AC-23"]}
+    ],
+    "factors": [
+      {"name": "change-size", "lean": "heavy", "basis": "从零做一款完整的浏览器游戏：23 条验收标准，技术方案列出约 40 个源文件、5 关地图、约 150 个单元用例、8 个集成用例与约 8 个端到端用例。"},
+      {"name": "modules", "lean": "heavy", "basis": "技术方案划分为 app、input、game、render、audio、storage 六个模块，外加工程配置、Dockerfile 与 nginx 部署。"},
+      {"name": "new-or-first", "lean": "heavy", "basis": "新项目，仓库只有 README 与交付文档，没有系统现状与既有代码，本交付建立第一版技术基线。"},
+      {"name": "risk", "lean": "light", "basis": "纯前端静态应用，无后端、无账号、无外部集成、无数据迁移、无凭据；唯一持久数据是本机 localStorage 中的最高分。"}
+    ],
+    "tier": "full",
+    "budget": {"revisions": 4, "sessions": 26, "hours": 22.0},
+    "items": [
+      {
+        "category": "business",
+        "question": "技术方案建议（OD-1）：手机转为横屏、显示“请旋转手机”提示期间暂停游戏，转回竖屏后继续。规格只要求显示提示、不暂停，不暂停时玩家转屏期间可能失去生命。是否纳入本次？纳入会扩大范围（第 4 批增加暂停与恢复，约 10 分钟，仍在时限内），并需要退回规格补写行为。",
+        "recommended": "不纳入：按已确认的 Q5 回答只显示旋转提示，不暂停。",
+        "alternatives": ["纳入：横屏提示期间暂停游戏，转回竖屏后继续"]
+      },
+      {
+        "category": "business",
+        "question": "技术方案建议（OD-2）：标签页切到后台再回来时，停在一个“继续”提示上等待玩家操作。当前行为是后台时游戏随画面刷新停止、回来后从停下处继续（不快进），没有提示。是否纳入本次？纳入会扩大范围（接近意图中“不纳入暂停菜单”的边界），需要退回规格补写行为，并在第 4 批增加约 10 分钟工作。",
+        "recommended": "不纳入：保持后台停止、回来后直接继续，不另加提示。",
+        "alternatives": ["纳入：回到前台时显示“继续”提示，玩家点击或按键后继续"]
+      },
+      {
+        "category": "business",
+        "question": "技术方案建议（OD-3）：为测试环境增加从第 N 关直接开局的入口（例如 ?startLevel=N），让独立测试在测试环境上快速验证第 2～5 关与全部通关画面。加入后玩家也能用它选关，接近意图中“不纳入难度选择等”的边界。是否纳入本次？纳入会扩大范围，需要退回规格与测试计划，并在第 3 批增加约 10 分钟工作。",
+        "recommended": "不纳入：第 2～5 关与全部通关画面由开发者检查 IT-07、UT-flow、UT-levels 覆盖，独立测试按固定种子实际游玩到达。",
+        "alternatives": ["纳入：增加 ?startLevel=N 入口，所有环境都可用", "纳入，但只在测试环境的构建中启用该入口"]
+      }
+    ],
+    "reason": "档位：改动规模、模块数、新项目三项倾向重档，数据与安全风险倾向轻档；综合为完整档，与 tierFloor（full）一致，每批编码之后都有代码审查。\n\n设计区：规格、技术方案、测试计划都已写成，本步骤是技术方案之后的细化计划，之后不再安排设计步骤（没选规格、技术方案、计划的理由见 omitted）。本次没有 g2Decisions。\n\n用时口径（依据技术方案“可测性约定”，均为方案中的估计）：静态检查约 20 秒、构建约 15 秒、全量单元测试约 20 秒（最终约 150 个用例）、全量集成测试最终约 3 分钟（约 8 个用例，单个 5～15 秒、IT-05 约 25 秒）；本批新写的端到端用例按单独运行计入（单个约 15～40 秒）。编码会话内按每批全量运行 2～3 次计，每批测试用时约 2～8 分钟，另留约 5 分钟写结果。既有端到端整套不在编码会话运行，不计入用时，由 G3 的独立测试验证验收标准。\n\n批次与排序依据（技术方案“技术先后依赖”）：config.ts/types.ts（含 GameEvent 事件类型）必须先于其余 game/render/audio/app 模块；palette.ts 必须先于所有精灵绘制与 CSS 配色变量；GameEvent 必须先于音频层与特效层；诊断快照 SteelDefenseSnapshot 必须先于集成测试；package.json 的脚本名必须先于 runtime/deployment.json 中已写好的开发者命令生效（@playwright/test 锁定 1.65.1）；Dockerfile 与 nginx.conf 在 npm run build 能产出 dist/ 之后。因此这些基础件全部放进第 1 批。其余先后没有技术方案依据的，按验收标准的业务先后与“后一批使用前一批的运行代码”推断。\n- 第 1 批（AC-1、AC-3、AC-4、AC-6），预计约 80 分钟（实现约 72 + 测试约 3 + 余量 5）：工程脚手架（package.json 五个脚本、tsconfig、Vite、Vitest、Playwright 两套配置、ESLint、.gitignore）、Dockerfile 与 deploy/nginx.conf（/healthz）；index.html 的 DOM 骨架与无障碍属性，标题“钢铁防线”与“怎么玩”说明（键盘、虚拟按键用法与手机静音提示）；config.ts、types.ts（全部实体、GameEvent、快照类型）、rng.ts、palette.ts 与 CSS 配色变量；主循环（固定步长、帧统计）、键盘输入与方向按住栈；地图与砖/钢/水地形、玩家坦克四向移动与开火、子弹与碰撞；地形层基础渲染；诊断快照 diagnostics.ts 与 ?seed=。开发者检查：UT-terrain、UT-input；集成测试工程与 harness 测试页骨架。基础件多但彼此无法拆开（其余每批都依赖），所以是本交付最重的一批，仍在 90 分钟内。\n- 第 2 批（AC-7、AC-8、AC-9、AC-13），预计约 75 分钟（实现约 68 + 测试约 2 + 余量 5）：三种敌人（快速型 3.5 格/秒 = 普通型 1.75 倍，重甲 3 次命中）与各自基础造型配色、enemy-ai、spawner（分批、同时最多 4 辆）；指挥所与任何子弹（含玩家子弹，Q4）击中即失败；生命、重生、护盾例外接口（R4）；计分与 HUD 即时更新；基础失败画面。开发者检查：UT-enemies、UT-base-lives，以及 UT-flow 中 HUD 与计分部分。依赖第 1 批的地图、子弹、碰撞与事件类型。\n- 第 3 批（AC-10、AC-11、AC-12、AC-14），预计约 80 分钟（实现约 70 + 测试约 5 + 余量 5）：levels.ts 5 关自行设计的地图与编队（总数递增、强敌不减且第 5 关多于第 1 关，R8）；过关→下一关、第 5 关后全部通关画面（本局分数、历史最高分、返回开始，Q2）；道具携带者标记、护盾 10 秒与火力升级；最高分本机保存（进行中超过也随时保存，R5）。开发者检查：UT-levels、UT-flow、UT-powerups、UT-highscore、IT-06、IT-07；新写端到端用例：道具拾取、最高分（单独运行约 1 分钟）。依赖第 2 批的敌人、出兵与计分。\n- 第 4 批（AC-2、AC-5、AC-18、AC-22），预计约 75 分钟（实现约 62 + 测试约 8 + 余量 5）：screens.ts 画面状态机（开始、每关开场提示、过关、失败、全部通关）与过渡动画（data-transition）；虚拟方向键与开火按钮（Pointer Events、按住移动、松开即停）、layout.ts 自适应缩放与无横向滚动、虚拟按键不与地图和 HUD 重叠；横屏旋转提示（Q5）。开发者检查：IT-03、IT-08；新写端到端用例：开始与说明、电脑一关流程、手机一关流程、失败与返回、横屏提示（单独运行约 3 分钟）。依赖第 3 批已有的全部画面状态。\n- 第 5 批（AC-17、AC-19、AC-20、AC-21），预计约 75 分钟（实现约 65 + 测试约 5 + 余量 5）：audio-engine（以点击/触摸开始按钮解锁、总线、一键静音）、6 种互不相同的原创合成音效、低于音效音量的原创循环背景音乐（Q3）；effects.ts 与 particles.ts 中按事件触发的砖墙碎屑、击中坦克与钢墙的火花（R7）、爆炸火光烟雾与画面震动、拾取动画与提示。音效与特效都只消费 GameEvent（技术方案“事件→音效→特效映射”），放在同批；比上一版计划把 AC-17 从第 6 批移来，使两批用时均衡。开发者检查：IT-01、IT-02；新写端到端用例：静音（单独运行约 40 秒）。依赖第 3 批的拾取与过关事件、第 4 批的开始按钮与界面。\n- 第 6 批（AC-15、AC-16、AC-23），预计约 75 分钟（实现约 65 + 测试约 5 + 余量 5）：render/sprites 全部精灵配方按调色板统一画法（投影方向、描边宽度一致）与分层阴影，玩家与三种敌人主色和轮廓两两不同；履带转动、炮口火光与后坐、子弹拖尾（与坦克精灵同批，避免改造型时返工）；quality.ts 自适应画质与帧统计、不闪烁的预渲染；核对 AC-23（响应 ≤100 毫秒、松开即停、约 60 帧/秒、无单次 >100 毫秒停顿）。开发者检查：UT-art、IT-04、IT-05。放在功能齐全之后，因为造型、动效与性能要覆盖全部实体与画面。\n相邻两批合并约 155、155、155、150、150 分钟，都超过 90 分钟，6 批是满足时限的最少批数。所有开发者检查（UT-*、IT-01～IT-08）都排在覆盖对应验收标准的批次中，测试计划引用的 UT-art、IT-01、IT-02 分别在第 6、5、5 批。\n\n按假设排批的业务细节（不影响批次与用时，交规格与测试计划处理）：测试计划的依赖假设 T-A1（HUD 100 毫秒内更新）、T-A2（平均帧率不低于 55）、T-A3（松开后 100 毫秒内停止）由 G2 回答，回答不同只改测试判定，不改批次。items 中 OD-1～OD-3 推荐均为不纳入，计划按不纳入排批。\n\n预算：已用约 7 次会话（意图、首次计划、规格、技术方案两次、测试计划、本次细化）；剩余编码 6 次、审查 6 次、测试环境、测试脚本、更新系统现状共 15 次，合计约 22 次，另为退回与修改留余量，计 26 次会话；编码会话每次最长 1.5 小时，按实际批次用时（70～80 分钟）将工时由 20 小时调到 22 小时；修订 4 次不变。"
+  }
+}

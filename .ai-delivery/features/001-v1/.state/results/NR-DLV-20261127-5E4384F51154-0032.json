@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S49",
+  "result": "done",
+  "summary": "已修复 S50 阻断问题（TD-007、AC-21）：静音按钮和任意按键现在会创建并恢复音频，游戏中的触摸、按键和点击会恢复被系统挂起或中断的音频。先在 tests/integration/audio-mute.spec.ts 新写 3 个复现集成用例（游戏中音频被挂起后，按键、静音按钮、手机开火键和方向键能恢复；开始前点静音或按键会创建音频），修改前运行 3 个全部失败，修改后通过（约 9 秒）。lint、typecheck 和构建通过。全量单元测试 104 项通过（约 1 秒），全量集成测试 39 项通过（约 14 秒）。本次没有新写或改动端到端用例；既有端到端用例没有在会话里运行，交由 G3 的独立测试验证。技术细节：已在运行时不再重复播放 1 采样静音缓冲；触摸和点击只恢复已创建的音频，不会新建。",
+  "asks": [],
+  "outputs": [
+    "src/audio/audio-engine.ts",
+    "src/app/boot.ts",
+    "tests/integration/audio-mute.spec.ts",
+    ".ai-delivery/features/001-v1/.state/results/NR-DLV-20261127-5E4384F51154-0032.json"
+  ]
+}

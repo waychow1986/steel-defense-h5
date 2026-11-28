@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S47",
+  "result": "done",
+  "summary": "修复 S48 两项审查问题：开始画面对话框内新增非标题元素“钢铁防线”（p.start-title，未新增任何级别的标题，页头一级标题不变），集成用例 basics.spec 补断言“开始画面对话框内可见‘钢铁防线’”；layout.spec 补断言画布为正方形且边长等于舞台可用宽高较小者（±2 像素），并新增改变窗口尺寸后画布随之放大、缩回的用例；复现测试：修改前标题断言失败（1 项失败），布局新断言在正确实现上通过、在临时把 watchStage 固定为 300 像素后 6 项失败（已还原），修改后全部通过；最终运行 lint、typecheck、build 通过，全量单元 93 项通过（约 1 秒），全量集成 32 项通过（约 9 秒）；本批未新写或改动端到端用例，既有端到端用例未运行，测试环境验证交由 G3 独立测试。",
+  "asks": [],
+  "outputs": [
+    "index.html",
+    "src/styles/main.css",
+    "tests/integration/basics.spec.ts",
+    "tests/integration/layout.spec.ts"
+  ]
+}

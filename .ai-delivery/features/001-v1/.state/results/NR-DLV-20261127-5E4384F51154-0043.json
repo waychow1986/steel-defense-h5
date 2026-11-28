@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "stepId": "S57",
+  "result": "done",
+  "summary": "根因：eslint.config.js 的 ignores 未排除平台目录 .ai-delivery/，`eslint .` 因此检查了 S54 写入的独立测试脚本（runtime/qa/**，测试计划目录，只读）并报 24 个错误；修复只在 ignores 中加入 '.ai-delivery/'，未改动任何测试或测试脚本。复现（即失败的静态分析命令 npm run lint）：修改前失败（24 errors，与平台日志一致），修改后通过（退出码 0，约 2 秒）。本次实际运行：npm run lint 与 npm run typecheck 通过（各约 2 秒）、npm run build 通过（约 2 秒）、全量单元测试 npm run test:unit 14 个文件 122 项全部通过（约 1 秒）、全量集成测试 npm run test:integration 46 项全部通过（约 34 秒）；本次无新写或改动的端到端用例，既有端到端用例按规定未在会话中运行，由 G3 独立测试验证。",
+  "asks": [],
+  "outputs": ["eslint.config.js"]
+}
